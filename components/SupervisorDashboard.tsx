@@ -1,4 +1,3 @@
-
 import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../App';
 import UserDashboard from './UserDashboard';
@@ -105,7 +104,7 @@ const SupervisorDashboard: React.FC = () => {
           }
 
           // --- PAGINACIÓN (Página X de Y) ---
-          const pageCount = doc.internal.getNumberOfPages();
+          const pageCount = doc.getNumberOfPages();
           for (let i = 1; i <= pageCount; i++) {
               doc.setPage(i);
               doc.setFontSize(8);
@@ -281,7 +280,7 @@ const SupervisorDashboard: React.FC = () => {
                 2: { cellWidth: 50 }
             },
             didDrawPage: function (data) {
-                const pageCount = doc.internal.getNumberOfPages();
+                const pageCount = doc.getNumberOfPages();
                 doc.setFontSize(8);
                 doc.setTextColor(150);
                 doc.text(`Página ${pageCount}`, 196, 290, { align: 'right' });
