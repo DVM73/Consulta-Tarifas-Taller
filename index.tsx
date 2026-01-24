@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import './index.css';
 
-console.log("🚀 Iniciando App v2.0.4 (Modo Híbrido)...");
+console.log("🚀 Iniciando App v2.0.0 (Modo Híbrido)...");
 
 const isProduction = window.location.hostname !== 'localhost' && 
                      !window.location.hostname.includes('ai.studio') && 
