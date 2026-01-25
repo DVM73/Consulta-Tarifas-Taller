@@ -5,7 +5,7 @@ import UserDashboard from './UserDashboard';
 import { getAppData } from '../services/dataService';
 import { AppData, PointOfSale } from '../types';
 import { ReadOnlyPOSList, ReadOnlyGroupsList, ReadOnlyUsersList } from './AdminViews';
-import jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 import LogoutIcon from './icons/LogoutIcon';
@@ -65,9 +65,6 @@ const SupervisorDashboard: React.FC = () => {
       
       const FAMILIAS_ANEXO = ['13', '14', '19']; // Envases, Especias, Limpieza
 
-      // CORRECCIÓN 1: BUCLE CON DELAY PARA ASEGURAR DESCARGA DE TODOS LOS ARCHIVOS
-      // Al hacer download de 11 archivos de golpe, el navegador suele bloquear los últimos.
-      // Implementamos una secuencia asíncrona.
       let generatedCount = 0;
 
       for (const posId of selectedPosIds) {
