@@ -73,12 +73,10 @@ const SupervisorDashboard: React.FC = () => {
           const pos = data?.pos.find(p => p.id === posId);
           if (!pos) continue;
 
-          // Pequeño delay para dar respiro al hilo principal y al gestor de descargas del navegador
           await new Promise(resolve => setTimeout(resolve, 300));
 
           const doc = new jsPDF();
           
-          // 1. OBTENER ARTÍCULOS PRINCIPALES
           const mainArticles = (data?.articulos || []).filter(art => {
               const tarifa = data?.tarifas.find(t => 
                   t.Tienda === pos.zona && 
@@ -87,7 +85,6 @@ const SupervisorDashboard: React.FC = () => {
               return tarifa && tarifa['P.V.P.'] && !FAMILIAS_ANEXO.includes(art.Familia);
           });
 
-          // ORDENACIÓN
           mainArticles.sort((a, b) => {
               const secA = parseInt(a.Sección) || 99;
               const secB = parseInt(b.Sección) || 99;
@@ -95,13 +92,11 @@ const SupervisorDashboard: React.FC = () => {
               return a.Descripción.localeCompare(b.Descripción);
           });
 
-          // 2. OBTENER ARTÍCULOS ANEXO
           const appendixArticles = (data?.articulos || []).filter(art => 
               FAMILIAS_ANEXO.includes(art.Familia)
           );
           appendixArticles.sort((a, b) => a.Descripción.localeCompare(b.Descripción));
 
-          // GENERACIÓN
           generateInventoryTable(doc, pos, mainArticles, `INVENTARIO CARNICERÍA/CHARCUTERÍA - ${invMonth} ${invYear}`);
 
           if (appendixArticles.length > 0) {
@@ -109,7 +104,6 @@ const SupervisorDashboard: React.FC = () => {
               generateInventoryTable(doc, pos, appendixArticles, `INVENTARIO ESPECIAS / ENVASES / LIMPIEZA - ${invMonth} ${invYear}`);
           }
 
-          // PAGINACIÓN
           const pageCount = doc.getNumberOfPages();
           for (let i = 1; i <= pageCount; i++) {
               doc.setPage(i);
@@ -126,7 +120,6 @@ const SupervisorDashboard: React.FC = () => {
   };
 
   const generateInventoryTable = (doc: jsPDF, pos: PointOfSale, articles: any[], title: string) => {
-        // CORRECCIÓN 2: CABECERA PERFECTAMENTE ALINEADA Y PAREJA
         const headerText = `${title}   -   TIENDA: ${pos.zona} (${pos.código}) - ${pos.población}`;
 
         autoTable(doc, {
@@ -144,7 +137,6 @@ const SupervisorDashboard: React.FC = () => {
             pageBreak: 'avoid'
         });
 
-        // CORRECCIÓN 3: CUERPO ROBUSTO Y PAREJO
         autoTable(doc, {
             startY: (doc as any).lastAutoTable.finalY, 
             head: [['C.Art', 'Secc.', 'Descripción', 'EXISTENCIAS', 'NOTA']],
@@ -186,7 +178,7 @@ const SupervisorDashboard: React.FC = () => {
         });
   };
 
-  // --- LÓGICA DE GENERACIÓN DE TARIFAS ---
+  // --- LÓGICA DE GENERACIÓN DE TARIFAS (CORREGIDA) ---
   const handleGenerateTariff = () => {
       if (!tarPosId) {
           alert("⚠️ Selecciona una tienda válida.");
@@ -198,101 +190,175 @@ const SupervisorDashboard: React.FC = () => {
 
       try {
         const doc = new jsPDF();
-        const companyName = data?.companyName || "Paraíso de la Carne Selección";
+        const companyName = data?.companyName || "Paraíso de la Carne Selección, S.L.U.";
         const fechaRev = new Date(tarRevisionDate).toLocaleDateString('es-ES');
         const showPvp = tarShowPvp === 'Si';
-        const headers = [['Mostrador', 'Familia', 'Código', 'Tipo', 'Artículo', showPvp ? 'PVP' : '']];
 
-        const rows = (data?.articulos || [])
-            .filter(art => {
-                const hasTariff = data?.tarifas.some(t => 
-                    t.Tienda === selectedPos.zona && 
-                    String(t['Cód. Art.']).trim() === String(art.Referencia).trim() &&
-                    t['P.V.P.']
-                );
-                return hasTariff;
-            })
-            .map(art => {
-                const tariff = data?.tarifas.find(t => 
-                    t.Tienda === selectedPos.zona && 
-                    String(t['Cód. Art.']).trim() === String(art.Referencia).trim()
-                );
-                
-                let precioStr = '-';
-                if (tariff && tariff['P.V.P.']) {
-                    const num = parseFloat(String(tariff['P.V.P.']).replace(',', '.'));
-                    if (!isNaN(num)) precioStr = num.toLocaleString('es-ES', {minimumFractionDigits: 2}) + ' €';
-                }
+        // 1. OBTENER NOMBRE COMERCIAL
+        let nombreTienda = `Carnicería ${selectedPos.zona}`;
+        // Mapeo manual según ejemplos solicitados (esto idealmente iría en BD)
+        const zoneMap: Record<string, string> = {
+            'ATA': 'Carnicería El Buen Corte',
+            'TO3': 'Carnicería Villalba',
+            'EC2': 'Carnicería Medina',
+            // Añadir más mapeos aquí si se conocen
+        };
+        if (zoneMap[selectedPos.zona]) {
+            nombreTienda = zoneMap[selectedPos.zona];
+        }
 
-                const uniMedDisplay = art.UniMed || ''; 
+        // 2. DEFINIR COLUMNAS
+        // Si no se muestra PVP, eliminamos la columna completamente.
+        const headers = [['Mostrador', 'Familia', 'Código', 'Uni.Med', 'Artículo']];
+        if (showPvp) {
+            headers[0].push('PVP');
+        }
 
-                return [
-                    art.Sección, 
-                    art.Familia, 
-                    art.Referencia, 
-                    uniMedDisplay, 
-                    art.Descripción, 
-                    showPvp ? precioStr : ''
-                ];
-            })
-            .sort((a, b) => {
-                const secA = parseInt(a[0]) || 99; const secB = parseInt(b[0]) || 99;
-                if (secA !== secB) return secA - secB;
-                const famA = parseInt(a[1]) || 99; const famB = parseInt(b[1]) || 99;
-                if (famA !== famB) return famA - famB;
-                return a[4].localeCompare(b[4]);
-            });
+        // 3. OBTENER Y PROCESAR DATOS
+        const allArticles = (data?.articulos || []).filter(art => {
+            const hasTariff = data?.tarifas.some(t => 
+                t.Tienda === selectedPos.zona && 
+                String(t['Cód. Art.']).trim() === String(art.Referencia).trim() &&
+                t['P.V.P.']
+            );
+            return hasTariff;
+        });
 
-        if (rows.length === 0) {
+        if (allArticles.length === 0) {
             alert("⚠️ No hay artículos con precio asignado para esta tienda.");
             return;
         }
 
-        doc.setFontSize(14);
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(150, 75, 0); 
-        doc.text(`CARNICERÍA MEDINA  ###  ${companyName.toUpperCase()}`, 105, 15, { align: 'center' });
-        
-        doc.setFontSize(10);
-        doc.setTextColor(0);
-        doc.text(`Fecha Revisión: ${fechaRev}`, 195, 15, { align: 'right' });
-
-        autoTable(doc, {
-            startY: 20,
-            head: headers,
-            body: rows,
-            theme: 'grid', 
-            styles: {
-                fontSize: 9,
-                cellPadding: 1,
-                lineColor: [0, 0, 0], 
-                lineWidth: 0.1,
-                textColor: [0, 0, 0],
-                valign: 'middle'
-            },
-            headStyles: {
-                fillColor: [255, 228, 196], 
-                textColor: [100, 50, 0], 
-                fontStyle: 'bold',
-                halign: 'center',
-                lineWidth: 0.2, 
-                lineColor: [0, 0, 0]
-            },
-            columnStyles: {
-                0: { cellWidth: 20, halign: 'center' }, 
-                1: { cellWidth: 15, halign: 'center' }, 
-                2: { cellWidth: 20, halign: 'center', fontStyle: 'bold' }, 
-                3: { cellWidth: 15, halign: 'center', fontStyle: 'bold' }, 
-                4: { cellWidth: 'auto' }, 
-                5: { cellWidth: 20, halign: 'right', fontStyle: 'bold' } 
-            },
-            didDrawPage: function (data) {
-                const pageCount = doc.getNumberOfPages();
-                doc.setFontSize(8);
-                doc.setTextColor(150, 75, 0);
-                doc.text(`Carnicería ACA // Página ${pageCount}`, 195, 290, { align: 'right' });
-            }
+        // 4. ORDENAR: 1º Sección (Mostrador), 2º Alfabético
+        allArticles.sort((a, b) => {
+            const secA = parseInt(a.Sección) || 99;
+            const secB = parseInt(b.Sección) || 99;
+            if (secA !== secB) return secA - secB;
+            return a.Descripción.localeCompare(b.Descripción);
         });
+
+        // 5. AGRUPAR POR MOSTRADOR (SECCIÓN)
+        // Esto es necesario para separar la paginación y cortar página entre mostradores.
+        const sections: Record<string, any[]> = {};
+        allArticles.forEach(art => {
+            const sec = art.Sección || 'Otros';
+            if (!sections[sec]) sections[sec] = [];
+            
+            const tariff = data?.tarifas.find(t => 
+                t.Tienda === selectedPos.zona && 
+                String(t['Cód. Art.']).trim() === String(art.Referencia).trim()
+            );
+            
+            let precioStr = '-';
+            if (tariff && tariff['P.V.P.']) {
+                const num = parseFloat(String(tariff['P.V.P.']).replace(',', '.'));
+                if (!isNaN(num)) precioStr = num.toLocaleString('es-ES', {minimumFractionDigits: 2}) + ' €';
+            }
+
+            const row = [
+                art.Sección, 
+                art.Familia, 
+                art.Referencia, 
+                art.UniMed || 'U', // Default U si no tiene
+                art.Descripción
+            ];
+            if (showPvp) row.push(precioStr);
+            
+            sections[sec].push(row);
+        });
+
+        // 6. GENERAR TABLAS
+        const sortedSectionKeys = Object.keys(sections).sort((a, b) => (parseInt(a)||99) - (parseInt(b)||99));
+        
+        let isFirstTable = true;
+
+        for (const secKey of sortedSectionKeys) {
+            const rows = sections[secKey];
+            
+            // Si no es la primera tabla, añadimos página nueva para separar mostrador
+            if (!isFirstTable) {
+                doc.addPage();
+            }
+            isFirstTable = false;
+
+            // Guardamos la página donde empieza este mostrador
+            const startPage = doc.getNumberOfPages();
+
+            autoTable(doc, {
+                head: headers,
+                body: rows,
+                theme: 'grid',
+                startY: 35, // Espacio para cabecera fija
+                styles: {
+                    fontSize: 9,
+                    cellPadding: 1,
+                    lineColor: [0, 0, 0], 
+                    lineWidth: 0.1,
+                    textColor: [0, 0, 0],
+                    valign: 'middle'
+                },
+                headStyles: {
+                    fillColor: [255, 228, 196], 
+                    textColor: [100, 50, 0], 
+                    fontStyle: 'bold',
+                    halign: 'center',
+                    lineWidth: 0.2, 
+                    lineColor: [0, 0, 0]
+                },
+                columnStyles: {
+                    0: { cellWidth: 20, halign: 'center' }, // Mostrador
+                    1: { cellWidth: 15, halign: 'center' }, // Familia
+                    2: { cellWidth: 20, halign: 'center', fontStyle: 'bold' }, // Código
+                    3: { cellWidth: 15, halign: 'center', fontStyle: 'bold' }, // Uni.Med
+                    4: { cellWidth: 'auto' }, // Artículo
+                    5: { cellWidth: 20, halign: 'right', fontStyle: 'bold' } // PVP
+                },
+                // DIBUJAR CABECERAS Y PIES DE PÁGINA
+                didDrawPage: (data) => {
+                    const pageNumber = doc.getNumberOfPages();
+                    
+                    // --- CABECERA (Repetida en cada página) ---
+                    // Línea 1: TIENDA ### EMPRESA
+                    doc.setFontSize(14);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(150, 75, 0); 
+                    doc.text(`${nombreTienda.toUpperCase()} ### ${companyName.toUpperCase()}`, 105, 15, { align: 'center' });
+                    
+                    // Línea 2: FECHA REVISIÓN (Debajo, separada)
+                    doc.setFontSize(10);
+                    doc.setTextColor(0);
+                    doc.setFont('helvetica', 'normal');
+                    doc.text(`Fecha Revisión: ${fechaRev}`, 105, 22, { align: 'center' }); // Centrado debajo del título
+
+                    // --- PIE DE PÁGINA ---
+                    const footerY = doc.internal.pageSize.height - 10;
+                    doc.setFontSize(8);
+                    
+                    // Izquierda: Carnicería // [ZONA]
+                    doc.text(`Carnicería // ${selectedPos.zona}`, 14, footerY);
+                    
+                    // Derecha: Página X de Y (Calculado posteriormente o aquí si es global, 
+                    // pero para "por mostrador" necesitamos saber cuantas páginas ocupa la tabla actual)
+                    // Como autoTable no nos dice el total de páginas de la tabla actual FÁCILMENTE durante el dibujo,
+                    // usaremos un marcador temporal o lógica post-proceso.
+                    // ESTRATEGIA SIMPLE Y ROBUSTA: Escribimos el pie de página AL FINAL del bucle de sección.
+                }
+            });
+
+            // LÓGICA DE NUMERACIÓN DE PÁGINA POR MOSTRADOR
+            // Recorremos las páginas que ocupó esta sección y escribimos el número
+            const endPage = doc.getNumberOfPages();
+            const totalPagesInSection = endPage - startPage + 1;
+            
+            for (let i = startPage; i <= endPage; i++) {
+                doc.setPage(i);
+                const currentPageInSection = i - startPage + 1;
+                const footerY = doc.internal.pageSize.height - 10;
+                doc.setFontSize(8);
+                doc.setTextColor(0);
+                doc.text(`Página ${currentPageInSection} de ${totalPagesInSection}`, 196, footerY, { align: 'right' });
+            }
+        }
 
         doc.save(`Tarifa_${selectedPos.zona}_${tarRevisionDate}.pdf`);
         
@@ -389,7 +455,6 @@ const SupervisorDashboard: React.FC = () => {
                         </div>
                         <button onClick={() => setView('menu')} className="text-gray-400 hover:text-gray-600 transition-colors"><CloseIcon className="w-6 h-6"/></button>
                     </div>
-                    {/* MENÚ PERMANECE IGUAL */}
                     <div className="p-8 space-y-8 overflow-y-auto">
                         <section className="space-y-4">
                             <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b pb-2">Selección de Tienda</h3>
