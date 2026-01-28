@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// FunciÃ³n auxiliar para buscar variables con diferentes prefijos comunes
+// Función auxiliar para buscar variables con diferentes prefijos comunes
 // Esto asegura compatibilidad con configuraciones antiguas de Vercel
 const findEnv = (env: Record<string, string>, key: string) => {
   return JSON.stringify(
@@ -26,6 +26,12 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
+    // ?? AÑADE ESTA SECCIÓN AQUÍ, DONDE INDICAMOS EL PUERTO QUE DEBE UTILIZAR LA APP PARA ARRANCAR EN LOCAL
+        server: {
+          port: 5174,
+          strictPort: true, // Esto evita que si el 5174 está ocupado, salte a otro
+        },
+    // ?? HASTA AQUÍ
     base: './', 
     resolve: {
       alias: {

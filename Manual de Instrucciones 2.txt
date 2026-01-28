@@ -1,0 +1,74 @@
+Para que tengas este manual siempre a mano con una presentación impecable, he estructurado la información en un formato de **Ficha Técnica de Operaciones**.
+
+Como soy una IA, no puedo enviarte un archivo `.pdf` descargable directamente, pero he preparado el contenido con un formato especial. **Para tenerlo en PDF ahora mismo, solo tienes que copiar el texto de abajo, pegarlo en un documento de Word y darle a "Guardar como PDF"**.
+
+---
+
+# 🛠️ GUÍA DE OPERACIONES: CENTRO DE CONTROL "TALLER IA"
+
+**Documentación Técnica de Flujo de Trabajo v1.0**
+
+## 📌 INTRODUCCIÓN AL SISTEMA
+
+Tu "Taller" es un entorno aislado. Su propósito es permitirte experimentar con la IA de Google sin riesgo de romper la web que tus clientes ya están usando. El **Panel de Control (.bat)** es el puente entre tus ideas en la nube y la realidad en tu ordenador.
+
+---
+
+## 🧭 DICCIONARIO DE MISIONES (EL MENÚ)
+
+### 1. 📥 ACTUALIZAR (Sincronización con la Nube)
+
+* **Acción:** Descarga el código desde GitHub.
+* **Cuándo usar:** Siempre que hayas hecho cambios en Google AI Studio y les hayas dado a "Stage and Commit".
+* **Nota técnica:** Si el panel muestra errores en rojo aquí, probablemente sea un problema de conexión a Internet o que olvidaste guardar los cambios en la web de la IA.
+
+### 2. 🔥 LANZAR (Entorno de Desarrollo en Tiempo Real)
+
+* **Acción:** Enciende el servidor local en el puerto `5174`.
+* **Cuándo usar:** Es tu modo de trabajo diario. Abre Edge y te muestra los cambios al instante.
+* **Control:** Para detenerlo y volver al menú principal, pulsa **`CTRL + C`** y luego responde **`N`**.
+
+### 3. 🏗️ PREVIEW (Simulación de Producción)
+
+* **Acción:** Empaqueta la app de forma profesional (puerto `4173`).
+* **Cuándo usar:** **Obligatorio** antes de pasar el código a la web de producción.
+* **Por qué:** Sirve para detectar errores que solo ocurren cuando la app está "cerrada" y lista para el público.
+
+### 4. 💾 BACKUP (Seguridad Instantánea)
+
+* **Acción:** Crea una copia con fecha y hora de todo tu código.
+* **Cuándo usar:** Antes de pedirle a la IA cambios grandes en la estructura o en Firebase.
+* **Ubicación:** Las copias se guardan en la carpeta anterior a "Taller-IA", manteniendo tu espacio de trabajo limpio.
+
+### 5. 🔐 CHEQUEAR (Verificación de Llaves)
+
+* **Acción:** Escanea el archivo `.env`.
+* **Cuándo usar:** Si la web carga pero no guarda datos o la IA no responde.
+* **Diagnóstico:** Te dirá si falta la `API_KEY` de Gemini o las credenciales de Firebase.
+
+### 6. 🛠️ REPARAR (Mantenimiento de Motor)
+
+* **Acción:** Borra y reinstala todas las librerías internas (`npm install`).
+* **Cuándo usar:** Si el panel te da errores extraños de "módulo no encontrado" o después de meses sin usar el taller.
+
+---
+
+## 🔄 EL CICLO DE TRABAJO PERFECTO (Infografía)
+
+1. **CREAR:** Trabajas en **Google AI Studio**. Guardas cambios (Commit).
+2. **BAJAR:** Abres el Panel en tu PC -> **Opción 1**.
+3. **PROBAR:** Ejecutas la **Opción 2**. Verificas en Edge que todo está bien.
+4. **REVISAR:** Si estás satisfecho, ejecutas la **Opción 3** para la prueba final.
+5. **SUBIR:** Ahora que sabes que el código es robusto, ya puedes sincronizarlo con tu repositorio de **Producción**.
+
+---
+
+## 🆘 RESOLUCIÓN DE EMERGENCIAS
+
+* **¿La ventana se cierra sola?** Abre una terminal (CMD), arrastra el archivo `.bat` dentro y pulsa Enter. Así verás el error antes de que se cierre.
+* **¿Edge no abre la web?** Verifica que el Panel está en la **Opción 2** o **3**. Si la ventana negra está en el menú principal, la web está "apagada".
+* **¿Cambios no se ven?** Pulsa **`CTRL + F5`** en Edge para limpiar la memoria caché.
+
+---
+
+**¿Te gustaría que te ayude con el siguiente paso, que sería sincronizar este código del Taller con tu web de Producción una vez que lo hayas probado?** Solo dime cuando estés listo.
