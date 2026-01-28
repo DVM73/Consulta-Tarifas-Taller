@@ -8,7 +8,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Función auxiliar para buscar variables con diferentes prefijos comunes
-// Esto asegura compatibilidad con configuraciones antiguas de Vercel
 const findEnv = (env: Record<string, string>, key: string) => {
   return JSON.stringify(
     env[key] || 
@@ -48,7 +47,9 @@ export default defineConfig(({ mode }) => {
       }
     },
     define: {
-      // Mapeo robusto: Busca la clave pura, con prefijo VITE_ o con prefijo REACT_APP_
+      // Polyfill vital para evitar "process is not defined" en navegadores
+      'process.env': {}, 
+      // Inyección robusta de variables
       'process.env.API_KEY': findEnv(env, 'API_KEY'),
       'process.env.FIREBASE_API_KEY': findEnv(env, 'FIREBASE_API_KEY'),
       'process.env.FIREBASE_AUTH_DOMAIN': findEnv(env, 'FIREBASE_AUTH_DOMAIN'),

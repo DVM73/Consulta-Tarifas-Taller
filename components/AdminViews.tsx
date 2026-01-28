@@ -19,7 +19,7 @@ import { getAppData, saveAllData, overwriteAllData } from '../services/dataServi
 // --- VISTAS DE SOLO LECTURA PARA SUPERVISOR ---
 
 export const ReadOnlyUsersList: React.FC<{ users: User[], posList: PointOfSale[] }> = ({ users, posList }) => {
-    // Ordenamiento Numérico Estricto por Cód. Tienda (Idéntico al panel de Admin)
+    // Ordenamiento Numérico Estricto por Cód. Tienda
     const sortedUsers = useMemo(() => {
         const sorted = [...users];
         return sorted.sort((a, b) => {
@@ -27,11 +27,12 @@ export const ReadOnlyUsersList: React.FC<{ users: User[], posList: PointOfSale[]
             const posA = posList.find(p => p.zona.toUpperCase() === a.zona.toUpperCase());
             const posB = posList.find(p => p.zona.toUpperCase() === b.zona.toUpperCase());
             
-            // Extraemos el código numérico. Si no tiene tienda (ej. Admin), usamos 99999 para que vaya al final.
+            // Extraemos el código numérico. 
+            // Si no tiene tienda (ej. Admin, Supervisor General), usamos 99999 para que vaya al final.
             const codeA = posA && posA.código ? parseInt(posA.código, 10) : 99999;
             const codeB = posB && posB.código ? parseInt(posB.código, 10) : 99999;
 
-            // Si los códigos son iguales (ej: dos empleados en la misma tienda o dos admins)
+            // Si los códigos son iguales (ej: dos empleados en la misma tienda)
             if (codeA === codeB) {
                 // Ordenar alfabéticamente por nombre
                 return a.nombre.localeCompare(b.nombre);
