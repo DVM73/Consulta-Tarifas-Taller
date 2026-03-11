@@ -96,11 +96,11 @@ const FileConverter: React.FC = () => {
         // Columnas Originales (según descripción):
         // L (11): Ult. Costo
         // M (12): IVA
-        // Columnas a mantener (según análisis de imágenes y "Quita columnas vacías A, C, G, H, I, K"):
-        // B(1), D(3), E(4), F(5), J(9), L(11), N(13)
+        // N (13): Uni.Med
+        // Columnas a mantener: B(1), D(3), E(4), F(5), J(9), L(11), M(12), N(13)
         
-        // Headers esperados: Referencia, Sección, Descripción, Familia, Ult.Pro, Ult. Costo IVA, UN
-        const headers = ['Referencia', 'Sección', 'Descripción', 'Familia', 'Ult.Pro', 'Ult. Costo IVA', 'UN'];
+        // Headers esperados: Referencia, Sección, Descripción, Familia, Ult.Pro, Ult. Costo, IVA, Uni.Med
+        const headers = ['Referencia', 'Sección', 'Descripción', 'Familia', 'Ult.Pro', 'Ult. Costo', 'IVA', 'Uni.Med'];
 
         rows.forEach(row => {
             // Si la fila está vacía, saltar
@@ -110,20 +110,24 @@ const FileConverter: React.FC = () => {
             // Esto evita duplicados si la estructura del archivo varía ligeramente.
             if (String(row[1]).trim() === 'Referencia' || String(row[11]).trim() === 'Ult. Costo') return;
 
-            const costo = parseFloat(String(row[11]).replace(',', '.')) || 0;
-            const iva = parseInt(String(row[12])) || 0;
-            
-            // Fórmula: Ult.Costo = Ult. Costo + ((Ult.Costo * IVA)/100)
-            const newCosto = costo + ((costo * iva) / 100);
-            
+            // Extraer y calcular el nuevo coste con IVA
+            const costoBase = parseFloat(String(row[11]).replace(',', '.')) || 0;
+            const iva = parseFloat(String(row[12]).replace(',', '.')) || 0;
+            const nuevoCosto = costoBase + ((costoBase * iva) / 100);
+
+            // Formatear a string con coma para decimales
+            const costoFinalStr = nuevoCosto.toFixed(2).replace('.', ',');
+            const ivaStr = row[12] !== undefined && row[12] !== null ? String(row[12]).replace('.', ',') : '';
+
             const newRow = [
                 row[1], // Referencia (B)
                 row[3], // Sección (D)
                 row[4], // Descripción (E)
                 row[5], // Familia (F)
                 row[9], // Ult.Pro (J)
-                newCosto.toFixed(2).replace('.', ','), // Ult. Costo IVA (Formato con coma para Excel español)
-                row[13] // UN (N) - Asumiendo que UN está en N si M era IVA
+                costoFinalStr, // Ult. Costo (L) - Ahora contiene el coste con IVA
+                ivaStr, // IVA (M)
+                row[13]  // Uni.Med (N)
             ];
             newRows.push(newRow);
         });
