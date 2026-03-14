@@ -491,7 +491,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                 </div>
             )}
             
-            {isBotOpen && <div className="fixed bottom-20 right-5 w-96 h-[500px] shadow-lg rounded-lg z-50 bg-white dark:bg-slate-800 border dark:border-slate-700 overflow-hidden"><Chatbot contextData={JSON.stringify(filteredData.slice(0,10))}/></div>}
+            {isBotOpen && <div className="fixed bottom-20 right-5 w-96 h-[500px] shadow-lg rounded-lg z-50 bg-white dark:bg-slate-800 border dark:border-slate-700 overflow-hidden"><Chatbot contextData={JSON.stringify(filteredData)}/></div>}
         </div>
     );
 };
