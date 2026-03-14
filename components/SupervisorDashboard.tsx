@@ -119,14 +119,14 @@ const SupervisorDashboard: React.FC = () => {
           });
 
           // 2. Separar por Mostrador
-          const carniceriaArticles = mainArticles.filter(a => a.Sección === '1').sort((a,b) => a.Descripción.localeCompare(b.Descripción));
-          const charcuteriaArticles = mainArticles.filter(a => a.Sección === '2').sort((a,b) => a.Descripción.localeCompare(b.Descripción));
-          const otherMainArticles = mainArticles.filter(a => a.Sección !== '1' && a.Sección !== '2').sort((a,b) => a.Descripción.localeCompare(b.Descripción));
+          const carniceriaArticles = mainArticles.filter(a => String(a.Sección) === '1').sort((a,b) => String(a.Descripción || '').localeCompare(String(b.Descripción || '')));
+          const charcuteriaArticles = mainArticles.filter(a => String(a.Sección) === '2').sort((a,b) => String(a.Descripción || '').localeCompare(String(b.Descripción || '')));
+          const otherMainArticles = mainArticles.filter(a => String(a.Sección) !== '1' && String(a.Sección) !== '2').sort((a,b) => String(a.Descripción || '').localeCompare(String(b.Descripción || '')));
 
           // 3. Artículos Anexo
           const appendixArticles = (data?.articulos || []).filter(art => 
-              FAMILIAS_ANEXO.includes(art.Familia)
-          ).sort((a, b) => a.Descripción.localeCompare(b.Descripción));
+              FAMILIAS_ANEXO.includes(String(art.Familia))
+          ).sort((a, b) => String(a.Descripción || '').localeCompare(String(b.Descripción || '')));
 
           // Helper para generar bloque
           const generateSectionBlock = (articles: any[], title: string, footerLabel: string) => {
@@ -205,10 +205,10 @@ const SupervisorDashboard: React.FC = () => {
         if (allArticles.length === 0) { alert("⚠️ No hay artículos con precio asignado para esta tienda."); return; }
 
         allArticles.sort((a, b) => {
-            const secA = parseInt(a.Sección) || 99;
-            const secB = parseInt(b.Sección) || 99;
+            const secA = parseInt(String(a.Sección)) || 99;
+            const secB = parseInt(String(b.Sección)) || 99;
             if (secA !== secB) return secA - secB;
-            return a.Descripción.localeCompare(b.Descripción);
+            return String(a.Descripción || '').localeCompare(String(b.Descripción || ''));
         });
 
         const sections: Record<string, any[]> = {};

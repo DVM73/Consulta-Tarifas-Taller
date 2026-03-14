@@ -110,8 +110,8 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
         return map;
     }, [tarifas]);
 
-    const getTariffForZone = (ref: string, zona: string): Tarifa | undefined => {
-        const articleTariffs = tariffsByArticle.get(ref);
+    const getTariffForZone = (ref: string | number, zona: string): Tarifa | undefined => {
+        const articleTariffs = tariffsByArticle.get(String(ref).trim());
         if (!articleTariffs) return undefined;
         
         if (zona === 'Todas') {
@@ -122,15 +122,19 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
 
     const filteredData = useMemo(() => {
         return articulos.filter(art => {
-            const matchesSearch = art.Descripción.toLowerCase().includes(searchTerm.toLowerCase()) || art.Referencia.toLowerCase().includes(searchTerm.toLowerCase());
+            const desc = String(art.Descripción || '').toLowerCase();
+            const refStr = String(art.Referencia || '').toLowerCase();
+            const search = searchTerm.toLowerCase();
+            const matchesSearch = desc.includes(search) || refStr.includes(search);
             if (!matchesSearch) return false;
 
-            let seccionStr = art.Sección === '1' ? 'Carnicería' : (art.Sección === '2' ? 'Charcutería' : art.Sección);
+            const sec = String(art.Sección || '');
+            let seccionStr = sec === '1' ? 'Carnicería' : (sec === '2' ? 'Charcutería' : sec);
             const matchesSeccion = seccionFilter === 'Todas' || seccionStr === seccionFilter;
             if (!matchesSeccion) return false;
 
             if (familiaFilter !== 'Todas') {
-                 const artFam = parseInt(art.Familia);
+                 const artFam = parseInt(String(art.Familia));
                  const filterFam = parseInt(familiaFilter);
                  if (isNaN(artFam) || isNaN(filterFam) || artFam !== filterFam) {
                      return false;
@@ -313,7 +317,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                             
                             return (
                                 <tr key={art.Referencia} className={`transition-colors border-b dark:border-slate-800 ${hasOffer ? 'bg-green-100 dark:bg-green-900/40 hover:bg-green-200 dark:hover:bg-green-900/60' : 'hover:bg-gray-50 dark:hover:bg-slate-800'}`}>
-                                    <td className="p-3 font-mono text-xs text-slate-500">{art.Referencia.replace(/\D/g,'')}</td>
+                                    <td className="p-3 font-mono text-xs text-slate-500">{String(art.Referencia || '').replace(/\D/g,'')}</td>
                                     <td className="p-3 font-bold text-slate-800 dark:text-slate-200">{art.Descripción}</td>
                                     {user?.rol !== 'Normal' && <td className="p-3 text-slate-600 dark:text-slate-400 font-medium">{formatCurrency(art['Ult. Costo'])}</td>}
                                     

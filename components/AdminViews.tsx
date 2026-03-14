@@ -35,7 +35,7 @@ export const ReadOnlyUsersList: FC<{ users: User[], posList: PointOfSale[] }> = 
             // Si los códigos son iguales (ej: dos empleados en la misma tienda)
             if (codeA === codeB) {
                 // Ordenar alfabéticamente por nombre
-                return a.nombre.localeCompare(b.nombre);
+                return String(a.nombre || '').localeCompare(String(b.nombre || ''));
             }
 
             // Orden ascendente por código de tienda (1, 2, 7, 10...)
@@ -181,7 +181,7 @@ export const UsersList: React.FC<{ users: User[], posList: PointOfSale[] } & Vie
             const posB = posList.find(p => p.zona.toUpperCase() === b.zona.toUpperCase());
             const codeA = posA && posA.código ? parseInt(posA.código, 10) : 99999;
             const codeB = posB && posB.código ? parseInt(posB.código, 10) : 99999;
-            if (codeA === codeB) return a.nombre.localeCompare(b.nombre);
+            if (codeA === codeB) return String(a.nombre || '').localeCompare(String(b.nombre || ''));
             return codeA - codeB;
         });
     }, [users, posList]);
