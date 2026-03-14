@@ -70,6 +70,21 @@ const FileConverter: React.FC = () => {
         return headers.findIndex(h => h.trim().toLowerCase().replace(/\s+/g, ' ') === keyword.toLowerCase().replace(/\s+/g, ' '));
     };
 
+    const downloadCSV = (data: any[], filename: string) => {
+        if (data.length === 0) return;
+        const headers = Object.keys(data[0]);
+        const csvContent = [
+            headers.join(';'),
+            ...data.map(row => headers.map(h => String(row[h] ?? '').replace(/"/g, '""')).join(';'))
+        ].join('\n');
+        
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+    };
+
     const processArticulos = async (data: any[][]) => {
         const headerKeywords = ['Referencia', 'Descripción', 'Ult. Costo', 'IVA'];
         const headerIndex = findHeaderRow(data, headerKeywords);
@@ -115,7 +130,11 @@ const FileConverter: React.FC = () => {
 
         const currentData = await getAppData();
         await saveAllData({ articulos: newArticulos });
-        setMessage({ type: 'success', text: `Se han cargado ${newArticulos.length} artículos correctamente.` });
+        
+        // Exportar para verificación
+        downloadCSV(newArticulos, 'articulos_procesados.csv');
+        
+        setMessage({ type: 'success', text: `Se han cargado ${newArticulos.length} artículos correctamente y se ha descargado el CSV para verificación.` });
         setProcessing(false);
     };
 
@@ -159,7 +178,11 @@ const FileConverter: React.FC = () => {
         }
 
         await saveAllData({ tarifas: newTarifas });
-        setMessage({ type: 'success', text: `Se han cargado ${newTarifas.length} tarifas correctamente.` });
+        
+        // Exportar para verificación
+        downloadCSV(newTarifas, 'tarifas_procesadas.csv');
+        
+        setMessage({ type: 'success', text: `Se han cargado ${newTarifas.length} tarifas correctamente y se ha descargado el CSV para verificación.` });
         setProcessing(false);
     };
 
