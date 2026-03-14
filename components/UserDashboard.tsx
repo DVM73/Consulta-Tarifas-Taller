@@ -104,8 +104,8 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
         const map = new Map<string, Tarifa[]>();
         (tarifas || []).forEach(t => {
             if (!t) return;
-            // Normalizamos: quitamos espacios y convertimos a string
-            const ref = String(t['Cód. Art.'] ?? '').trim();
+            // Normalizamos: quitamos espacios, ceros a la izquierda y convertimos a string
+            const ref = String(t['Cód. Art.'] ?? '').trim().replace(/^0+/, '');
             if (!map.has(ref)) map.set(ref, []);
             map.get(ref)!.push(t);
         });
@@ -114,7 +114,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
 
     const getTariffForZone = (ref: string | number | undefined, zona: string): Tarifa | undefined => {
         // Normalizamos la referencia del artículo igual que en tariffsByArticle
-        const refNormalizada = String(ref ?? '').trim();
+        const refNormalizada = String(ref ?? '').trim().replace(/^0+/, '');
         const articleTariffs = tariffsByArticle.get(refNormalizada);
         if (!articleTariffs) return undefined;
         
