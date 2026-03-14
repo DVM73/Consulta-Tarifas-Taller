@@ -163,17 +163,23 @@ const FileConverter: React.FC = () => {
         const newTarifas: any[] = [];
         for (let i = headerIndex + 1; i < data.length; i++) {
             const row = data[i];
-            if (!row[idx.cod]) continue;
+            if (!row[idx.codArt]) continue; // Usamos codArt como clave principal
+
+            // Función para limpiar precios: eliminar todo excepto números, puntos y comas
+            const cleanPrice = (val: any) => {
+                const str = String(val).replace(',', '.').replace(/[^0-9.]/g, '');
+                return parseFloat(str) || 0;
+            };
 
             newTarifas.push({
-                'Cod.': row[idx.cod],
-                'Tienda': row[idx.tienda],
-                'Cód. Art.': String(row[idx.codArt]),
-                'Descripción': row[idx.desc],
-                'P.V.P.': parseFloat(String(row[idx.pvp]).replace(',', '.')) || 0,
-                'PVP Oferta': parseFloat(String(row[idx.pvpOferta]).replace(',', '.')) || 0,
-                'Fec.Ini.Ofe.': row[idx.fecIni],
-                'Fec.Fin.Ofe.': row[idx.fecFin]
+                'Cod.': String(row[idx.cod]),
+                'Tienda': String(row[idx.tienda]),
+                'Cód. Art.': String(row[idx.codArt]).trim().replace(/^0+/, ''),
+                'Descripción': String(row[idx.desc]),
+                'P.V.P.': cleanPrice(row[idx.pvp]),
+                'PVP Oferta': cleanPrice(row[idx.pvpOferta]),
+                'Fec.Ini.Ofe.': String(row[idx.fecIni] || ''),
+                'Fec.Fin.Ofe.': String(row[idx.fecFin] || '')
             });
         }
 
