@@ -79,7 +79,7 @@ const AdminDashboard = () => {
         { id: 'pos', label: 'Administración de P. Venta', desc: 'Gestionar los puntos de venta.', icon: HistoryIcon },
         { id: 'groups', label: 'Administración de Grupos', desc: 'Gestionar los grupos de tiendas.', icon: BuildingIcon },
         { id: 'families', label: 'Administración de Familias', desc: 'Gestionar códigos y nombres de familias.', icon: TagIcon },
-        { id: 'upload', label: 'Importar Datos', desc: 'Cargar y convertir archivos de artículos y tarifas.', icon: UploadIcon },
+        { id: 'upload', label: 'Cargar Artículos y Tarifas', desc: 'Cargar y convertir archivos de artículos y tarifas.', icon: UploadIcon },
         { 
             id: 'data_io', 
             label: 'Exportación / Importación Datos', 

@@ -104,6 +104,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
         const map = new Map<string, Tarifa[]>();
         (tarifas || []).forEach(t => {
             if (!t) return;
+            // Normalizamos: quitamos espacios y convertimos a string
             const ref = String(t['Cód. Art.'] ?? '').trim();
             if (!map.has(ref)) map.set(ref, []);
             map.get(ref)!.push(t);
@@ -112,7 +113,9 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
     }, [tarifas]);
 
     const getTariffForZone = (ref: string | number | undefined, zona: string): Tarifa | undefined => {
-        const articleTariffs = tariffsByArticle.get(String(ref ?? '').trim());
+        // Normalizamos la referencia del artículo igual que en tariffsByArticle
+        const refNormalizada = String(ref ?? '').trim();
+        const articleTariffs = tariffsByArticle.get(refNormalizada);
         if (!articleTariffs) return undefined;
         
         if (zona === 'Todas') {
@@ -334,15 +337,16 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                                     
                                     {!isComparing ? <>
                                         <td className="p-3">
-                                            {hasOffer ? (
-                                                <span className="line-through text-red-500 font-bold decoration-2 opacity-70 text-xs">
-                                                    {formatCurrency(t?.['P.V.P.'])}
+                                            <div className="flex flex-col">
+                                                {hasOffer && (
+                                                    <span className="line-through text-slate-400 dark:text-slate-500 text-[10px]">
+                                                        {formatCurrency(t?.['P.V.P.'])}
+                                                    </span>
+                                                )}
+                                                <span className={`font-bold ${hasOffer ? 'text-green-700 dark:text-green-400' : 'text-slate-800 dark:text-slate-200'}`}>
+                                                    {formatCurrency(hasOffer ? t!['PVP Oferta'] : t?.['P.V.P.'])}
                                                 </span>
-                                            ) : (
-                                                <span className="font-bold text-slate-800 dark:text-slate-200">
-                                                    {formatCurrency(t?.['P.V.P.'])}
-                                                </span>
-                                            )}
+                                            </div>
                                         </td>
                                         <td className="p-3">
                                             {hasOffer ? (
