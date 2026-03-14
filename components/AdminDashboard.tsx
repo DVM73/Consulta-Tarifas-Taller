@@ -54,11 +54,10 @@ const AdminDashboard = () => {
             case 'pos': return <POSList pos={data.pos || []} onUpdate={handleUpdateData} />;
             case 'groups': return <GroupsList groups={data.groups || []} onUpdate={handleUpdateData} />;
             case 'families': return <FamiliesList families={data.families || []} onUpdate={handleUpdateData} />;
-            case 'upload': return <DataUploadView />;
+            case 'upload': return <FileConverter />;
             case 'data_io': return <DataManagementView />;
             case 'reports': return <ReportsInboxView reports={data.reports || []} onUpdate={handleUpdateData} onRefresh={refreshData} />;
             case 'backup': return <BackupView backups={data.backups || []} currentData={data} onUpdate={handleUpdateData} />;
-            case 'converter': return <FileConverter />;
             case 'settings': return (
                 <SettingsView 
                     companyName={data.companyName} 
@@ -80,8 +79,7 @@ const AdminDashboard = () => {
         { id: 'pos', label: 'Administración de P. Venta', desc: 'Gestionar los puntos de venta.', icon: HistoryIcon },
         { id: 'groups', label: 'Administración de Grupos', desc: 'Gestionar los grupos de tiendas.', icon: BuildingIcon },
         { id: 'families', label: 'Administración de Familias', desc: 'Gestionar códigos y nombres de familias.', icon: TagIcon },
-        { id: 'upload', label: 'Carga de datos', desc: 'Subir archivos CSV de artículos y tarifas.', icon: UploadIcon },
-        { id: 'converter', label: 'Conversor XLS a CSV', desc: 'Convertir archivos de Artículos y Tarifas.', icon: SparklesIcon },
+        { id: 'upload', label: 'Importar Datos', desc: 'Cargar y convertir archivos de artículos y tarifas.', icon: UploadIcon },
         { 
             id: 'data_io', 
             label: 'Exportación / Importación Datos', 

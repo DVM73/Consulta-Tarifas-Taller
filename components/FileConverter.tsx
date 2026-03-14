@@ -147,8 +147,8 @@ const FileConverter: React.FC = () => {
                 'Tienda': row[idx.tienda],
                 'Cód. Art.': String(row[idx.codArt]),
                 'Descripción': row[idx.desc],
-                'P.V.P.': parseFloat(String(row[idx.pvp]).replace(',', '.')),
-                'PVP Oferta': parseFloat(String(row[idx.pvpOferta]).replace(',', '.')) || '',
+                'P.V.P.': parseFloat(String(row[idx.pvp]).replace(',', '.')) || 0,
+                'PVP Oferta': parseFloat(String(row[idx.pvpOferta]).replace(',', '.')) || 0,
                 'Fec.Ini.Ofe.': row[idx.fecIni],
                 'Fec.Fin.Ofe.': row[idx.fecFin]
             });
