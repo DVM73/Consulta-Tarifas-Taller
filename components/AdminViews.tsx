@@ -24,8 +24,8 @@ export const ReadOnlyUsersList: FC<{ users: User[], posList: PointOfSale[] }> = 
         const sorted = [...users];
         return sorted.sort((a, b) => {
             // Buscamos la tienda asociada a la zona de cada usuario
-            const posA = posList.find(p => p.zona.toUpperCase() === a.zona.toUpperCase());
-            const posB = posList.find(p => p.zona.toUpperCase() === b.zona.toUpperCase());
+            const posA = posList.find(p => String(p.zona ?? '').toUpperCase() === String(a.zona ?? '').toUpperCase());
+            const posB = posList.find(p => String(p.zona ?? '').toUpperCase() === String(b.zona ?? '').toUpperCase());
             
             // Extraemos el código numérico. 
             // Si no tiene tienda (ej. Admin, Supervisor General), usamos 99999 para que vaya al final.
@@ -35,7 +35,7 @@ export const ReadOnlyUsersList: FC<{ users: User[], posList: PointOfSale[] }> = 
             // Si los códigos son iguales (ej: dos empleados en la misma tienda)
             if (codeA === codeB) {
                 // Ordenar alfabéticamente por nombre
-                return String(a.nombre || '').localeCompare(String(b.nombre || ''));
+                return String(a.nombre ?? '').localeCompare(String(b.nombre ?? ''));
             }
 
             // Orden ascendente por código de tienda (1, 2, 7, 10...)
@@ -177,11 +177,11 @@ export const UsersList: React.FC<{ users: User[], posList: PointOfSale[] } & Vie
     const sortedUsers = useMemo(() => {
         const sorted = [...users];
         return sorted.sort((a, b) => {
-            const posA = posList.find(p => p.zona.toUpperCase() === a.zona.toUpperCase());
-            const posB = posList.find(p => p.zona.toUpperCase() === b.zona.toUpperCase());
+            const posA = posList.find(p => String(p.zona ?? '').toUpperCase() === String(a.zona ?? '').toUpperCase());
+            const posB = posList.find(p => String(p.zona ?? '').toUpperCase() === String(b.zona ?? '').toUpperCase());
             const codeA = posA && posA.código ? parseInt(posA.código, 10) : 99999;
             const codeB = posB && posB.código ? parseInt(posB.código, 10) : 99999;
-            if (codeA === codeB) return String(a.nombre || '').localeCompare(String(b.nombre || ''));
+            if (codeA === codeB) return String(a.nombre ?? '').localeCompare(String(b.nombre ?? ''));
             return codeA - codeB;
         });
     }, [users, posList]);

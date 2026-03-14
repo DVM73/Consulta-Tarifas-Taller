@@ -111,22 +111,22 @@ const SupervisorDashboard: React.FC = () => {
 
           // 1. Filtrar artículos principales
           const mainArticles = (data?.articulos || []).filter(art => {
-              const tarifa = data?.tarifas.find(t => 
+              const tarifa = (data?.tarifas || []).find(t => 
                   t.Tienda === pos.zona && 
-                  String(t['Cód. Art.']).trim() === String(art.Referencia).trim()
+                  String(t['Cód. Art.'] ?? '').trim() === String(art.Referencia ?? '').trim()
               );
-              return tarifa && tarifa['P.V.P.'] && !FAMILIAS_ANEXO.includes(art.Familia);
+              return tarifa && tarifa['P.V.P.'] && !FAMILIAS_ANEXO.includes(String(art.Familia ?? ''));
           });
 
           // 2. Separar por Mostrador
-          const carniceriaArticles = mainArticles.filter(a => String(a.Sección) === '1').sort((a,b) => String(a.Descripción || '').localeCompare(String(b.Descripción || '')));
-          const charcuteriaArticles = mainArticles.filter(a => String(a.Sección) === '2').sort((a,b) => String(a.Descripción || '').localeCompare(String(b.Descripción || '')));
-          const otherMainArticles = mainArticles.filter(a => String(a.Sección) !== '1' && String(a.Sección) !== '2').sort((a,b) => String(a.Descripción || '').localeCompare(String(b.Descripción || '')));
+          const carniceriaArticles = mainArticles.filter(a => String(a.Sección ?? '') === '1').sort((a,b) => String(a.Descripción ?? '').localeCompare(String(b.Descripción ?? '')));
+          const charcuteriaArticles = mainArticles.filter(a => String(a.Sección ?? '') === '2').sort((a,b) => String(a.Descripción ?? '').localeCompare(String(b.Descripción ?? '')));
+          const otherMainArticles = mainArticles.filter(a => String(a.Sección ?? '') !== '1' && String(a.Sección ?? '') !== '2').sort((a,b) => String(a.Descripción ?? '').localeCompare(String(b.Descripción ?? '')));
 
           // 3. Artículos Anexo
           const appendixArticles = (data?.articulos || []).filter(art => 
-              FAMILIAS_ANEXO.includes(String(art.Familia))
-          ).sort((a, b) => String(a.Descripción || '').localeCompare(String(b.Descripción || '')));
+              FAMILIAS_ANEXO.includes(String(art.Familia ?? ''))
+          ).sort((a, b) => String(a.Descripción ?? '').localeCompare(String(b.Descripción ?? '')));
 
           // Helper para generar bloque
           const generateSectionBlock = (articles: any[], title: string, footerLabel: string) => {
@@ -199,23 +199,23 @@ const SupervisorDashboard: React.FC = () => {
         if (showPvp) headers[0].push('PVP');
 
         const allArticles = (data?.articulos || []).filter(art => {
-            return data?.tarifas.some(t => t.Tienda === selectedPos.zona && String(t['Cód. Art.']).trim() === String(art.Referencia).trim() && t['P.V.P.']);
+            return (data?.tarifas || []).some(t => t.Tienda === selectedPos.zona && String(t['Cód. Art.'] ?? '').trim() === String(art.Referencia ?? '').trim() && t['P.V.P.']);
         });
 
         if (allArticles.length === 0) { alert("⚠️ No hay artículos con precio asignado para esta tienda."); return; }
 
         allArticles.sort((a, b) => {
-            const secA = parseInt(String(a.Sección)) || 99;
-            const secB = parseInt(String(b.Sección)) || 99;
+            const secA = parseInt(String(a.Sección ?? '')) || 99;
+            const secB = parseInt(String(b.Sección ?? '')) || 99;
             if (secA !== secB) return secA - secB;
-            return String(a.Descripción || '').localeCompare(String(b.Descripción || ''));
+            return String(a.Descripción ?? '').localeCompare(String(b.Descripción ?? ''));
         });
 
         const sections: Record<string, any[]> = {};
         allArticles.forEach(art => {
             const sec = art.Sección || 'Otros';
             if (!sections[sec]) sections[sec] = [];
-            const tariff = data?.tarifas.find(t => t.Tienda === selectedPos.zona && String(t['Cód. Art.']).trim() === String(art.Referencia).trim());
+            const tariff = (data?.tarifas || []).find(t => t.Tienda === selectedPos.zona && String(t['Cód. Art.'] ?? '').trim() === String(art.Referencia ?? '').trim());
             let precioStr = '-';
             if (tariff && tariff['P.V.P.']) {
                 const num = parseFloat(String(tariff['P.V.P.']).replace(',', '.'));

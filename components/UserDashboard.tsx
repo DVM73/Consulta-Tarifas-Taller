@@ -102,16 +102,17 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
 
     const tariffsByArticle = useMemo(() => {
         const map = new Map<string, Tarifa[]>();
-        tarifas.forEach(t => {
-            const ref = String(t['Cód. Art.']).trim();
+        (tarifas || []).forEach(t => {
+            if (!t) return;
+            const ref = String(t['Cód. Art.'] ?? '').trim();
             if (!map.has(ref)) map.set(ref, []);
             map.get(ref)!.push(t);
         });
         return map;
     }, [tarifas]);
 
-    const getTariffForZone = (ref: string | number, zona: string): Tarifa | undefined => {
-        const articleTariffs = tariffsByArticle.get(String(ref).trim());
+    const getTariffForZone = (ref: string | number | undefined, zona: string): Tarifa | undefined => {
+        const articleTariffs = tariffsByArticle.get(String(ref ?? '').trim());
         if (!articleTariffs) return undefined;
         
         if (zona === 'Todas') {
@@ -121,27 +122,28 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
     };
 
     const filteredData = useMemo(() => {
-        return articulos.filter(art => {
-            const desc = String(art.Descripción || '').toLowerCase();
-            const refStr = String(art.Referencia || '').toLowerCase();
+        return (articulos || []).filter(art => {
+            if (!art) return false;
+            const desc = String(art.Descripción ?? '').toLowerCase();
+            const refStr = String(art.Referencia ?? '').toLowerCase();
             const search = searchTerm.toLowerCase();
             const matchesSearch = desc.includes(search) || refStr.includes(search);
             if (!matchesSearch) return false;
 
-            const sec = String(art.Sección || '');
+            const sec = String(art.Sección ?? '');
             let seccionStr = sec === '1' ? 'Carnicería' : (sec === '2' ? 'Charcutería' : sec);
             const matchesSeccion = seccionFilter === 'Todas' || seccionStr === seccionFilter;
             if (!matchesSeccion) return false;
 
             if (familiaFilter !== 'Todas') {
-                 const artFam = parseInt(String(art.Familia));
+                 const artFam = parseInt(String(art.Familia ?? ''));
                  const filterFam = parseInt(familiaFilter);
                  if (isNaN(artFam) || isNaN(filterFam) || artFam !== filterFam) {
                      return false;
                  }
             }
             
-            const ref = String(art.Referencia).trim();
+            const ref = String(art.Referencia ?? '').trim();
             const articleTariffs = tariffsByArticle.get(ref) || [];
 
             if (!isComparing && zonaFilter !== 'Todas') {
@@ -161,22 +163,22 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
             }
 
             if (showNoPrice) {
-                const hasAnyPrice = articleTariffs.some(t => t['P.V.P.'] !== '');
+                const hasAnyPrice = articleTariffs.some(t => t['P.V.P.'] && t['P.V.P.'] !== '');
                 if (hasAnyPrice) return false;
             }
             return true;
         });
     }, [articulos, tariffsByArticle, searchTerm, zonaFilter, showOffers, showNoPrice, seccionFilter, familiaFilter, isComparing, selectedCompareZones]);
 
-    const handleSaveNote = (ref: string, val: string) => {
-        setNotes(prev => ({ ...prev, [ref]: val }));
+    const handleSaveNote = (ref: string | number | undefined, val: string) => {
+        setNotes(prev => ({ ...prev, [String(ref ?? '')]: val }));
     };
 
     const toggleAllZones = () => setSelectedCompareZones(prev => prev.length === posList.length ? [] : posList.map(p => p.zona));
     const toggleZone = (zona: string) => setSelectedCompareZones(prev => prev.includes(zona) ? prev.filter(z => z !== zona) : [...prev, zona]);
 
     const generateCSV = () => {
-        const dataToExport = exportType === 'Completo' ? filteredData : filteredData.filter(a => notes[a.Referencia]);
+        const dataToExport = exportType === 'Completo' ? filteredData : filteredData.filter(a => notes[String(a.Referencia ?? '')]);
         
         const priceHeaders = isComparing 
             ? selectedCompareZones.map(z => `;${z}`).join('') 
@@ -197,7 +199,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                 row += `;${t?.['P.V.P.'] || '-'}`;
             }
 
-            row += `;${notes[art.Referencia] || ''}`;
+            row += `;${notes[String(art.Referencia ?? '')] || ''}`;
             return row;
         });
         
@@ -280,7 +282,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                     ))}
                 </select>
 
-                <select value={zonaFilter} disabled={isComparing} onChange={e => setZonaFilter(e.target.value)} className="bg-gray-50 dark:bg-slate-800 rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 disabled:opacity-50 font-medium cursor-pointer"><option>Todas</option>{posList.map(p=><option key={p.id}>{p.zona}</option>)}</select>
+                <select value={zonaFilter} disabled={isComparing} onChange={e => setZonaFilter(e.target.value)} className="bg-gray-50 dark:bg-slate-800 rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 disabled:opacity-50 font-medium cursor-pointer"><option>Todas</option>{(posList || []).map(p=> p ? <option key={p.id}>{p.zona}</option> : null)}</select>
                 <label className="flex items-center gap-2 text-sm cursor-pointer select-none"><input type="checkbox" checked={showOffers} onChange={e => setShowOffers(e.target.checked)} className="rounded text-brand-600"/> Ofertas</label>
                 <label className="flex items-center gap-2 text-sm cursor-pointer select-none"><input type="checkbox" checked={showNoPrice} onChange={e => setShowNoPrice(e.target.checked)} className="rounded text-brand-600"/> Sin Precio</label>
                 <label className="flex items-center gap-2 text-sm cursor-pointer select-none"><input type="checkbox" checked={isComparing} onChange={e => setIsComparing(e.target.checked)} className="rounded text-brand-600"/> Comparar</label>
@@ -292,7 +294,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                 </div>
             </header>
 
-            {isComparing && <div className="bg-white dark:bg-slate-800 p-2 flex flex-wrap gap-2 border-b dark:border-slate-700 shadow-sm z-30"><label className="flex items-center gap-2 text-sm px-2"><input type="checkbox" onChange={toggleAllZones} className="rounded text-brand-600"/> Todas las Zonas</label>{posList.map(p=><label key={p.id} className="flex items-center gap-2 text-sm px-2"><input type="checkbox" checked={selectedCompareZones.includes(p.zona)} onChange={()=>toggleZone(p.zona)} className="rounded text-brand-600"/>{p.zona}</label>)}</div>}
+            {isComparing && <div className="bg-white dark:bg-slate-800 p-2 flex flex-wrap gap-2 border-b dark:border-slate-700 shadow-sm z-30"><label className="flex items-center gap-2 text-sm px-2"><input type="checkbox" onChange={toggleAllZones} className="rounded text-brand-600"/> Todas las Zonas</label>{(posList || []).map(p=> p ? <label key={p.id} className="flex items-center gap-2 text-sm px-2"><input type="checkbox" checked={selectedCompareZones.includes(p.zona)} onChange={()=>toggleZone(p.zona)} className="rounded text-brand-600"/>{p.zona}</label> : null)}</div>}
 
             <main className="flex-1 overflow-auto bg-[#f3f4f6] dark:bg-slate-950 relative custom-scrollbar">
                 <table className="w-full text-left text-sm border-separate border-spacing-0">
@@ -316,8 +318,8 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                             const hasOffer = t && t['PVP Oferta'] && t['PVP Oferta'] !== '';
                             
                             return (
-                                <tr key={art.Referencia} className={`transition-colors border-b dark:border-slate-800 ${hasOffer ? 'bg-green-100 dark:bg-green-900/40 hover:bg-green-200 dark:hover:bg-green-900/60' : 'hover:bg-gray-50 dark:hover:bg-slate-800'}`}>
-                                    <td className="p-3 font-mono text-xs text-slate-500">{String(art.Referencia || '').replace(/\D/g,'')}</td>
+                                <tr key={art.Referencia || Math.random()} className={`transition-colors border-b dark:border-slate-800 ${hasOffer ? 'bg-green-100 dark:bg-green-900/40 hover:bg-green-200 dark:hover:bg-green-900/60' : 'hover:bg-gray-50 dark:hover:bg-slate-800'}`}>
+                                    <td className="p-3 font-mono text-xs text-slate-500">{String(art.Referencia ?? '').replace(/\D/g,'')}</td>
                                     <td className="p-3 font-bold text-slate-800 dark:text-slate-200">{art.Descripción}</td>
                                     {user?.rol !== 'Normal' && <td className="p-3 text-slate-600 dark:text-slate-400 font-medium">{formatCurrency(art['Ult. Costo'])}</td>}
                                     
@@ -360,7 +362,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                                     })}
                                     <td className="p-2">
                                         <NoteInput 
-                                            initialValue={notes[art.Referencia] || ''} 
+                                            initialValue={notes[String(art.Referencia ?? '')] || ''} 
                                             onSave={(val) => handleSaveNote(art.Referencia, val)} 
                                         />
                                     </td>
