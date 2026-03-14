@@ -60,10 +60,14 @@ const FileConverter: React.FC = () => {
 
     const findHeaderRow = (data: any[][], keywords: string[]): number => {
         for (let i = 0; i < data.length; i++) {
-            const row = data[i].map(cell => String(cell).trim());
-            if (keywords.every(kw => row.includes(kw))) return i;
+            const row = data[i].map(cell => String(cell).trim().toLowerCase().replace(/\s+/g, ' '));
+            if (keywords.every(kw => row.includes(kw.toLowerCase().replace(/\s+/g, ' ')))) return i;
         }
         return -1;
+    };
+
+    const getHeaderIndex = (headers: string[], keyword: string): number => {
+        return headers.findIndex(h => h.trim().toLowerCase().replace(/\s+/g, ' ') === keyword.toLowerCase().replace(/\s+/g, ' '));
     };
 
     const processArticulos = async (data: any[][]) => {
@@ -78,14 +82,14 @@ const FileConverter: React.FC = () => {
 
         const headers = data[headerIndex];
         const idx = {
-            ref: headers.indexOf('Referencia'),
-            desc: headers.indexOf('Descripción'),
-            costo: headers.indexOf('Ult. Costo'),
-            iva: headers.indexOf('IVA'),
-            seccion: headers.indexOf('Sección'),
-            familia: headers.indexOf('Familia'),
-            ultPro: headers.indexOf('Ult.Pro'),
-            un: headers.indexOf('UN')
+            ref: getHeaderIndex(headers, 'Referencia'),
+            desc: getHeaderIndex(headers, 'Descripción'),
+            costo: getHeaderIndex(headers, 'Ult. Costo'),
+            iva: getHeaderIndex(headers, 'IVA'),
+            seccion: getHeaderIndex(headers, 'Sección'),
+            familia: getHeaderIndex(headers, 'Familia'),
+            ultPro: getHeaderIndex(headers, 'Ult.Pro'),
+            un: getHeaderIndex(headers, 'UN')
         };
 
         const newArticulos: any[] = [];
@@ -116,7 +120,7 @@ const FileConverter: React.FC = () => {
     };
 
     const processTarifas = async (data: any[][]) => {
-        const headerKeywords = ['Cod.', 'Cód. Art.', 'P.V.P.'];
+        const headerKeywords = ['Cod.', 'Tienda', 'Cód. Art.', 'Descripción', 'P.V.P.'];
         const headerIndex = findHeaderRow(data, headerKeywords);
         
         if (headerIndex === -1) {
@@ -127,14 +131,14 @@ const FileConverter: React.FC = () => {
 
         const headers = data[headerIndex];
         const idx = {
-            cod: headers.indexOf('Cod.'),
-            tienda: headers.indexOf('Tienda'),
-            codArt: headers.indexOf('Cód. Art.'),
-            desc: headers.indexOf('Descripción'),
-            pvp: headers.indexOf('P.V.P.'),
-            pvpOferta: headers.indexOf('PVP Oferta'),
-            fecIni: headers.indexOf('Fec.Ini.Ofe.'),
-            fecFin: headers.indexOf('Fec.Fin.Ofe.')
+            cod: getHeaderIndex(headers, 'Cod.'),
+            tienda: getHeaderIndex(headers, 'Tienda'),
+            codArt: getHeaderIndex(headers, 'Cód. Art.'),
+            desc: getHeaderIndex(headers, 'Descripción'),
+            pvp: getHeaderIndex(headers, 'P.V.P.'),
+            pvpOferta: getHeaderIndex(headers, 'PVP Oferta'),
+            fecIni: getHeaderIndex(headers, 'Fec.Ini.Ofe.'),
+            fecFin: getHeaderIndex(headers, 'Fec.Fin.Ofe.')
         };
 
         const newTarifas: any[] = [];
