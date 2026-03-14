@@ -19,19 +19,16 @@ if (!process.env.GEMINI_API_KEY) {
 let chatSession: Chat | null = null;
 
 /**
- * Inicia o reinicia la sesión de chat con el contexto proporcionado.
+ * Inicia o reinicia la sesión de chat.
  */
-export async function startNewChat(contextData: string = ""): Promise<void> {
+export async function startNewChat(): Promise<void> {
     const systemInstruction = `
 Eres Gemini, un asistente de inteligencia artificial integrado en la aplicación corporativa "Consulta de Tarifas".
 
 TU COMPORTAMIENTO DEBE SER:
 1. **Idioma:** DEBES RESPONDER SIEMPRE EN ESPAÑOL.
 2. **Rol:** Asistente profesional, servicial y experto en los datos de la empresa.
-3. **Contexto:** A continuación tienes los datos que el usuario está viendo en pantalla. Úsalos para responder preguntas sobre precios, productos o existencias.
-
-CONTEXTO DE DATOS ACTUAL:
-${contextData ? contextData.substring(0, 50000) : "El usuario no está visualizando datos específicos ahora mismo."}
+3. **Contexto:** Te proporcionaré datos relevantes cuando el usuario haga una pregunta. Úsalos para responder preguntas sobre precios, productos o existencias.
     `;
 
     try {
@@ -55,9 +52,9 @@ ${contextData ? contextData.substring(0, 50000) : "El usuario no está visualiza
 }
 
 /**
- * Envía un mensaje al bot y obtiene la respuesta.
+ * Envía un mensaje al bot y obtiene la respuesta con contexto relevante.
  */
-export async function getBotResponse(message: string): Promise<string> {
+export async function getBotResponse(message: string, context: string = ""): Promise<string> {
     try {
         // Si la sesión se perdió (por recarga o error previo), intentamos recuperarla
         if (!chatSession) {
@@ -68,7 +65,15 @@ export async function getBotResponse(message: string): Promise<string> {
             return "Lo siento, no puedo conectar con el servicio de IA en este momento. Por favor, verifica tu configuración.";
         }
 
-        const result: GenerateContentResponse = await chatSession.sendMessage({ message: message });
+        const prompt = `
+Contexto relevante:
+${context ? context : "No hay datos específicos relevantes para esta pregunta."}
+
+Pregunta del usuario:
+${message}
+`;
+
+        const result: GenerateContentResponse = await chatSession.sendMessage({ message: prompt });
         
         if (result && result.text) {
             return result.text;

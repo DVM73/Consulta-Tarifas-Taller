@@ -20,10 +20,10 @@ const Chatbot: React.FC<ChatbotProps> = ({ contextData, initialMessage }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const hasInitialized = useRef(false);
 
-  // Inicializar el chat con el contexto cuando se monta o cambia el contexto
+  // Inicializar el chat cuando se monta
   useEffect(() => {
       const initChat = async () => {
-          await startNewChat(contextData);
+          await startNewChat();
           
           // Si es la primera vez, ponemos el mensaje de bienvenida
           if (!hasInitialized.current) {
@@ -45,7 +45,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ contextData, initialMessage }) => {
       };
       initChat();
       // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contextData]); // Re-inicializar si los datos de fondo cambian drásticamente
+  }, []); // Ya no depende de contextData
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -61,7 +61,18 @@ const Chatbot: React.FC<ChatbotProps> = ({ contextData, initialMessage }) => {
       setMessages((prev) => [...prev, userMessage]);
       setIsLoading(true);
       try {
-          const botResponseText = await getBotResponse(text);
+          // Búsqueda inteligente
+          let relevantContext = "";
+          if (contextData) {
+              const data = JSON.parse(contextData);
+              const relevantData = data.filter((item: any) => 
+                  (item.Descripción && item.Descripción.toLowerCase().includes(text.toLowerCase())) || 
+                  (item.Referencia && item.Referencia.toLowerCase().includes(text.toLowerCase()))
+              );
+              relevantContext = JSON.stringify(relevantData.slice(0, 20));
+          }
+          
+          const botResponseText = await getBotResponse(text, relevantContext);
           const botMessage: Message = {
               id: `bot-${Date.now()}`,
               text: botResponseText,
@@ -97,7 +108,18 @@ const Chatbot: React.FC<ChatbotProps> = ({ contextData, initialMessage }) => {
     setIsLoading(true);
 
     try {
-      const botResponseText = await getBotResponse(currentInput);
+      // Búsqueda inteligente
+      let relevantContext = "";
+      if (contextData) {
+          const data = JSON.parse(contextData);
+          const relevantData = data.filter((item: any) => 
+              (item.Descripción && item.Descripción.toLowerCase().includes(currentInput.toLowerCase())) || 
+              (item.Referencia && item.Referencia.toLowerCase().includes(currentInput.toLowerCase()))
+          );
+          relevantContext = JSON.stringify(relevantData.slice(0, 20));
+      }
+
+      const botResponseText = await getBotResponse(currentInput, relevantContext);
       const botMessage: Message = {
         id: `bot-${Date.now()}`,
         text: botResponseText,
@@ -106,13 +128,13 @@ const Chatbot: React.FC<ChatbotProps> = ({ contextData, initialMessage }) => {
       };
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
-      const errorMessage: Message = {
-        id: `error-${Date.now()}`,
-        text: 'Lo siento, he encontrado un error. Por favor, inténtalo de nuevo.',
-        sender: 'bot',
-        timestamp: Date.now(),
-      };
-      setMessages((prev) => [...prev, errorMessage]);
+      console.error("Error en chat:", error);
+      setMessages((prev) => [...prev, {
+          id: `error-${Date.now()}`,
+          text: "Lo siento, ha ocurrido un error al procesar tu mensaje.",
+          sender: 'bot',
+          timestamp: Date.now(),
+      }]);
     } finally {
       setIsLoading(false);
     }
