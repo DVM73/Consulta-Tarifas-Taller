@@ -36,6 +36,7 @@ ${contextData ? contextData.substring(0, 50000) : "El usuario no está visualiza
 
     try {
         if (!ai) {
+            console.error("❌ ERROR: GoogleGenAI (ai) es null al intentar iniciar el chat.");
             throw new Error("GoogleGenAI no está inicializado.");
         }
         // Intentamos crear el chat con el modelo principal
@@ -48,7 +49,7 @@ ${contextData ? contextData.substring(0, 50000) : "El usuario no está visualiza
         });
         console.log("✅ Sesión de chat IA iniciada correctamente.");
     } catch (error) {
-        console.error("❌ Error al iniciar sesión de chat:", error);
+        console.error("❌ Error detallado al iniciar sesión de chat:", error);
         chatSession = null;
     }
 }
@@ -82,9 +83,9 @@ export async function getBotResponse(message: string): Promise<string> {
         chatSession = null;
 
         if (error.message && error.message.includes('API key')) {
-            return "Error de configuración: La API Key no es válida o no se ha encontrado. Revisa la consola.";
+            return "Error de configuración: La API Key no es válida o no se ha encontrado. Revisa la consola del navegador.";
         }
         
-        return "Ha ocurrido un error al procesar tu solicitud. Inténtalo de nuevo en unos segundos.";
+        return `Ha ocurrido un error al procesar tu solicitud: ${error.message || "Error desconocido"}. Inténtalo de nuevo en unos segundos.`;
     }
 }
