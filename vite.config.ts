@@ -58,6 +58,7 @@ export default defineConfig(({ mode }) => {
       'process.env': {}, 
       // Inyección robusta de variables
       'process.env.API_KEY': findEnv(env, 'API_KEY'),
+      'process.env.GEMINI_API_KEY': findEnv(env, 'GEMINI_API_KEY'),
       'process.env.FIREBASE_API_KEY': findEnv(env, 'FIREBASE_API_KEY'),
       'process.env.FIREBASE_AUTH_DOMAIN': findEnv(env, 'FIREBASE_AUTH_DOMAIN'),
       'process.env.FIREBASE_PROJECT_ID': findEnv(env, 'FIREBASE_PROJECT_ID'),

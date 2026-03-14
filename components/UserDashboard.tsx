@@ -89,10 +89,10 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
 
     useEffect(() => {
         getAppData().then(data => {
-            setTarifas(data.tarifas || []);
-            setArticulos(data.articulos || []);
-            setPosList(data.pos || []);
-            setFamilies(data.families || []);
+            setTarifas(data?.tarifas || []);
+            setArticulos(data?.articulos || []);
+            setPosList(data?.pos || []);
+            setFamilies(data?.families || []);
             setLoading(false);
         }).catch(err => {
             console.error("Error al cargar los datos del panel de usuario:", err);
@@ -120,6 +120,9 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
         }
         return articleTariffs.find(t => t.Tienda === zona);
     };
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 100;
 
     const filteredData = useMemo(() => {
         return (articulos || []).filter(art => {
@@ -169,6 +172,18 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
             return true;
         });
     }, [articulos, tariffsByArticle, searchTerm, zonaFilter, showOffers, showNoPrice, seccionFilter, familiaFilter, isComparing, selectedCompareZones]);
+
+    // Reset page when filters change
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, zonaFilter, showOffers, showNoPrice, seccionFilter, familiaFilter, isComparing, selectedCompareZones]);
+
+    const paginatedData = useMemo(() => {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        return filteredData.slice(startIndex, startIndex + itemsPerPage);
+    }, [filteredData, currentPage]);
+
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
     const handleSaveNote = (ref: string | number | undefined, val: string) => {
         setNotes(prev => ({ ...prev, [String(ref ?? '')]: val }));
@@ -313,7 +328,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                         </tr>
                     </thead>
                     <tbody className="bg-white dark:bg-slate-900 divide-y dark:divide-slate-800">
-                        {filteredData.map(art => {
+                        {paginatedData.map(art => {
                             const t = getTariffForZone(art.Referencia, zonaFilter);
                             const hasOffer = t && t['PVP Oferta'] && t['PVP Oferta'] !== '';
                             
@@ -371,6 +386,57 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                         })}
                     </tbody>
                 </table>
+                
+                {totalPages > 1 && (
+                    <div className="flex items-center justify-between px-4 py-3 bg-white dark:bg-slate-900 border-t dark:border-slate-800 sticky bottom-0 z-20">
+                        <div className="flex flex-1 justify-between sm:hidden">
+                            <button
+                                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                disabled={currentPage === 1}
+                                className="relative inline-flex items-center rounded-md border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50"
+                            >
+                                Anterior
+                            </button>
+                            <button
+                                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                disabled={currentPage === totalPages}
+                                className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50"
+                            >
+                                Siguiente
+                            </button>
+                        </div>
+                        <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                            <div>
+                                <p className="text-sm text-gray-700 dark:text-gray-300">
+                                    Mostrando <span className="font-medium">{((currentPage - 1) * itemsPerPage) + 1}</span> a <span className="font-medium">{Math.min(currentPage * itemsPerPage, filteredData.length)}</span> de <span className="font-medium">{filteredData.length}</span> resultados
+                                </p>
+                            </div>
+                            <div>
+                                <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                                    <button
+                                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                        disabled={currentPage === 1}
+                                        className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
+                                    >
+                                        <span className="sr-only">Anterior</span>
+                                        <ArrowLeftIcon className="h-5 w-5" aria-hidden="true" />
+                                    </button>
+                                    <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 ring-1 ring-inset ring-gray-300 dark:ring-slate-700 focus:outline-offset-0">
+                                        Página {currentPage} de {totalPages}
+                                    </span>
+                                    <button
+                                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                        disabled={currentPage === totalPages}
+                                        className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
+                                    >
+                                        <span className="sr-only">Siguiente</span>
+                                        <ArrowLeftIcon className="h-5 w-5 rotate-180" aria-hidden="true" />
+                                    </button>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </main>
 
             {isExportModalOpen && (

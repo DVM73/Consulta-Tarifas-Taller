@@ -2,14 +2,19 @@
 import { GoogleGenAI, Chat, GenerateContentResponse } from "@google/genai";
 
 // DIAGNÓSTICO DE INICIO
-if (!process.env.API_KEY) {
-    console.error("❌ ERROR CRÍTICO: No se ha detectado la API_KEY en el entorno.");
-} else {
-    console.log("🔑 Estado API Key: Detectada (Longitud: " + process.env.API_KEY.length + ")");
-}
+let ai: GoogleGenAI | null = null;
 
-// Inicialización estricta según las directrices de la plataforma.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+if (!process.env.GEMINI_API_KEY) {
+    console.error("❌ ERROR CRÍTICO: No se ha detectado la GEMINI_API_KEY en el entorno.");
+} else {
+    console.log("🔑 Estado API Key: Detectada (Longitud: " + process.env.GEMINI_API_KEY.length + ")");
+    // Inicialización estricta según las directrices de la plataforma.
+    try {
+        ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    } catch (e) {
+        console.error("❌ Error al inicializar GoogleGenAI:", e);
+    }
+}
 
 let chatSession: Chat | null = null;
 
@@ -30,6 +35,9 @@ ${contextData ? contextData.substring(0, 50000) : "El usuario no está visualiza
     `;
 
     try {
+        if (!ai) {
+            throw new Error("GoogleGenAI no está inicializado.");
+        }
         // Intentamos crear el chat con el modelo principal
         chatSession = ai.chats.create({
             model: 'gemini-3-flash-preview',

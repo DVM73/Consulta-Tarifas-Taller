@@ -55,12 +55,12 @@ const SupervisorDashboard: React.FC = () => {
   useEffect(() => {
       getAppData().then(appData => {
           setData(appData);
-          if (appData.pos && appData.pos.length > 0) {
+          if (appData?.pos && appData.pos.length > 0) {
               setTarPosId(appData.pos[0].id);
           }
           
           // Lógica de Notificación de Actualización (ROBUSTA)
-          if (appData.lastUpdated) {
+          if (appData?.lastUpdated) {
              const cleanDate = appData.lastUpdated.replace(/[^a-zA-Z0-9]/g, '');
              const storageKey = `supervisor_update_ack_${cleanDate}`;
              const hasSeenThisUpdate = localStorage.getItem(storageKey);

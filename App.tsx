@@ -4,6 +4,7 @@ import LoginScreen from './components/LoginScreen';
 import { User, AppData } from './types';
 import { getAppData } from './services/dataService';
 import { AppContext } from './context/AppContext';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Importación Lazy para optimizar carga y evitar ciclos
 const UserDashboard = React.lazy(() => import('./components/UserDashboard'));
@@ -117,11 +118,13 @@ const App: React.FC = () => {
     }
 
     return (
-        <Suspense fallback={<LoadingFallback />}>
-            {user.rol === 'admin' && <AdminDashboard />}
-            {user.rol === 'Supervisor' && <SupervisorDashboard />}
-            {user.rol !== 'admin' && user.rol !== 'Supervisor' && <UserDashboard />}
-        </Suspense>
+        <ErrorBoundary>
+            <Suspense fallback={<LoadingFallback />}>
+                {user.rol === 'admin' && <AdminDashboard />}
+                {user.rol === 'Supervisor' && <SupervisorDashboard />}
+                {user.rol !== 'admin' && user.rol !== 'Supervisor' && <UserDashboard />}
+            </Suspense>
+        </ErrorBoundary>
     );
   };
 
