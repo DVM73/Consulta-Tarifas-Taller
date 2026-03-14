@@ -1,0 +1,10 @@
+# Bloqueo de claves y configuraciones locales
+.env
+.env.txt
+env.txt
+.env.local
+
+# Carpetas del sistema y temporales
+node_modules/
+dist/
+.DS_Store
