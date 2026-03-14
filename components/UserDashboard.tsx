@@ -121,9 +121,6 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
         return articleTariffs.find(t => t.Tienda === zona);
     };
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 100;
-
     const filteredData = useMemo(() => {
         return (articulos || []).filter(art => {
             if (!art) return false;
@@ -175,15 +172,12 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
 
     // Reset page when filters change
     useEffect(() => {
-        setCurrentPage(1);
+        // No pagination
     }, [searchTerm, zonaFilter, showOffers, showNoPrice, seccionFilter, familiaFilter, isComparing, selectedCompareZones]);
 
-    const paginatedData = useMemo(() => {
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        return filteredData.slice(startIndex, startIndex + itemsPerPage);
-    }, [filteredData, currentPage]);
+    const paginatedData = filteredData; // No pagination
 
-    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    const totalPages = 1; // No pagination
 
     const handleSaveNote = (ref: string | number | undefined, val: string) => {
         setNotes(prev => ({ ...prev, [String(ref ?? '')]: val }));

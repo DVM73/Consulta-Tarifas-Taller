@@ -70,7 +70,13 @@ const Chatbot: React.FC<ChatbotProps> = ({ contextData, initialMessage }) => {
           };
           setMessages((prev) => [...prev, botMessage]);
       } catch (error) {
-           // Error handling
+           console.error("Error en chat:", error);
+           setMessages((prev) => [...prev, {
+               id: `error-${Date.now()}`,
+               text: "Lo siento, ha ocurrido un error al procesar tu mensaje.",
+               sender: 'bot',
+               timestamp: Date.now(),
+           }]);
       } finally {
           setIsLoading(false);
       }
