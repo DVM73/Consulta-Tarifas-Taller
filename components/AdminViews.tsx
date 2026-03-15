@@ -14,7 +14,26 @@ import SettingsIcon from './icons/SettingsIcon';
 import HelpIcon from './icons/HelpIcon';
 import SparklesIcon from './icons/SparklesIcon';
 import ArrowDownIcon from './icons/ArrowDownIcon';
+import UserIcon from './icons/UserIcon';
+import ArrowLeftIcon from './icons/ArrowLeftIcon';
+import BuildingIcon from './icons/BuildingIcon';
+import TagIcon from './icons/TagIcon';
 import { getAppData, saveAllData, overwriteAllData } from '../services/dataService';
+
+// --- HELPERS ---
+const exportToCSV = (data: any[], filename: string) => {
+    if (!data || data.length === 0) return;
+    const headers = Object.keys(data[0]).filter(k => k !== 'id' && k !== 'clave');
+    const csvContent = [
+        headers.join(';'),
+        ...data.map(row => headers.map(h => String(row[h] ?? '').replace(/;/g, ',').replace(/"/g, '""')).join(';'))
+    ].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+};
 
 // --- VISTAS DE SOLO LECTURA PARA SUPERVISOR ---
 
@@ -174,6 +193,9 @@ export const UsersList: React.FC<{ users: User[], posList: PointOfSale[] } & Vie
         verPVP: false 
     });
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+
     const sortedUsers = useMemo(() => {
         const sorted = [...users];
         return sorted.sort((a, b) => {
@@ -185,6 +207,13 @@ export const UsersList: React.FC<{ users: User[], posList: PointOfSale[] } & Vie
             return codeA - codeB;
         });
     }, [users, posList]);
+
+    const totalPages = Math.ceil(sortedUsers.length / itemsPerPage) || 1;
+    const paginatedUsers = sortedUsers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [users.length]);
 
     const handleZonaChange = (zona: string) => {
         const foundPos = posList.find(p => p.zona === zona);
@@ -298,8 +327,11 @@ export const UsersList: React.FC<{ users: User[], posList: PointOfSale[] } & Vie
             />
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden animate-fade-in flex flex-col max-h-[80vh]">
                 <div className="p-6 flex justify-between items-center border-b dark:border-slate-700 shrink-0">
-                    <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight">Administración de Usuarios</h2>
-                    <button onClick={openCreate} className="bg-brand-600 text-white px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center gap-2"><PlusIcon className="w-4 h-4"/> Nuevo Usuario</button>
+                    <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2"><UserIcon className="w-5 h-5"/> Administración de Usuarios</h2>
+                    <div className="flex items-center gap-3">
+                        <button onClick={() => exportToCSV(sortedUsers, 'usuarios.csv')} className="text-slate-400 hover:text-brand-600 transition-colors" title="Exportar CSV"><ExportIcon className="w-5 h-5"/></button>
+                        <button onClick={openCreate} className="bg-brand-600 text-white px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center gap-2"><PlusIcon className="w-4 h-4"/> Nuevo Usuario</button>
+                    </div>
                 </div>
                 <div className="overflow-auto custom-scrollbar">
                     <table className="w-full text-left text-sm border-separate border-spacing-0">
@@ -315,7 +347,7 @@ export const UsersList: React.FC<{ users: User[], posList: PointOfSale[] } & Vie
                             </tr>
                         </thead>
                         <tbody className="divide-y dark:divide-slate-700">
-                            {sortedUsers.map(u => {
+                            {paginatedUsers.map(u => {
                                 const uPos = posList.find(p => p.zona === u.zona);
                                 return (
                                     <tr key={u.id} className="hover:bg-gray-50/50 dark:hover:bg-slate-900/50 transition-colors">
@@ -337,12 +369,42 @@ export const UsersList: React.FC<{ users: User[], posList: PointOfSale[] } & Vie
                         </tbody>
                     </table>
                 </div>
+                {totalPages > 1 && (
+                    <div className="p-4 border-t dark:border-slate-700 flex justify-between items-center bg-gray-50/50 dark:bg-slate-900/50 shrink-0">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Página {currentPage} de {totalPages}</p>
+                        <div className="flex gap-2">
+                            <button 
+                                onClick={() => setCurrentPage(p => Math.max(1, p - 1))} 
+                                disabled={currentPage === 1}
+                                className="p-1 rounded border dark:border-slate-700 disabled:opacity-30 hover:bg-white dark:hover:bg-slate-800 transition-colors"
+                            >
+                                <ArrowLeftIcon className="w-4 h-4"/>
+                            </button>
+                            <button 
+                                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} 
+                                disabled={currentPage === totalPages}
+                                className="p-1 rounded border dark:border-slate-700 disabled:opacity-30 hover:bg-white dark:hover:bg-slate-800 transition-colors"
+                            >
+                                <ArrowLeftIcon className="w-4 h-4 rotate-180"/>
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     );
 };
 
 export const POSList: React.FC<{ pos: PointOfSale[] } & ViewProps> = ({ pos, onUpdate }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+    const totalPages = Math.ceil(pos.length / itemsPerPage) || 1;
+    const paginatedPOS = pos.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [pos.length]);
+
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingPOS, setEditingPOS] = useState<PointOfSale | null>(null);
     const [deleteConfig, setDeleteConfig] = useState({ isOpen: false, id: '', name: '' });
@@ -442,8 +504,11 @@ export const POSList: React.FC<{ pos: PointOfSale[] } & ViewProps> = ({ pos, onU
             />
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden animate-fade-in flex flex-col max-h-[80vh]">
                 <div className="p-6 flex justify-between items-center border-b dark:border-slate-700 shrink-0">
-                    <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight">Administración de Puntos de Venta</h2>
-                    <button onClick={openCreate} className="bg-brand-600 text-white px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center gap-2"><PlusIcon className="w-4 h-4"/> Añadir Tienda</button>
+                    <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2"><BuildingIcon className="w-5 h-5"/> Administración de Puntos de Venta</h2>
+                    <div className="flex items-center gap-3">
+                        <button onClick={() => exportToCSV(pos, 'tiendas.csv')} className="text-slate-400 hover:text-brand-600 transition-colors" title="Exportar CSV"><ExportIcon className="w-5 h-5"/></button>
+                        <button onClick={openCreate} className="bg-brand-600 text-white px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center gap-2"><PlusIcon className="w-4 h-4"/> Añadir Tienda</button>
+                    </div>
                 </div>
                 <div className="overflow-auto custom-scrollbar">
                     <table className="w-full text-left text-sm border-separate border-spacing-0">
@@ -458,7 +523,7 @@ export const POSList: React.FC<{ pos: PointOfSale[] } & ViewProps> = ({ pos, onU
                             </tr>
                         </thead>
                         <tbody className="divide-y dark:divide-slate-700">
-                            {pos.map(p => (
+                            {paginatedPOS.map(p => (
                                 <tr key={p.id} className="hover:bg-gray-50/50 dark:hover:bg-slate-900/50 transition-colors">
                                     <td className="p-4 font-bold">{p.código}</td>
                                     <td className="p-4 font-bold text-slate-700 dark:text-slate-200">{p.zona}</td>
@@ -476,12 +541,42 @@ export const POSList: React.FC<{ pos: PointOfSale[] } & ViewProps> = ({ pos, onU
                         </tbody>
                     </table>
                 </div>
+                {totalPages > 1 && (
+                    <div className="p-4 border-t dark:border-slate-700 flex justify-between items-center bg-gray-50/50 dark:bg-slate-900/50 shrink-0">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Página {currentPage} de {totalPages}</p>
+                        <div className="flex gap-2">
+                            <button 
+                                onClick={() => setCurrentPage(p => Math.max(1, p - 1))} 
+                                disabled={currentPage === 1}
+                                className="p-1 rounded border dark:border-slate-700 disabled:opacity-30 hover:bg-white dark:hover:bg-slate-800 transition-colors"
+                            >
+                                <ArrowLeftIcon className="w-4 h-4"/>
+                            </button>
+                            <button 
+                                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} 
+                                disabled={currentPage === totalPages}
+                                className="p-1 rounded border dark:border-slate-700 disabled:opacity-30 hover:bg-white dark:hover:bg-slate-800 transition-colors"
+                            >
+                                <ArrowLeftIcon className="w-4 h-4 rotate-180"/>
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     );
 };
 
 export const GroupsList: React.FC<{ groups: Group[] } & ViewProps> = ({ groups, onUpdate }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+    const totalPages = Math.ceil(groups.length / itemsPerPage) || 1;
+    const paginatedGroups = groups.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [groups.length]);
+
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingGroup, setEditingGroup] = useState<Group | null>(null);
     const [name, setName] = useState('');
@@ -526,11 +621,14 @@ export const GroupsList: React.FC<{ groups: Group[] } & ViewProps> = ({ groups, 
             />
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden animate-fade-in max-w-2xl mx-auto flex flex-col max-h-[80vh]">
                 <div className="p-6 flex justify-between items-center border-b dark:border-slate-700 shrink-0">
-                    <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight">Gestión de Grupos</h2>
-                    <button onClick={openCreate} className="bg-brand-600 text-white px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center gap-2"><PlusIcon className="w-4 h-4"/> Nuevo Grupo</button>
+                    <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2"><BuildingIcon className="w-5 h-5"/> Gestión de Grupos</h2>
+                    <div className="flex items-center gap-3">
+                        <button onClick={() => exportToCSV(groups, 'grupos.csv')} className="text-slate-400 hover:text-brand-600 transition-colors" title="Exportar CSV"><ExportIcon className="w-5 h-5"/></button>
+                        <button onClick={openCreate} className="bg-brand-600 text-white px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center gap-2"><PlusIcon className="w-4 h-4"/> Nuevo Grupo</button>
+                    </div>
                 </div>
                 <div className="overflow-auto custom-scrollbar p-4 divide-y dark:divide-slate-700">
-                    {groups.map(g => (
+                    {paginatedGroups.map(g => (
                         <div key={g.id} className="py-4 flex justify-between items-center px-4 hover:bg-gray-50/50 dark:hover:bg-slate-900/30 transition-all rounded-lg">
                             <span className="font-bold text-slate-700 dark:text-slate-200">{g.nombre}</span>
                             <div className="flex gap-4">
@@ -540,12 +638,42 @@ export const GroupsList: React.FC<{ groups: Group[] } & ViewProps> = ({ groups, 
                         </div>
                     ))}
                 </div>
+                {totalPages > 1 && (
+                    <div className="p-4 border-t dark:border-slate-700 flex justify-between items-center bg-gray-50/50 dark:bg-slate-900/50 shrink-0">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Página {currentPage} de {totalPages}</p>
+                        <div className="flex gap-2">
+                            <button 
+                                onClick={() => setCurrentPage(p => Math.max(1, p - 1))} 
+                                disabled={currentPage === 1}
+                                className="p-1 rounded border dark:border-slate-700 disabled:opacity-30 hover:bg-white dark:hover:bg-slate-800 transition-colors"
+                            >
+                                <ArrowLeftIcon className="w-4 h-4"/>
+                            </button>
+                            <button 
+                                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} 
+                                disabled={currentPage === totalPages}
+                                className="p-1 rounded border dark:border-slate-700 disabled:opacity-30 hover:bg-white dark:hover:bg-slate-800 transition-colors"
+                            >
+                                <ArrowLeftIcon className="w-4 h-4 rotate-180"/>
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     );
 };
 
 export const FamiliesList: React.FC<{ families: Family[] } & ViewProps> = ({ families, onUpdate }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+    const totalPages = Math.ceil(families.length / itemsPerPage) || 1;
+    const paginatedFamilies = families.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [families.length]);
+
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingFamily, setEditingFamily] = useState<Family | null>(null);
     const [formData, setFormData] = useState({ id: '', nombre: '' });
@@ -599,8 +727,11 @@ export const FamiliesList: React.FC<{ families: Family[] } & ViewProps> = ({ fam
             />
             <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden animate-fade-in max-w-3xl mx-auto flex flex-col max-h-[80vh]">
                 <div className="p-6 flex justify-between items-center border-b dark:border-slate-700 shrink-0">
-                    <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight">Familias de Artículos</h2>
-                    <button onClick={openCreate} className="bg-brand-600 text-white px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center gap-2"><PlusIcon className="w-4 h-4"/> Nueva Familia</button>
+                    <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2"><TagIcon className="w-5 h-5"/> Familias de Artículos</h2>
+                    <div className="flex items-center gap-3">
+                        <button onClick={() => exportToCSV(families, 'familias.csv')} className="text-slate-400 hover:text-brand-600 transition-colors" title="Exportar CSV"><ExportIcon className="w-5 h-5"/></button>
+                        <button onClick={openCreate} className="bg-brand-600 text-white px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center gap-2"><PlusIcon className="w-4 h-4"/> Nueva Familia</button>
+                    </div>
                 </div>
                 <div className="overflow-auto custom-scrollbar">
                     <table className="w-full text-left text-sm border-separate border-spacing-0">
@@ -612,7 +743,7 @@ export const FamiliesList: React.FC<{ families: Family[] } & ViewProps> = ({ fam
                             </tr>
                         </thead>
                         <tbody className="divide-y dark:divide-slate-700">
-                            {families.map(f => (
+                            {paginatedFamilies.map(f => (
                                 <tr key={f.id} className="hover:bg-gray-50/50 dark:hover:bg-slate-900/50 transition-colors">
                                     <td className="p-4 font-mono font-bold text-slate-500">{f.id}</td>
                                     <td className="p-4 font-bold text-slate-800 dark:text-slate-200">{f.nombre}</td>
@@ -627,6 +758,27 @@ export const FamiliesList: React.FC<{ families: Family[] } & ViewProps> = ({ fam
                         </tbody>
                     </table>
                 </div>
+                {totalPages > 1 && (
+                    <div className="p-4 border-t dark:border-slate-700 flex justify-between items-center bg-gray-50/50 dark:bg-slate-900/50 shrink-0">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Página {currentPage} de {totalPages}</p>
+                        <div className="flex gap-2">
+                            <button 
+                                onClick={() => setCurrentPage(p => Math.max(1, p - 1))} 
+                                disabled={currentPage === 1}
+                                className="p-1 rounded border dark:border-slate-700 disabled:opacity-30 hover:bg-white dark:hover:bg-slate-800 transition-colors"
+                            >
+                                <ArrowLeftIcon className="w-4 h-4"/>
+                            </button>
+                            <button 
+                                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} 
+                                disabled={currentPage === totalPages}
+                                className="p-1 rounded border dark:border-slate-700 disabled:opacity-30 hover:bg-white dark:hover:bg-slate-800 transition-colors"
+                            >
+                                <ArrowLeftIcon className="w-4 h-4 rotate-180"/>
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     );
@@ -784,6 +936,15 @@ export const DataUploadView: React.FC = () => {
 // Componente Unificado de Gestión de Datos (Exportación e Importación) - MOVIDO A DataManagementView.tsx
 
 export const ReportsInboxView: React.FC<{ reports: Report[], onUpdate: any, onRefresh: any }> = ({ reports, onUpdate, onRefresh }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+    const totalPages = Math.ceil(reports.length / itemsPerPage) || 1;
+    const paginatedReports = reports.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [reports.length]);
+
     const [deleteConfig, setDeleteConfig] = useState({ isOpen: false, id: '', name: '' });
 
     const markAsRead = (r: Report) => {
@@ -792,8 +953,16 @@ export const ReportsInboxView: React.FC<{ reports: Report[], onUpdate: any, onRe
     };
 
     const downloadCSV = (r: Report) => {
+        let content = r.csvContent;
+        // Reparación de cabeceras duplicadas (Fix para reportes antiguos)
+        const lines = content.split('\n');
+        if (lines.length > 2 && lines[0].trim() === lines[1].trim() && lines[0].includes(';')) {
+            console.log("🔧 Reparando cabecera duplicada en reporte...");
+            content = lines.slice(1).join('\n');
+        }
+
         const link = document.createElement("a");
-        link.href = URL.createObjectURL(new Blob([r.csvContent], { type: 'text/csv;charset=utf-8;' }));
+        link.href = URL.createObjectURL(new Blob([content], { type: 'text/csv;charset=utf-8;' }));
         link.download = `reporte_${r.supervisorName}_${r.date.replace(/\//g,'-')}.csv`;
         link.click();
         markAsRead(r);
@@ -837,7 +1006,7 @@ export const ReportsInboxView: React.FC<{ reports: Report[], onUpdate: any, onRe
                                     <td colSpan={6} className="p-10 text-center text-slate-400 italic">No hay reportes recibidos.</td>
                                 </tr>
                             )}
-                            {reports.map(r => (
+                            {paginatedReports.map(r => (
                                 <tr key={r.id} className="hover:bg-gray-50/50 dark:hover:bg-slate-900/50 transition-colors">
                                     <td className="p-4">
                                         {r.read ? (
@@ -871,6 +1040,27 @@ export const ReportsInboxView: React.FC<{ reports: Report[], onUpdate: any, onRe
                         </tbody>
                     </table>
                 </div>
+                {totalPages > 1 && (
+                    <div className="p-4 border-t dark:border-slate-700 flex justify-between items-center bg-gray-50/50 dark:bg-slate-900/50 shrink-0">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Página {currentPage} de {totalPages}</p>
+                        <div className="flex gap-2">
+                            <button 
+                                onClick={() => setCurrentPage(p => Math.max(1, p - 1))} 
+                                disabled={currentPage === 1}
+                                className="p-1 rounded border dark:border-slate-700 disabled:opacity-30 hover:bg-white dark:hover:bg-slate-800 transition-colors"
+                            >
+                                <ArrowLeftIcon className="w-4 h-4"/>
+                            </button>
+                            <button 
+                                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} 
+                                disabled={currentPage === totalPages}
+                                className="p-1 rounded border dark:border-slate-700 disabled:opacity-30 hover:bg-white dark:hover:bg-slate-800 transition-colors"
+                            >
+                                <ArrowLeftIcon className="w-4 h-4 rotate-180"/>
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         </>
     );

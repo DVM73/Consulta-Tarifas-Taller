@@ -88,6 +88,10 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
     const [exportType, setExportType] = useState<'Completo' | 'Solo Notas'>('Completo');
     const [isSending, setIsSending] = useState(false);
     
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(50);
+    const [showExitModal, setShowExitModal] = useState(false);
+    
     const [showSessionModal, setShowSessionModal] = useState(false);
     const [showOverwriteModal, setShowOverwriteModal] = useState(false);
     const [previousSession, setPreviousSession] = useState<any>(null);
@@ -231,12 +235,12 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
 
     // Reset page when filters change
     useEffect(() => {
-        // No pagination
+        setCurrentPage(1);
     }, [searchTerm, zonaFilter, showOffers, showNoPrice, seccionFilter, familiaFilter, isComparing, selectedCompareZones]);
 
-    const paginatedData = filteredData; // No pagination
+    const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-    const totalPages = 1; // No pagination
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage) || 1;
 
     const handleSaveNote = (ref: string | number | undefined, val: string) => {
         setNotes(prev => ({ ...prev, [String(ref ?? '')]: val }));
@@ -366,6 +370,14 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                 <label className="flex items-center gap-2 text-sm cursor-pointer select-none"><input type="checkbox" checked={showNoPrice} onChange={e => setShowNoPrice(e.target.checked)} className="rounded text-brand-600"/> Sin Precio</label>
                 <label className="flex items-center gap-2 text-sm cursor-pointer select-none"><input type="checkbox" checked={isComparing} onChange={e => setIsComparing(e.target.checked)} className="rounded text-brand-600"/> Comparar</label>
                 <div className="ml-auto flex items-center gap-4 pl-4 border-l dark:border-slate-700">
+                    {onBack && (
+                        <button 
+                            onClick={() => Object.keys(notes).length > 0 ? setShowExitModal(true) : onBack()} 
+                            className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
+                        >
+                            <ArrowLeftIcon className="w-4 h-4" /> Volver
+                        </button>
+                    )}
                     <button onClick={() => setIsBotOpen(!isBotOpen)} className="text-slate-500 hover:text-brand-600 transition-colors"><SparklesIcon/></button>
                     <button onClick={() => setIsExportModalOpen(true)} className="text-slate-500 hover:text-brand-600 transition-colors"><UploadIcon/></button>
                     <ThemeToggle/>
@@ -381,6 +393,23 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                         <div className="flex gap-3">
                             <button onClick={() => setShowOverwriteModal(false)} className="flex-1 px-4 py-2 bg-gray-200 dark:bg-slate-700 rounded-lg text-slate-800 dark:text-slate-200">Cancelar</button>
                             <button onClick={performSave} className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg">Sobrescribir</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showExitModal && (
+                <div className="fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm z-[100]">
+                    <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-xl shadow-2xl p-6">
+                        <div className="w-12 h-12 bg-amber-50 dark:bg-amber-900/20 rounded-full flex items-center justify-center text-amber-600 mb-4 mx-auto">
+                            <Save className="w-6 h-6"/>
+                        </div>
+                        <h2 className="text-lg font-bold mb-2 text-center text-slate-800 dark:text-white">¿Guardar cambios?</h2>
+                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 text-center">Tienes notas sin guardar. ¿Deseas guardar tu sesión antes de salir?</p>
+                        <div className="flex flex-col gap-2">
+                            <button onClick={handleSaveAndExit} className="w-full px-4 py-2.5 bg-brand-600 text-white rounded-lg font-bold uppercase text-xs tracking-widest shadow-lg shadow-brand-600/20">Guardar y Salir</button>
+                            <button onClick={onBack} className="w-full px-4 py-2.5 bg-gray-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg font-bold uppercase text-xs tracking-widest">Salir sin Guardar</button>
+                            <button onClick={() => setShowExitModal(false)} className="w-full px-4 py-2 text-slate-400 text-[10px] uppercase tracking-widest font-bold mt-2">Cancelar</button>
                         </div>
                     </div>
                 </div>
@@ -484,10 +513,23 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                             </button>
                         </div>
                         <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-                            <div>
+                            <div className="flex items-center gap-4">
                                 <p className="text-sm text-gray-700 dark:text-gray-300">
                                     Mostrando <span className="font-medium">{((currentPage - 1) * itemsPerPage) + 1}</span> a <span className="font-medium">{Math.min(currentPage * itemsPerPage, filteredData.length)}</span> de <span className="font-medium">{filteredData.length}</span> resultados
                                 </p>
+                                <select 
+                                    value={itemsPerPage} 
+                                    onChange={e => {
+                                        setItemsPerPage(Number(e.target.value));
+                                        setCurrentPage(1);
+                                    }}
+                                    className="text-[10px] font-bold uppercase tracking-widest border rounded-lg px-2 py-1 bg-white dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-500 focus:ring-2 focus:ring-brand-500"
+                                >
+                                    <option value={25}>25 por página</option>
+                                    <option value={50}>50 por página</option>
+                                    <option value={100}>100 por página</option>
+                                    <option value={filteredData.length}>Ver todos</option>
+                                </select>
                             </div>
                             <div>
                                 <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">

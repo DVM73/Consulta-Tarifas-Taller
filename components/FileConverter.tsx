@@ -112,7 +112,7 @@ const FileConverter: React.FC = () => {
                 'Ult.Pro': String(row[9] ?? ''),
                 'Ult. Costo': nuevoCosto,
                 IVA: String(row[12] ?? ''),
-                UN: String(row[13] ?? '')
+                UniMed: String(row[13] ?? '')
             });
         }
 
