@@ -163,6 +163,12 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
         }
     };
 
+    const handleExitWithoutSaving = () => {
+        setShowExitModal(false);
+        if (onBack) onBack();
+        else logout();
+    };
+
     const handleExitClick = () => {
         setExitModalStep('main');
         setShowExitModal(true);
@@ -419,10 +425,11 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                                 </div>
                                 <h2 className="text-lg font-bold mb-6 text-center text-slate-800 dark:text-white">¿Qué deseas hacer?</h2>
                                 <div className="flex flex-col gap-3">
-                                    <button onClick={() => setShowExitModal(false)} className="w-full px-4 py-3 bg-gray-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg font-bold uppercase text-xs tracking-widest hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors">Cancelar</button>
-                                    <button onClick={() => { setExportAction('download'); setExitModalStep('export_type'); }} className="w-full px-4 py-3 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300 rounded-lg font-bold uppercase text-xs tracking-widest border border-brand-200 dark:border-brand-800 hover:bg-brand-100 dark:hover:bg-brand-900/40 transition-colors">Descargar</button>
                                     <button onClick={handleSaveAndExit} className="w-full px-4 py-3 bg-brand-600 text-white rounded-lg font-bold uppercase text-xs tracking-widest shadow-lg shadow-brand-600/20 hover:bg-brand-700 transition-colors">Guardar y Salir</button>
+                                    <button onClick={() => { setExportAction('download'); setExitModalStep('export_type'); }} className="w-full px-4 py-3 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300 rounded-lg font-bold uppercase text-xs tracking-widest border border-brand-200 dark:border-brand-800 hover:bg-brand-100 dark:hover:bg-brand-900/40 transition-colors">Descargar CSV</button>
                                     <button onClick={() => { setExportAction('send'); setExitModalStep('export_type'); }} className="w-full px-4 py-3 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300 rounded-lg font-bold uppercase text-xs tracking-widest border border-brand-200 dark:border-brand-800 hover:bg-brand-100 dark:hover:bg-brand-900/40 transition-colors">Enviar a Admin</button>
+                                    <button onClick={handleExitWithoutSaving} className="w-full px-4 py-3 bg-transparent text-red-600 dark:text-red-400 rounded-lg font-bold uppercase text-xs tracking-widest border border-red-200 dark:border-red-900/50 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">Salir sin Guardar</button>
+                                    <button onClick={() => setShowExitModal(false)} className="w-full px-4 py-3 bg-gray-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg font-bold uppercase text-xs tracking-widest hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors">Cancelar</button>
                                 </div>
                             </>
                         ) : (
