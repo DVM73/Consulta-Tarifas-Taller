@@ -18,10 +18,10 @@ import { getAppData, saveAllData } from '../services/dataService';
 import emailjs from '@emailjs/browser';
 
 const formatCurrency = (value: string | number | undefined): string => {
-    if (value === undefined || value === null || value === '') return '-';
+    if (value === undefined || value === null || value === '' || value === 0 || value === '0') return '-';
     let num = typeof value === 'number' ? value : parseFloat(String(value).replace(',', '.').replace(/[^0-9.-]/g, ''));
-    if (isNaN(num)) return '-';
-    return num.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '€';
+    if (isNaN(num) || num === 0) return '-';
+    return num.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',') + '€';
 };
 
 const NoteInput = memo(({ 

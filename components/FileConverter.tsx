@@ -96,8 +96,8 @@ const FileConverter: React.FC = () => {
             if (!ref) continue;
 
             // Columna L (Ult. Costo) = índice 11, Columna M (IVA) = índice 12
-            const costoBase = parseFloat(String(row[11]).replace(',', '.')) || 0;
-            const iva = parseFloat(String(row[12]).replace(',', '.')) || 0;
+            const costoBase = parseFloat(String(row[11] ?? '').replace(',', '.')) || 0;
+            const iva = parseFloat(String(row[12] ?? '').replace(',', '.')) || 0;
             const nuevoCosto = costoBase + ((costoBase * iva) / 100);
 
             newArticulos.push({
@@ -113,7 +113,6 @@ const FileConverter: React.FC = () => {
         }
 
         await saveAllData({ articulos: newArticulos });
-        downloadCSV(newArticulos, 'articulos_procesados.csv');
         setMessage({ type: 'success', text: `Se han cargado ${newArticulos.length} artículos correctamente.` });
         setProcessing(false);
     };
@@ -128,7 +127,12 @@ const FileConverter: React.FC = () => {
             const codArt = String(row[4] ?? '').trim().replace(/^0+/, '');
             if (!codArt) continue;
 
-            const cleanPrice = (val: any) => parseFloat(String(val).replace(',', '.').replace(/[^0-9.]/g, '')) || 0;
+            // Función para limpiar precios: eliminar todo excepto números, puntos y comas
+            const cleanPrice = (val: any) => {
+                const str = String(val).replace(',', '.').replace(/[^0-9.]/g, '');
+                const num = parseFloat(str);
+                return isNaN(num) ? 0 : num;
+            };
 
             newTarifas.push({
                 'Cod.': String(row[2] ?? ''), // Columna C
@@ -143,7 +147,6 @@ const FileConverter: React.FC = () => {
         }
 
         await saveAllData({ tarifas: newTarifas });
-        downloadCSV(newTarifas, 'tarifas_procesadas.csv');
         setMessage({ type: 'success', text: `Se han cargado ${newTarifas.length} tarifas correctamente.` });
         setProcessing(false);
     };
