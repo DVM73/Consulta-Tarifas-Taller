@@ -86,109 +86,65 @@ const FileConverter: React.FC = () => {
     };
 
     const processArticulos = async (data: any[][]) => {
-        const headerKeywords = ['Referencia', 'Descripción', 'Ult. Costo', 'IVA'];
-        const headerIndex = findHeaderRow(data, headerKeywords);
-        
-        if (headerIndex === -1) {
-            setMessage({ type: 'error', text: 'No se encontró la cabecera correcta en el archivo de Artículos.' });
-            setProcessing(false);
-            return;
-        }
-
-        const headers = data[headerIndex];
-        const idx = {
-            ref: getHeaderIndex(headers, 'Referencia'),
-            desc: getHeaderIndex(headers, 'Descripción'),
-            costo: getHeaderIndex(headers, 'Ult. Costo'),
-            iva: getHeaderIndex(headers, 'IVA'),
-            seccion: getHeaderIndex(headers, 'Sección'),
-            familia: getHeaderIndex(headers, 'Familia'),
-            ultPro: getHeaderIndex(headers, 'Ult.Pro'),
-            un: getHeaderIndex(headers, 'UN')
-        };
-
+        // Ignorar filas 1 y 2 (índices 0 y 1)
         const newArticulos: any[] = [];
-        for (let i = headerIndex + 1; i < data.length; i++) {
+        for (let i = 2; i < data.length; i++) {
             const row = data[i];
-            if (!row[idx.ref]) continue;
+            
+            // Columna B (Referencia) = índice 1
+            const ref = String(row[1] ?? '').trim();
+            if (!ref) continue;
 
-            const costoBase = parseFloat(String(row[idx.costo]).replace(',', '.')) || 0;
-            const iva = parseFloat(String(row[idx.iva]).replace(',', '.')) || 0;
+            // Columna L (Ult. Costo) = índice 11, Columna M (IVA) = índice 12
+            const costoBase = parseFloat(String(row[11]).replace(',', '.')) || 0;
+            const iva = parseFloat(String(row[12]).replace(',', '.')) || 0;
             const nuevoCosto = costoBase + ((costoBase * iva) / 100);
 
             newArticulos.push({
-                Referencia: String(row[idx.ref]),
-                Sección: row[idx.seccion],
-                Descripción: row[idx.desc],
-                Familia: row[idx.familia],
-                'Ult.Pro': row[idx.ultPro],
-                'Ult. Costo': nuevoCosto,
-                IVA: iva,
-                UN: row[idx.un]
+                Referencia: ref,
+                Sección: String(row[3] ?? ''), // Columna D
+                Descripción: String(row[4] ?? ''), // Columna E
+                Familia: String(row[5] ?? ''), // Columna F
+                'Ult.Pro': String(row[9] ?? ''), // Columna J
+                'Ult. Costo': nuevoCosto, // Calculado
+                IVA: String(row[12] ?? ''), // Columna M
+                UN: String(row[13] ?? '') // Columna N
             });
         }
 
-        const currentData = await getAppData();
         await saveAllData({ articulos: newArticulos });
-        
-        // Exportar para verificación
         downloadCSV(newArticulos, 'articulos_procesados.csv');
-        
-        setMessage({ type: 'success', text: `Se han cargado ${newArticulos.length} artículos correctamente y se ha descargado el CSV para verificación.` });
+        setMessage({ type: 'success', text: `Se han cargado ${newArticulos.length} artículos correctamente.` });
         setProcessing(false);
     };
 
     const processTarifas = async (data: any[][]) => {
-        const headerKeywords = ['Cod.', 'Tienda', 'Cód. Art.', 'Descripción', 'P.V.P.'];
-        const headerIndex = findHeaderRow(data, headerKeywords);
-        
-        if (headerIndex === -1) {
-            setMessage({ type: 'error', text: 'No se encontró la cabecera correcta en el archivo de Tarifas.' });
-            setProcessing(false);
-            return;
-        }
-
-        const headers = data[headerIndex];
-        const idx = {
-            cod: getHeaderIndex(headers, 'Cod.'),
-            tienda: getHeaderIndex(headers, 'Tienda'),
-            codArt: getHeaderIndex(headers, 'Cód. Art.'),
-            desc: getHeaderIndex(headers, 'Descripción'),
-            pvp: getHeaderIndex(headers, 'P.V.P.'),
-            pvpOferta: getHeaderIndex(headers, 'PVP Oferta'),
-            fecIni: getHeaderIndex(headers, 'Fec.Ini.Ofe.'),
-            fecFin: getHeaderIndex(headers, 'Fec.Fin.Ofe.')
-        };
-
+        // Ignorar filas 1 a 5 (índices 0 a 4)
         const newTarifas: any[] = [];
-        for (let i = headerIndex + 1; i < data.length; i++) {
+        for (let i = 5; i < data.length; i++) {
             const row = data[i];
-            if (!row[idx.codArt]) continue; // Usamos codArt como clave principal
+            
+            // Columna E (Cód. Art.) = índice 4
+            const codArt = String(row[4] ?? '').trim().replace(/^0+/, '');
+            if (!codArt) continue;
 
-            // Función para limpiar precios: eliminar todo excepto números, puntos y comas
-            const cleanPrice = (val: any) => {
-                const str = String(val).replace(',', '.').replace(/[^0-9.]/g, '');
-                return parseFloat(str) || 0;
-            };
+            const cleanPrice = (val: any) => parseFloat(String(val).replace(',', '.').replace(/[^0-9.]/g, '')) || 0;
 
             newTarifas.push({
-                'Cod.': String(row[idx.cod]),
-                'Tienda': String(row[idx.tienda]),
-                'Cód. Art.': String(row[idx.codArt]).trim().replace(/^0+/, ''),
-                'Descripción': String(row[idx.desc]),
-                'P.V.P.': cleanPrice(row[idx.pvp]),
-                'PVP Oferta': cleanPrice(row[idx.pvpOferta]),
-                'Fec.Ini.Ofe.': String(row[idx.fecIni] || ''),
-                'Fec.Fin.Ofe.': String(row[idx.fecFin] || '')
+                'Cod.': String(row[2] ?? ''), // Columna C
+                'Tienda': String(row[3] ?? ''), // Columna D
+                'Cód. Art.': codArt,
+                'Descripción': String(row[5] ?? ''), // Columna F
+                'P.V.P.': cleanPrice(row[9]), // Columna J
+                'PVP Oferta': cleanPrice(row[12]), // Columna M
+                'Fec.Ini.Ofe.': String(row[14] ?? ''), // Columna O
+                'Fec.Fin.Ofe.': String(row[17] ?? '') // Columna R
             });
         }
 
         await saveAllData({ tarifas: newTarifas });
-        
-        // Exportar para verificación
         downloadCSV(newTarifas, 'tarifas_procesadas.csv');
-        
-        setMessage({ type: 'success', text: `Se han cargado ${newTarifas.length} tarifas correctamente y se ha descargado el CSV para verificación.` });
+        setMessage({ type: 'success', text: `Se han cargado ${newTarifas.length} tarifas correctamente.` });
         setProcessing(false);
     };
 
