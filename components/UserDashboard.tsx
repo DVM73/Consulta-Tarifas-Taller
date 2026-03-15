@@ -375,46 +375,58 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                     </div>
                 </div>
             )}
-            <header className="glass-panel p-4 border-b dark:border-slate-800/50 flex items-center gap-4 shadow-sm z-40 overflow-x-auto min-h-[76px] whitespace-nowrap sticky top-0">
-                <div className="relative flex-grow min-w-[250px]">
+            <header className="glass-panel p-4 border-b dark:border-slate-800/50 flex items-center gap-4 shadow-xl z-40 overflow-x-auto min-h-[90px] whitespace-nowrap sticky top-0 backdrop-blur-3xl border-white/20">
+                <div className="flex items-center gap-3 mr-4">
+                    <div className="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/20 dynamic-icon">
+                        <ChatIcon className="w-6 h-6 text-white" />
+                    </div>
+                    <div className="hidden lg:block">
+                        <h1 className="text-sm font-black text-slate-800 dark:text-white uppercase tracking-tighter leading-none">Panel de</h1>
+                        <h2 className="text-xs font-bold text-brand-500 uppercase tracking-widest leading-none">Supervisión</h2>
+                    </div>
+                </div>
+
+                <div className="relative flex-grow max-w-md group">
                     <input 
                         type="text" 
                         placeholder="Buscar por descripción o referencia..." 
                         value={searchTerm} 
                         onChange={e => setSearchTerm(e.target.value)} 
-                        className="pl-11 pr-4 py-2.5 bg-slate-100/50 dark:bg-slate-800/50 rounded-xl w-full text-sm outline-none focus:ring-2 focus:ring-brand-500/50 focus:bg-white dark:focus:bg-slate-800 transition-all border border-transparent focus:border-brand-500/30 backdrop-blur-sm" 
+                        className="pl-11 pr-4 py-3 bg-white/40 dark:bg-slate-800/40 rounded-2xl w-full text-sm outline-none focus:ring-4 focus:ring-brand-500/20 focus:bg-white dark:focus:bg-slate-800 transition-all border border-slate-200/50 dark:border-slate-700/50 focus:border-brand-500 shadow-inner" 
                     />
-                    <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-brand-500 transition-colors" />
                 </div>
                 
-                <select value={seccionFilter} onChange={e => setSeccionFilter(e.target.value)} className="bg-slate-100/50 dark:bg-slate-800/50 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500/50 font-medium cursor-pointer border border-transparent focus:border-brand-500/30 transition-all backdrop-blur-sm">
-                    <option>Todas</option>
-                    <option>Carnicería</option>
-                    <option>Charcutería</option>
-                </select>
+                <div className="flex items-center gap-3">
+                    <select value={seccionFilter} onChange={e => setSeccionFilter(e.target.value)} className="bg-white/40 dark:bg-slate-800/40 rounded-2xl px-5 py-3 text-xs font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-brand-500/20 cursor-pointer border border-slate-200/50 dark:border-slate-700/50 focus:border-brand-500 transition-all shadow-sm">
+                        <option>Todas</option>
+                        <option>Carnicería</option>
+                        <option>Charcutería</option>
+                    </select>
 
-                <select value={familiaFilter} onChange={e => setFamiliaFilter(e.target.value)} className="bg-slate-100/50 dark:bg-slate-800/50 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500/50 font-medium max-w-[180px] cursor-pointer border border-transparent focus:border-brand-500/30 transition-all backdrop-blur-sm">
-                    <option value="Todas">Todas las Familias</option>
-                    {families.map(f => (
-                        <option key={f.id} value={f.id}>{f.nombre}</option>
-                    ))}
-                </select>
+                    <select value={familiaFilter} onChange={e => setFamiliaFilter(e.target.value)} className="bg-white/40 dark:bg-slate-800/40 rounded-2xl px-5 py-3 text-xs font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-brand-500/20 max-w-[200px] cursor-pointer border border-slate-200/50 dark:border-slate-700/50 focus:border-brand-500 transition-all shadow-sm">
+                        <option value="Todas">Familias</option>
+                        {families.map(f => (
+                            <option key={f.id} value={f.id}>{f.nombre}</option>
+                        ))}
+                    </select>
 
-                <select value={zonaFilter} disabled={isComparing} onChange={e => setZonaFilter(e.target.value)} className="bg-slate-100/50 dark:bg-slate-800/50 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500/50 disabled:opacity-50 font-medium cursor-pointer border border-transparent focus:border-brand-500/30 transition-all backdrop-blur-sm">
-                    <option>Todas</option>
-                    {(posList || []).map(p=> p ? <option key={p.id}>{p.zona}</option> : null)}
-                </select>
-
-                <div className="flex items-center gap-3 bg-slate-100/50 dark:bg-slate-800/50 p-1.5 rounded-xl border border-transparent backdrop-blur-sm">
-                    <button onClick={() => setShowOffers(!showOffers)} className={`px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${showOffers ? 'bg-brand-600 text-white shadow-md shadow-brand-500/20' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>Ofertas</button>
-                    <button onClick={() => setShowNoPrice(!showNoPrice)} className={`px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${showNoPrice ? 'bg-red-500 text-white shadow-md shadow-red-500/20' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>Sin PVP</button>
-                    <button onClick={() => setIsComparing(!isComparing)} className={`px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${isComparing ? 'bg-accent-500 text-white shadow-md shadow-accent-500/20' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>Comparar</button>
+                    <select value={zonaFilter} disabled={isComparing} onChange={e => setZonaFilter(e.target.value)} className="bg-white/40 dark:bg-slate-800/40 rounded-2xl px-5 py-3 text-xs font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-brand-500/20 disabled:opacity-50 cursor-pointer border border-slate-200/50 dark:border-slate-700/50 focus:border-brand-500 transition-all shadow-sm">
+                        <option>Todas</option>
+                        {(posList || []).map(p=> p ? <option key={p.id}>{p.zona}</option> : null)}
+                    </select>
                 </div>
 
-                <div className="ml-auto flex items-center gap-4 pl-4 border-l border-slate-200 dark:border-slate-700/50">
-                    <button onClick={() => setIsBotOpen(!isBotOpen)} className="text-slate-400 hover:text-brand-500 transition-colors hover:scale-110 active:scale-95"><SparklesIcon/></button>
+                <div className="flex items-center gap-2 bg-slate-200/30 dark:bg-slate-800/30 p-1.5 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 shadow-inner">
+                    <button onClick={() => setShowOffers(!showOffers)} className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500 ${showOffers ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/40 scale-105' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>Ofertas</button>
+                    <button onClick={() => setShowNoPrice(!showNoPrice)} className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500 ${showNoPrice ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/40 scale-105' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>Sin PVP</button>
+                    <button onClick={() => setIsComparing(!isComparing)} className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500 ${isComparing ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/40 scale-105' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>Comparar</button>
+                </div>
+
+                <div className="ml-auto flex items-center gap-6 pl-6 border-l border-slate-200/50 dark:border-slate-700/50">
+                    <button onClick={() => setIsBotOpen(!isBotOpen)} className="dynamic-icon text-slate-400 hover:text-brand-500 transition-all"><SparklesIcon className="w-6 h-6"/></button>
                     <ThemeToggle/>
-                    <button onClick={handleExitClick} className="text-slate-400 hover:text-red-500 transition-colors hover:scale-110 active:scale-95"><LogoutIcon/></button>
+                    <button onClick={handleExitClick} className="dynamic-icon text-slate-400 hover:text-rose-500 transition-all"><LogoutIcon className="w-6 h-6"/></button>
                 </div>
             </header>
 
@@ -522,43 +534,51 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                             const hasOffer = t && t['PVP Oferta'] && t['PVP Oferta'] !== '';
                             
                             return (
-                                <tr key={art.Referencia || Math.random()} className={`transition-colors group ${hasOffer ? 'bg-emerald-50/50 dark:bg-emerald-900/10 hover:bg-emerald-100/50 dark:hover:bg-emerald-900/20' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
-                                    <td className="p-4 font-mono text-xs text-slate-400 dark:text-slate-500">{String(art.Referencia ?? '').replace(/\D/g,'')}</td>
-                                    <td className="p-4 font-bold text-slate-800 dark:text-slate-200 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">{art.Descripción}</td>
-                                    {user?.rol !== 'Normal' && <td className="p-4 text-slate-500 dark:text-slate-400 font-medium">{formatCurrency(art['Ult. Costo'])}</td>}
+                                <tr key={art.Referencia || Math.random()} className={`transition-all duration-500 group ${hasOffer ? 'bg-emerald-50/20 dark:bg-emerald-900/10 hover:bg-emerald-100/40 dark:hover:bg-emerald-900/20' : 'hover:bg-brand-50/20 dark:hover:bg-brand-900/10'}`}>
+                                    <td className="p-4 font-mono text-[10px] font-black text-slate-400 dark:text-slate-500 group-hover:text-brand-500 transition-colors tracking-tighter">{String(art.Referencia ?? '').replace(/\D/g,'')}</td>
+                                    <td className="p-4">
+                                        <div className="flex flex-col">
+                                            <span className="font-black text-slate-800 dark:text-slate-200 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-all group-hover:translate-x-1 uppercase tracking-tight leading-tight">{art.Descripción}</span>
+                                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">{art.Familia}</span>
+                                        </div>
+                                    </td>
+                                    {user?.rol !== 'Normal' && <td className="p-4 text-slate-500 dark:text-slate-400 font-black text-xs tabular-nums">{formatCurrency(art['Ult. Costo'])}</td>}
                                     
                                     {!isComparing ? <>
                                         <td className="p-4">
                                             <div className="flex flex-col">
                                                 {hasOffer && (
-                                                    <span className="line-through text-slate-400 dark:text-slate-500 text-[10px]">
+                                                    <span className="line-through text-rose-400/70 dark:text-rose-500/50 text-[10px] font-black italic">
                                                         {formatCurrency(t?.['P.V.P.'])}
                                                     </span>
                                                 )}
-                                                <span className={`font-bold ${hasOffer ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-800 dark:text-slate-200'}`}>
+                                                <span className={`font-black text-lg tabular-nums tracking-tighter ${hasOffer ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-800 dark:text-slate-200'}`}>
                                                     {formatCurrency(hasOffer ? t!['PVP Oferta'] : t?.['P.V.P.'])}
                                                 </span>
                                             </div>
                                         </td>
                                         <td className="p-4">
                                             {hasOffer ? (
-                                                <span className="font-extrabold text-emerald-700 dark:text-emerald-400 text-sm bg-emerald-100 dark:bg-emerald-900/30 px-2.5 py-1 rounded-lg border border-emerald-200 dark:border-emerald-800/50 shadow-sm">
-                                                    {formatCurrency(t!['PVP Oferta'])}
-                                                </span>
+                                                <div className="relative inline-flex">
+                                                    <span className="absolute inset-0 bg-emerald-500 blur-md opacity-40 animate-pulse rounded-full"></span>
+                                                    <span className="relative inline-flex items-center justify-center font-black text-white text-[9px] bg-gradient-to-r from-emerald-500 to-emerald-600 px-3 py-1.5 rounded-full shadow-lg shadow-emerald-500/30 uppercase tracking-[0.2em]">
+                                                        Oferta
+                                                    </span>
+                                                </div>
                                             ) : (
                                                 <span className="text-slate-300"></span>
                                             )}
                                         </td>
-                                        <td className="p-4 text-xs font-medium text-slate-500">{t?.['Fec.Ini.Ofe.']||'-'}</td>
-                                        <td className="p-4 text-xs font-medium text-slate-500">{t?.['Fec.Fin.Ofe.']||'-'}</td>
+                                        <td className="p-4 text-[10px] font-black text-slate-400 uppercase tracking-tighter">{t?.['Fec.Ini.Ofe.']||'-'}</td>
+                                        <td className="p-4 text-[10px] font-black text-slate-400 uppercase tracking-tighter">{t?.['Fec.Fin.Ofe.']||'-'}</td>
                                     </> : selectedCompareZones.map(z => {
                                         const tz = getTariffForZone(art.Referencia, z);
                                         const isOffer = tz && tz['PVP Oferta'] && tz['PVP Oferta'] !== '';
                                         return (
-                                            <td key={z} className={`p-4 text-center border-l border-slate-100 dark:border-slate-800/50 ${isOffer ? 'bg-emerald-50/50 dark:bg-emerald-900/10' : ''}`}>
+                                            <td key={z} className={`p-4 text-center border-l border-slate-100 dark:border-slate-800/50 transition-colors ${isOffer ? 'bg-emerald-50/30 dark:bg-emerald-900/10' : 'group-hover:bg-white/50 dark:group-hover:bg-slate-800/50'}`}>
                                                 <div className="flex flex-col items-center">
-                                                    {isOffer && <span className="text-[10px] text-red-400 line-through mb-0.5">{formatCurrency(tz?.['P.V.P.'])}</span>}
-                                                    <span className={`font-bold ${isOffer ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-700 dark:text-slate-300'}`}>
+                                                    {isOffer && <span className="text-[10px] text-rose-400/70 line-through mb-0.5 font-black italic tabular-nums">{formatCurrency(tz?.['P.V.P.'])}</span>}
+                                                    <span className={`font-black text-base tabular-nums tracking-tighter ${isOffer ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-700 dark:text-slate-300'}`}>
                                                         {formatCurrency(isOffer ? tz!['PVP Oferta'] : tz?.['P.V.P.'])}
                                                     </span>
                                                 </div>

@@ -64,33 +64,37 @@ export const ReadOnlyUsersList: FC<{ users: User[], posList: PointOfSale[] }> = 
     }, [users, posList]);
 
     return (
-        <div className="glass-panel overflow-hidden animate-fade-in max-h-[80vh] flex flex-col">
-            <div className="p-6 border-b dark:border-slate-700 shrink-0">
-                <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight">Usuarios</h2>
+        <div className="glass-panel overflow-hidden animate-fade-in max-h-[80vh] flex flex-col border-white/20 shadow-xl">
+            <div className="p-6 border-b dark:border-slate-700 shrink-0 bg-white/5 dark:bg-slate-900/5">
+                <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight vibrant-gradient bg-clip-text text-transparent inline-block">Usuarios</h2>
             </div>
             <div className="overflow-auto custom-scrollbar">
                 <table className="w-full text-left text-sm border-separate border-spacing-0">
                     <thead className="sticky top-0 z-20 shadow-sm">
                         <tr>
-                            <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód. Tienda</th>
-                            <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
-                            <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Nombre</th>
-                            <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Departamento</th>
-                            <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Grupo</th>
-                            <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Ver PVP</th>
+                            <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód. Tienda</th>
+                            <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
+                            <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Nombre</th>
+                            <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Departamento</th>
+                            <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Grupo</th>
+                            <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Ver PVP</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y dark:divide-slate-700">
                         {sortedUsers.map(u => {
                             const uPos = posList.find(p => p.zona === u.zona);
                             return (
-                                <tr key={u.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
-                                    <td className="p-4 font-bold">{uPos?.código || '--'}</td>
+                                <tr key={u.id} className="hover:bg-brand-50/30 dark:hover:bg-brand-900/20 transition-all duration-300 group">
+                                    <td className="p-4 font-bold group-hover:text-brand-600 transition-colors">{uPos?.código || '--'}</td>
                                     <td className="p-4 font-medium">{u.zona}</td>
                                     <td className="p-4 font-bold text-slate-800 dark:text-slate-200">{u.nombre}</td>
                                     <td className="p-4 text-slate-500">{u.departamento}</td>
                                     <td className="p-4 text-slate-500">{u.grupo}</td>
-                                    <td className="p-4 font-bold">{u.verPVP ? 'Sí' : 'No'}</td>
+                                    <td className="p-4 font-bold">
+                                        <span className={`px-2 py-1 rounded-full text-[10px] ${u.verPVP ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'}`}>
+                                            {u.verPVP ? 'SÍ' : 'NO'}
+                                        </span>
+                                    </td>
                                 </tr>
                             );
                         })}
@@ -102,25 +106,25 @@ export const ReadOnlyUsersList: FC<{ users: User[], posList: PointOfSale[] }> = 
 };
 
 export const ReadOnlyPOSList: FC<{ pos: PointOfSale[] }> = ({ pos }) => (
-    <div className="glass-panel overflow-hidden animate-fade-in max-h-[80vh] flex flex-col">
-        <div className="p-6 border-b dark:border-slate-700 shrink-0">
-            <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight">Puntos de Venta</h2>
+    <div className="glass-panel overflow-hidden animate-fade-in max-h-[80vh] flex flex-col border-white/20 shadow-xl">
+        <div className="p-6 border-b dark:border-slate-700 shrink-0 bg-white/5 dark:bg-slate-900/5">
+            <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight vibrant-gradient bg-clip-text text-transparent inline-block">Puntos de Venta</h2>
         </div>
         <div className="overflow-auto custom-scrollbar">
             <table className="w-full text-left text-sm border-separate border-spacing-0">
                 <thead className="sticky top-0 z-20 shadow-sm">
                     <tr>
-                        <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód</th>
-                        <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
-                        <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Grupo</th>
-                        <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Dirección</th>
-                        <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Población</th>
+                        <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód</th>
+                        <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
+                        <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Grupo</th>
+                        <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Dirección</th>
+                        <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Población</th>
                     </tr>
                 </thead>
                 <tbody className="divide-y dark:divide-slate-700">
                     {pos.map(p => (
-                        <tr key={p.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
-                            <td className="p-4 font-bold">{p.código}</td>
+                        <tr key={p.id} className="hover:bg-brand-50/30 dark:hover:bg-brand-900/20 transition-all duration-300 group">
+                            <td className="p-4 font-bold group-hover:text-brand-600 transition-colors">{p.código}</td>
                             <td className="p-4 font-bold text-slate-700 dark:text-slate-200">{p.zona}</td>
                             <td className="p-4 text-slate-500">{p.grupo}</td>
                             <td className="p-4 text-slate-500 text-xs">{p.dirección}</td>
@@ -134,12 +138,12 @@ export const ReadOnlyPOSList: FC<{ pos: PointOfSale[] }> = ({ pos }) => (
 );
 
 export const ReadOnlyGroupsList: FC<{ groups: Group[] }> = ({ groups }) => (
-    <div className="glass-panel max-w-2xl mx-auto overflow-hidden animate-fade-in">
-        <div className="p-6 border-b dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 uppercase font-bold text-sm tracking-widest text-slate-700 dark:text-white">Grupos</div>
+    <div className="glass-panel max-w-2xl mx-auto overflow-hidden animate-fade-in border-white/20 shadow-xl">
+        <div className="p-6 border-b dark:border-slate-700 bg-white/5 dark:bg-slate-900/5 uppercase font-bold text-sm tracking-widest vibrant-gradient bg-clip-text text-transparent">Grupos</div>
         <div className="p-4 divide-y dark:divide-slate-700">
             {groups.map(g => (
-                <div key={g.id} className="py-4 flex justify-between items-center px-4 hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-all">
-                    <span className="font-bold text-slate-700 dark:text-slate-200 text-sm tracking-wide">{g.nombre}</span>
+                <div key={g.id} className="py-4 flex justify-between items-center px-4 hover:bg-brand-50/30 dark:hover:bg-brand-900/20 transition-all rounded-lg group">
+                    <span className="font-bold text-slate-700 dark:text-slate-200 text-sm tracking-wide group-hover:text-brand-600 transition-colors">{g.nombre}</span>
                 </div>
             ))}
         </div>
@@ -156,18 +160,18 @@ const ConfirmModal: React.FC<{
 }> = ({ isOpen, title, message, onConfirm, onCancel }) => {
     if (!isOpen) return null;
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-            <div className="glass-panel w-full max-w-md shadow-2xl overflow-hidden transform transition-all">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md animate-fade-in">
+            <div className="glass-panel w-full max-w-md shadow-2xl overflow-hidden transform transition-all border-white/20 scale-100 animate-scale-in">
                 <div className="p-8">
-                    <div className="w-14 h-14 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center text-red-600 mb-6 mx-auto">
-                        <TrashIcon className="w-7 h-7" />
+                    <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center text-red-600 mb-6 mx-auto shadow-inner">
+                        <TrashIcon className="w-8 h-8 animate-pulse" />
                     </div>
-                    <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-3 text-center">{title}</h3>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed text-center">{message}</p>
+                    <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-3 text-center uppercase tracking-tight">{title}</h3>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed text-center font-medium">{message}</p>
                 </div>
-                <div className="bg-slate-50 dark:bg-slate-800/50 p-6 flex justify-end gap-3">
-                    <button onClick={onCancel} className="px-6 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-all uppercase tracking-widest">No, cancelar</button>
-                    <button onClick={onConfirm} className="px-6 py-2.5 text-xs font-bold text-white bg-red-600 hover:bg-red-700 rounded-lg shadow-lg shadow-red-600/20 transition-all uppercase tracking-widest">Sí, borrar</button>
+                <div className="bg-white/5 dark:bg-slate-800/50 p-6 flex justify-end gap-3 border-t dark:border-slate-700">
+                    <button onClick={onCancel} className="px-6 py-3 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-all uppercase tracking-widest hover:scale-105 active:scale-95">No, cancelar</button>
+                    <button onClick={onConfirm} className="px-6 py-3 text-xs font-bold text-white bg-red-600 hover:bg-red-700 rounded-xl shadow-lg shadow-red-600/30 transition-all uppercase tracking-widest hover:scale-105 active:scale-95">Sí, borrar</button>
                 </div>
             </div>
         </div>
@@ -326,42 +330,49 @@ export const UsersList: React.FC<{ users: User[], posList: PointOfSale[] } & Vie
                 onConfirm={() => { onUpdate({ users: users.filter(u => u.id !== deleteConfig.id) }); setDeleteConfig({isOpen: false, id: '', name: ''}); }} 
                 onCancel={() => setDeleteConfig({isOpen: false, id: '', name: ''})} 
             />
-            <div className="glass-panel overflow-hidden animate-fade-in flex flex-col max-h-[80vh]">
-                <div className="p-6 flex justify-between items-center border-b dark:border-slate-700 shrink-0">
-                    <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2"><UserIcon className="w-5 h-5"/> Administración de Usuarios</h2>
+            <div className="glass-panel overflow-hidden animate-fade-in flex flex-col max-h-[80vh] border-white/20 shadow-xl">
+                <div className="p-6 flex justify-between items-center border-b dark:border-slate-700 shrink-0 bg-white/5 dark:bg-slate-900/5">
+                    <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2">
+                        <UserIcon className="w-5 h-5 text-brand-500 animate-pulse"/> 
+                        <span className="vibrant-gradient bg-clip-text text-transparent">Administración de Usuarios</span>
+                    </h2>
                     <div className="flex items-center gap-3">
-                        <button onClick={() => exportToCSV(sortedUsers, 'usuarios.csv')} className="text-slate-400 hover:text-brand-600 transition-colors" title="Exportar CSV"><ExportIcon className="w-5 h-5"/></button>
-                        <button onClick={openCreate} className="bg-brand-600 text-white px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center gap-2"><PlusIcon className="w-4 h-4"/> Nuevo Usuario</button>
+                        <button onClick={() => exportToCSV(sortedUsers, 'usuarios.csv')} className="text-slate-400 hover:text-brand-600 transition-all hover:scale-110" title="Exportar CSV"><ExportIcon className="w-5 h-5"/></button>
+                        <button onClick={openCreate} className="bg-brand-600 text-white px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-brand-600/30 hover:bg-brand-700 hover:scale-105 active:scale-95 transition-all"><PlusIcon className="w-4 h-4"/> Nuevo Usuario</button>
                     </div>
                 </div>
                 <div className="overflow-auto custom-scrollbar">
                     <table className="w-full text-left text-sm border-separate border-spacing-0">
                         <thead className="sticky top-0 z-20 shadow-sm">
                             <tr>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód. Tienda</th>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Nombre</th>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Departamento</th>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Grupo</th>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Ver PVP</th>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] text-center">Acciones</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód. Tienda</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Nombre</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Departamento</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Grupo</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Ver PVP</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y dark:divide-slate-700">
                             {paginatedUsers.map(u => {
                                 const uPos = posList.find(p => p.zona === u.zona);
                                 return (
-                                    <tr key={u.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
-                                        <td className="p-4 font-bold">{uPos?.código || '--'}</td>
+                                    <tr key={u.id} className="hover:bg-brand-50/30 dark:hover:bg-brand-900/20 transition-all duration-300 group">
+                                        <td className="p-4 font-bold group-hover:text-brand-600 transition-colors">{uPos?.código || '--'}</td>
                                         <td className="p-4 font-medium">{u.zona}</td>
                                         <td className="p-4 font-bold text-slate-800 dark:text-slate-200">{u.nombre}</td>
                                         <td className="p-4 text-slate-500">{u.departamento}</td>
                                         <td className="p-4 text-slate-500">{u.grupo}</td>
-                                        <td className="p-4 font-bold">{u.verPVP ? 'SÍ' : 'NO'}</td>
+                                        <td className="p-4 font-bold">
+                                            <span className={`px-2 py-1 rounded-full text-[10px] ${u.verPVP ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'}`}>
+                                                {u.verPVP ? 'SÍ' : 'NO'}
+                                            </span>
+                                        </td>
                                         <td className="p-4 text-center">
                                             <div className="flex justify-center gap-4">
-                                                <button onClick={() => openEdit(u)} className="text-brand-600 hover:scale-125 transition-all"><EditIcon className="w-5 h-5"/></button>
-                                                <button onClick={() => setDeleteConfig({isOpen: true, id: u.id, name: u.nombre})} className="text-red-500 hover:scale-125 transition-all"><TrashIcon className="w-5 h-5"/></button>
+                                                <button onClick={() => openEdit(u)} className="text-brand-600 hover:scale-125 transition-all dynamic-icon"><EditIcon className="w-5 h-5"/></button>
+                                                <button onClick={() => setDeleteConfig({isOpen: true, id: u.id, name: u.nombre})} className="text-red-500 hover:scale-125 transition-all dynamic-icon"><TrashIcon className="w-5 h-5"/></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -503,38 +514,41 @@ export const POSList: React.FC<{ pos: PointOfSale[] } & ViewProps> = ({ pos, onU
                 onConfirm={() => { onUpdate({ pos: pos.filter(p => p.id !== deleteConfig.id) }); setDeleteConfig({isOpen: false, id: '', name: ''}); }} 
                 onCancel={() => setDeleteConfig({isOpen: false, id: '', name: ''})} 
             />
-            <div className="glass-panel overflow-hidden animate-fade-in flex flex-col max-h-[80vh]">
-                <div className="p-6 flex justify-between items-center border-b dark:border-slate-700 shrink-0">
-                    <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2"><BuildingIcon className="w-5 h-5"/> Administración de Puntos de Venta</h2>
+            <div className="glass-panel overflow-hidden animate-fade-in flex flex-col max-h-[80vh] border-white/20 shadow-xl">
+                <div className="p-6 flex justify-between items-center border-b dark:border-slate-700 shrink-0 bg-white/5 dark:bg-slate-900/5">
+                    <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2">
+                        <BuildingIcon className="w-5 h-5 text-brand-500 animate-pulse"/> 
+                        <span className="vibrant-gradient bg-clip-text text-transparent">Administración de Puntos de Venta</span>
+                    </h2>
                     <div className="flex items-center gap-3">
-                        <button onClick={() => exportToCSV(pos, 'tiendas.csv')} className="text-slate-400 hover:text-brand-600 transition-colors" title="Exportar CSV"><ExportIcon className="w-5 h-5"/></button>
-                        <button onClick={openCreate} className="bg-brand-600 text-white px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center gap-2"><PlusIcon className="w-4 h-4"/> Añadir Tienda</button>
+                        <button onClick={() => exportToCSV(pos, 'tiendas.csv')} className="text-slate-400 hover:text-brand-600 transition-all hover:scale-110" title="Exportar CSV"><ExportIcon className="w-5 h-5"/></button>
+                        <button onClick={openCreate} className="bg-brand-600 text-white px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-brand-600/30 hover:bg-brand-700 hover:scale-105 active:scale-95 transition-all"><PlusIcon className="w-4 h-4"/> Añadir Tienda</button>
                     </div>
                 </div>
                 <div className="overflow-auto custom-scrollbar">
                     <table className="w-full text-left text-sm border-separate border-spacing-0">
                         <thead className="sticky top-0 z-20 shadow-sm">
                             <tr>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód</th>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Grupo</th>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Dirección</th>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Población</th>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] text-center">Acciones</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Grupo</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Dirección</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Población</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y dark:divide-slate-700">
                             {paginatedPOS.map(p => (
-                                <tr key={p.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
-                                    <td className="p-4 font-bold">{p.código}</td>
+                                <tr key={p.id} className="hover:bg-brand-50/30 dark:hover:bg-brand-900/20 transition-all duration-300 group">
+                                    <td className="p-4 font-bold group-hover:text-brand-600 transition-colors">{p.código}</td>
                                     <td className="p-4 font-bold text-slate-700 dark:text-slate-200">{p.zona}</td>
                                     <td className="p-4 text-slate-500">{p.grupo}</td>
                                     <td className="p-4 text-slate-500 text-xs">{p.dirección}</td>
                                     <td className="p-4 text-slate-500">{p.población}</td>
                                     <td className="p-4 text-center">
                                         <div className="flex justify-center gap-4">
-                                            <button onClick={() => openEdit(p)} className="text-brand-600 hover:scale-125 transition-all"><EditIcon className="w-5 h-5"/></button>
-                                            <button onClick={() => setDeleteConfig({isOpen: true, id: p.id, name: p.zona})} className="text-red-500 hover:scale-125 transition-all"><TrashIcon className="w-5 h-5"/></button>
+                                            <button onClick={() => openEdit(p)} className="text-brand-600 hover:scale-125 transition-all dynamic-icon"><EditIcon className="w-5 h-5"/></button>
+                                            <button onClick={() => setDeleteConfig({isOpen: true, id: p.id, name: p.zona})} className="text-red-500 hover:scale-125 transition-all dynamic-icon"><TrashIcon className="w-5 h-5"/></button>
                                         </div>
                                     </td>
                                 </tr>
@@ -620,21 +634,24 @@ export const GroupsList: React.FC<{ groups: Group[] } & ViewProps> = ({ groups, 
                 onConfirm={() => { onUpdate({ groups: groups.filter(g => g.id !== deleteConfig.id) }); setDeleteConfig({isOpen: false, id: '', name: ''}); }} 
                 onCancel={() => setDeleteConfig({isOpen: false, id: '', name: ''})} 
             />
-            <div className="glass-panel overflow-hidden animate-fade-in max-w-2xl mx-auto flex flex-col max-h-[80vh]">
-                <div className="p-6 flex justify-between items-center border-b dark:border-slate-700 shrink-0">
-                    <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2"><BuildingIcon className="w-5 h-5"/> Gestión de Grupos</h2>
+            <div className="glass-panel overflow-hidden animate-fade-in max-w-2xl mx-auto flex flex-col max-h-[80vh] border-white/20 shadow-xl">
+                <div className="p-6 flex justify-between items-center border-b dark:border-slate-700 shrink-0 bg-white/5 dark:bg-slate-900/5">
+                    <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2">
+                        <BuildingIcon className="w-5 h-5 text-brand-500 animate-pulse"/> 
+                        <span className="vibrant-gradient bg-clip-text text-transparent">Gestión de Grupos</span>
+                    </h2>
                     <div className="flex items-center gap-3">
-                        <button onClick={() => exportToCSV(groups, 'grupos.csv')} className="text-slate-400 hover:text-brand-600 transition-colors" title="Exportar CSV"><ExportIcon className="w-5 h-5"/></button>
-                        <button onClick={openCreate} className="bg-brand-600 text-white px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center gap-2"><PlusIcon className="w-4 h-4"/> Nuevo Grupo</button>
+                        <button onClick={() => exportToCSV(groups, 'grupos.csv')} className="text-slate-400 hover:text-brand-600 transition-all hover:scale-110" title="Exportar CSV"><ExportIcon className="w-5 h-5"/></button>
+                        <button onClick={openCreate} className="bg-brand-600 text-white px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-brand-600/30 hover:bg-brand-700 hover:scale-105 active:scale-95 transition-all"><PlusIcon className="w-4 h-4"/> Nuevo Grupo</button>
                     </div>
                 </div>
                 <div className="overflow-auto custom-scrollbar p-4 divide-y dark:divide-slate-700">
                     {paginatedGroups.map(g => (
-                        <div key={g.id} className="py-4 flex justify-between items-center px-4 hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-all rounded-lg">
-                            <span className="font-bold text-slate-700 dark:text-slate-200">{g.nombre}</span>
+                        <div key={g.id} className="py-4 flex justify-between items-center px-4 hover:bg-brand-50/30 dark:hover:bg-brand-900/20 transition-all rounded-lg group">
+                            <span className="font-bold text-slate-700 dark:text-slate-200 group-hover:text-brand-600 transition-colors">{g.nombre}</span>
                             <div className="flex gap-4">
-                                <button onClick={() => openEdit(g)} className="text-brand-600 hover:scale-110"><EditIcon className="w-4 h-4"/></button>
-                                <button onClick={() => setDeleteConfig({isOpen: true, id: g.id, name: g.nombre})} className="text-red-500 hover:scale-110"><TrashIcon className="w-4 h-4"/></button>
+                                <button onClick={() => openEdit(g)} className="text-brand-600 hover:scale-125 transition-all dynamic-icon"><EditIcon className="w-4 h-4"/></button>
+                                <button onClick={() => setDeleteConfig({isOpen: true, id: g.id, name: g.nombre})} className="text-red-500 hover:scale-125 transition-all dynamic-icon"><TrashIcon className="w-4 h-4"/></button>
                             </div>
                         </div>
                     ))}
@@ -726,32 +743,35 @@ export const FamiliesList: React.FC<{ families: Family[] } & ViewProps> = ({ fam
                 onConfirm={() => { onUpdate({ families: families.filter(f => f.id !== deleteConfig.id) }); setDeleteConfig({isOpen: false, id: '', name: ''}); }} 
                 onCancel={() => setDeleteConfig({isOpen: false, id: '', name: ''})} 
             />
-            <div className="glass-panel overflow-hidden animate-fade-in max-w-3xl mx-auto flex flex-col max-h-[80vh]">
-                <div className="p-6 flex justify-between items-center border-b dark:border-slate-700 shrink-0">
-                    <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2"><TagIcon className="w-5 h-5"/> Familias de Artículos</h2>
+            <div className="glass-panel overflow-hidden animate-fade-in max-w-3xl mx-auto flex flex-col max-h-[80vh] border-white/20 shadow-xl">
+                <div className="p-6 flex justify-between items-center border-b dark:border-slate-700 shrink-0 bg-white/5 dark:bg-slate-900/5">
+                    <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2">
+                        <TagIcon className="w-5 h-5 text-brand-500 animate-pulse"/> 
+                        <span className="vibrant-gradient bg-clip-text text-transparent">Familias de Artículos</span>
+                    </h2>
                     <div className="flex items-center gap-3">
-                        <button onClick={() => exportToCSV(families, 'familias.csv')} className="text-slate-400 hover:text-brand-600 transition-colors" title="Exportar CSV"><ExportIcon className="w-5 h-5"/></button>
-                        <button onClick={openCreate} className="bg-brand-600 text-white px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center gap-2"><PlusIcon className="w-4 h-4"/> Nueva Familia</button>
+                        <button onClick={() => exportToCSV(families, 'familias.csv')} className="text-slate-400 hover:text-brand-600 transition-all hover:scale-110" title="Exportar CSV"><ExportIcon className="w-5 h-5"/></button>
+                        <button onClick={openCreate} className="bg-brand-600 text-white px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-brand-600/30 hover:bg-brand-700 hover:scale-105 active:scale-95 transition-all"><PlusIcon className="w-4 h-4"/> Nueva Familia</button>
                     </div>
                 </div>
                 <div className="overflow-auto custom-scrollbar">
                     <table className="w-full text-left text-sm border-separate border-spacing-0">
                         <thead className="sticky top-0 z-20 shadow-sm">
                             <tr>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód</th>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] w-full">Descripción</th>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] text-center">Acciones</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] w-full">Descripción</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y dark:divide-slate-700">
                             {paginatedFamilies.map(f => (
-                                <tr key={f.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
-                                    <td className="p-4 font-mono font-bold text-slate-500">{f.id}</td>
+                                <tr key={f.id} className="hover:bg-brand-50/30 dark:hover:bg-brand-900/20 transition-all duration-300 group">
+                                    <td className="p-4 font-mono font-bold text-slate-500 group-hover:text-brand-600 transition-colors">{f.id}</td>
                                     <td className="p-4 font-bold text-slate-800 dark:text-slate-200">{f.nombre}</td>
                                     <td className="p-4 text-center">
                                         <div className="flex justify-center gap-4">
-                                            <button onClick={() => openEdit(f)} className="text-brand-600 hover:scale-110"><EditIcon className="w-4 h-4"/></button>
-                                            <button onClick={() => setDeleteConfig({isOpen: true, id: f.id, name: f.nombre})} className="text-red-500 hover:scale-110"><TrashIcon className="w-4 h-4"/></button>
+                                            <button onClick={() => openEdit(f)} className="text-brand-600 hover:scale-125 transition-all dynamic-icon"><EditIcon className="w-4 h-4"/></button>
+                                            <button onClick={() => setDeleteConfig({isOpen: true, id: f.id, name: f.nombre})} className="text-red-500 hover:scale-125 transition-all dynamic-icon"><TrashIcon className="w-4 h-4"/></button>
                                         </div>
                                     </td>
                                 </tr>
@@ -867,16 +887,16 @@ export const DataUploadView: React.FC = () => {
     };
 
     return (
-        <div className="glass-panel p-10 animate-fade-in max-w-4xl mx-auto text-center">
-            <div className="w-20 h-20 bg-brand-50 dark:bg-brand-900/20 rounded-full flex items-center justify-center text-brand-600 mb-6 mx-auto">
-                <UploadIcon className="w-10 h-10" />
+        <div className="glass-panel p-10 animate-fade-in max-w-4xl mx-auto text-center border-white/20 shadow-xl">
+            <div className="w-20 h-20 bg-brand-50 dark:bg-brand-900/20 rounded-full flex items-center justify-center text-brand-600 mb-6 mx-auto shadow-inner">
+                <UploadIcon className="w-10 h-10 animate-bounce" />
             </div>
-            <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-8 uppercase tracking-tight">Carga de Datos</h2>
+            <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-8 uppercase tracking-tight vibrant-gradient bg-clip-text text-transparent inline-block">Carga de Datos</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
                 {/* CAJA ARTÍCULOS */}
-                <div className={`border-2 border-dashed rounded-xl p-8 transition-colors ${pendingArticulos ? 'border-green-500 bg-green-50 dark:bg-green-900/10' : 'border-slate-300 dark:border-slate-600'}`}>
-                    <h3 className="font-bold text-slate-700 dark:text-slate-300 mb-4 text-sm uppercase">Archivo de Artículos (CSV)</h3>
+                <div className={`border-2 border-dashed rounded-xl p-8 transition-all duration-300 ${pendingArticulos ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/10 shadow-lg shadow-emerald-500/10' : 'border-slate-300 dark:border-slate-600 hover:border-brand-400'}`}>
+                    <h3 className="font-bold text-slate-700 dark:text-slate-300 mb-4 text-sm uppercase tracking-wide">Archivo de Artículos (CSV)</h3>
                     <input 
                         type="file" 
                         accept=".csv" 
@@ -885,19 +905,19 @@ export const DataUploadView: React.FC = () => {
                         className="hidden" 
                         id="file-art"
                     />
-                    <label htmlFor="file-art" className="bg-brand-50 dark:bg-slate-700 text-brand-600 dark:text-brand-300 px-6 py-3 rounded-lg font-bold text-xs uppercase cursor-pointer hover:bg-brand-100 dark:hover:bg-slate-600 transition-colors inline-block">
+                    <label htmlFor="file-art" className="bg-brand-50 dark:bg-slate-700 text-brand-600 dark:text-brand-300 px-6 py-3 rounded-lg font-bold text-xs uppercase cursor-pointer hover:bg-brand-100 dark:hover:bg-slate-600 transition-all inline-block shadow-sm hover:scale-105 active:scale-95">
                         Seleccionar Archivo
                     </label>
                     {pendingArticulos && (
-                        <p className="mt-4 text-green-600 dark:text-green-400 text-xs font-bold animate-pulse">
+                        <p className="mt-4 text-emerald-600 dark:text-emerald-400 text-xs font-bold animate-pulse">
                             ✓ {pendingArticulos.length} artículos leídos
                         </p>
                     )}
                 </div>
 
                 {/* CAJA TARIFAS */}
-                <div className={`border-2 border-dashed rounded-xl p-8 transition-colors ${pendingTarifas ? 'border-green-500 bg-green-50 dark:bg-green-900/10' : 'border-slate-300 dark:border-slate-600'}`}>
-                    <h3 className="font-bold text-slate-700 dark:text-slate-300 mb-4 text-sm uppercase">Archivo de Tarifas (CSV)</h3>
+                <div className={`border-2 border-dashed rounded-xl p-8 transition-all duration-300 ${pendingTarifas ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/10 shadow-lg shadow-emerald-500/10' : 'border-slate-300 dark:border-slate-600 hover:border-brand-400'}`}>
+                    <h3 className="font-bold text-slate-700 dark:text-slate-300 mb-4 text-sm uppercase tracking-wide">Archivo de Tarifas (CSV)</h3>
                     <input 
                         type="file" 
                         accept=".csv" 
@@ -906,11 +926,11 @@ export const DataUploadView: React.FC = () => {
                         className="hidden" 
                         id="file-tar"
                     />
-                    <label htmlFor="file-tar" className="bg-brand-50 dark:bg-slate-700 text-brand-600 dark:text-brand-300 px-6 py-3 rounded-lg font-bold text-xs uppercase cursor-pointer hover:bg-brand-100 dark:hover:bg-slate-600 transition-colors inline-block">
+                    <label htmlFor="file-tar" className="bg-brand-50 dark:bg-slate-700 text-brand-600 dark:text-brand-300 px-6 py-3 rounded-lg font-bold text-xs uppercase cursor-pointer hover:bg-brand-100 dark:hover:bg-slate-600 transition-all inline-block shadow-sm hover:scale-105 active:scale-95">
                         Seleccionar Archivo
                     </label>
                     {pendingTarifas && (
-                        <p className="mt-4 text-green-600 dark:text-green-400 text-xs font-bold animate-pulse">
+                        <p className="mt-4 text-emerald-600 dark:text-emerald-400 text-xs font-bold animate-pulse">
                             ✓ {pendingTarifas.length} tarifas leídas
                         </p>
                     )}
@@ -920,13 +940,13 @@ export const DataUploadView: React.FC = () => {
             <button 
                 onClick={handleUpdateDB}
                 disabled={(!pendingArticulos && !pendingTarifas) || loading}
-                className="w-full bg-brand-600 disabled:bg-slate-300 disabled:text-slate-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-brand-600/20 hover:bg-brand-700 transition-all uppercase text-xs tracking-widest"
+                className="w-full bg-brand-600 disabled:bg-slate-300 disabled:text-slate-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-brand-600/30 hover:bg-brand-700 hover:scale-[1.02] active:scale-[0.98] transition-all uppercase text-xs tracking-widest"
             >
                 {loading ? 'ACTUALIZANDO...' : 'ACTUALIZAR BASE DE DATOS'}
             </button>
             
             {successMsg && (
-                <div className="mt-6 p-4 bg-green-100 text-green-700 rounded-lg font-bold text-sm animate-fade-in">
+                <div className="mt-6 p-4 bg-emerald-100 text-emerald-700 rounded-lg font-bold text-sm animate-fade-in shadow-sm border border-emerald-200">
                     {successMsg}
                 </div>
             )}
@@ -984,21 +1004,24 @@ export const ReportsInboxView: React.FC<{ reports: Report[], onUpdate: any, onRe
                 onConfirm={handleDelete} 
                 onCancel={() => setDeleteConfig({isOpen: false, id: '', name: ''})} 
             />
-            <div className="glass-panel overflow-hidden animate-fade-in flex flex-col max-h-[80vh]">
-                <div className="p-6 border-b dark:border-slate-700 shrink-0 flex justify-between items-center">
-                    <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2"><MailIcon className="w-5 h-5"/> Buzón de Reportes</h2>
-                    <button onClick={onRefresh} className="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Actualizar</button>
+            <div className="glass-panel overflow-hidden animate-fade-in flex flex-col max-h-[80vh] border-white/20 shadow-xl">
+                <div className="p-6 border-b dark:border-slate-700 shrink-0 flex justify-between items-center bg-white/5 dark:bg-slate-900/5">
+                    <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2">
+                        <MailIcon className="w-5 h-5 text-brand-500 animate-pulse"/> 
+                        <span className="vibrant-gradient bg-clip-text text-transparent">Buzón de Reportes</span>
+                    </h2>
+                    <button onClick={onRefresh} className="px-4 py-2 bg-brand-50 dark:bg-slate-700 text-brand-600 dark:text-brand-300 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-brand-100 dark:hover:bg-slate-600 transition-all hover:scale-105 active:scale-95 shadow-sm">Actualizar</button>
                 </div>
                 <div className="overflow-auto custom-scrollbar">
                     <table className="w-full text-left text-sm border-separate border-spacing-0">
                         <thead className="sticky top-0 z-20 shadow-sm">
                             <tr>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Estado</th>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Fecha</th>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Supervisor</th>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Tipo</th>
-                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] text-center">Acciones</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Estado</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Fecha</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Supervisor</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Tipo</th>
+                                <th className="p-4 bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y dark:divide-slate-700">
@@ -1008,30 +1031,30 @@ export const ReportsInboxView: React.FC<{ reports: Report[], onUpdate: any, onRe
                                 </tr>
                             )}
                             {paginatedReports.map(r => (
-                                <tr key={r.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
+                                <tr key={r.id} className="hover:bg-brand-50/30 dark:hover:bg-brand-900/20 transition-all duration-300 group">
                                     <td className="p-4">
                                         {r.read ? (
-                                            <span className="flex items-center gap-2 text-green-600 dark:text-green-400 font-bold text-[10px] uppercase bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded border border-green-100 dark:border-green-800 w-fit">
+                                            <span className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold text-[10px] uppercase bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded border border-emerald-100 dark:border-emerald-800 w-fit shadow-sm">
                                                 ✓ DESCARGADO
                                             </span>
                                         ) : (
-                                            <span className="flex items-center gap-2 text-slate-400 font-bold text-[10px] uppercase border border-dashed border-slate-300 px-2 py-1 rounded w-fit">
+                                            <span className="flex items-center gap-2 text-brand-500 font-bold text-[10px] uppercase border border-dashed border-brand-300 px-2 py-1 rounded w-fit animate-pulse">
                                                 ○ PENDIENTE
                                             </span>
                                         )}
                                     </td>
                                     <td className="p-4 text-slate-600 dark:text-slate-300 font-mono text-xs">{r.date}</td>
-                                    <td className="p-4 font-bold text-slate-800 dark:text-slate-200">{r.supervisorName}</td>
+                                    <td className="p-4 font-bold text-slate-800 dark:text-slate-200 group-hover:text-brand-600 transition-colors">{r.supervisorName}</td>
                                     <td className="p-4 text-slate-500">{r.zoneFilter}</td>
                                     <td className="p-4">
-                                        <span className="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-[10px] font-bold uppercase border border-yellow-200">{r.type}</span>
+                                        <span className="bg-amber-100 text-amber-700 px-2 py-1 rounded text-[10px] font-bold uppercase border border-amber-200 shadow-sm">{r.type}</span>
                                     </td>
                                     <td className="p-4 text-center">
                                         <div className="flex justify-center gap-4">
-                                            <button onClick={() => downloadCSV(r)} className="text-green-600 hover:scale-125 transition-all" title="Descargar CSV">
+                                            <button onClick={() => downloadCSV(r)} className="text-emerald-600 hover:scale-125 transition-all dynamic-icon" title="Descargar CSV">
                                                 <ExportIcon className="w-5 h-5"/>
                                             </button>
-                                            <button onClick={() => setDeleteConfig({isOpen: true, id: r.id, name: r.supervisorName})} className="text-red-500 hover:scale-125 transition-all" title="Borrar Reporte">
+                                            <button onClick={() => setDeleteConfig({isOpen: true, id: r.id, name: r.supervisorName})} className="text-red-500 hover:scale-125 transition-all dynamic-icon" title="Borrar Reporte">
                                                 <TrashIcon className="w-5 h-5"/>
                                             </button>
                                         </div>
@@ -1087,26 +1110,26 @@ export const BackupView: React.FC<{ backups: Backup[], currentData: AppData, onU
     };
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="glass-panel p-8 text-center h-fit">
-                <div className="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center text-green-600 mb-4 mx-auto">
-                    <HistoryIcon className="w-8 h-8" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fade-in">
+            <div className="glass-panel p-8 text-center h-fit border-white/20 shadow-xl hover:scale-[1.02] transition-transform">
+                <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/20 rounded-full flex items-center justify-center text-emerald-600 mb-4 mx-auto shadow-inner">
+                    <HistoryIcon className="w-8 h-8 animate-spin-slow" />
                 </div>
-                <h3 className="font-bold text-slate-800 dark:text-white mb-2">Crear Punto de Restauración</h3>
-                <p className="text-xs text-slate-500 mb-6">Guarda el estado actual del sistema antes de hacer cambios importantes.</p>
-                <button onClick={createBackup} className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl uppercase text-xs tracking-widest shadow-lg shadow-green-600/20 transition-all">Crear Backup Ahora</button>
+                <h3 className="font-bold text-slate-800 dark:text-white mb-2 uppercase tracking-tight">Punto de Restauración</h3>
+                <p className="text-xs text-slate-500 mb-6 leading-relaxed">Guarda el estado actual del sistema antes de hacer cambios importantes.</p>
+                <button onClick={createBackup} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl uppercase text-xs tracking-widest shadow-lg shadow-emerald-600/30 hover:scale-105 active:scale-95 transition-all">Crear Backup Ahora</button>
             </div>
-            <div className="lg:col-span-2 glass-panel overflow-hidden flex flex-col max-h-[600px]">
-                <div className="p-6 border-b dark:border-slate-700 font-bold uppercase text-sm tracking-widest text-slate-700 dark:text-white">Historial de Copias</div>
+            <div className="lg:col-span-2 glass-panel overflow-hidden flex flex-col max-h-[600px] border-white/20 shadow-xl">
+                <div className="p-6 border-b dark:border-slate-700 font-bold uppercase text-sm tracking-widest vibrant-gradient bg-clip-text text-transparent bg-white/5 dark:bg-slate-900/5">Historial de Copias</div>
                 <div className="overflow-auto custom-scrollbar p-4 space-y-3">
                     {backups.length === 0 && <div className="text-center p-10 text-slate-400 italic">No hay copias de seguridad.</div>}
                     {backups.map(b => (
-                        <div key={b.id} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-700">
+                        <div key={b.id} className="flex items-center justify-between p-4 bg-white/40 dark:bg-slate-900/50 rounded-lg border border-white/20 dark:border-slate-700 hover:bg-brand-50/30 transition-all group">
                             <div>
-                                <h4 className="font-bold text-slate-700 dark:text-slate-200 text-sm">{b.nombre}</h4>
-                                <p className="text-xs text-slate-400">{b.fecha}</p>
+                                <h4 className="font-bold text-slate-700 dark:text-slate-200 text-sm group-hover:text-brand-600 transition-colors">{b.nombre}</h4>
+                                <p className="text-xs text-slate-400 font-mono">{b.fecha}</p>
                             </div>
-                            <button onClick={() => restoreBackup(b)} className="text-xs font-bold text-brand-600 hover:underline uppercase tracking-widest">Restaurar</button>
+                            <button onClick={() => restoreBackup(b)} className="text-xs font-bold text-brand-600 hover:text-brand-700 uppercase tracking-widest bg-brand-50 dark:bg-brand-900/20 px-3 py-1.5 rounded-lg transition-all hover:scale-105 active:scale-95">Restaurar</button>
                         </div>
                     ))}
                 </div>
@@ -1119,16 +1142,25 @@ export const SettingsView: React.FC<{ companyName?: string, onUpdate: any }> = (
     const [name, setName] = useState(companyName || '');
     
     return (
-        <div className="glass-panel p-8 max-w-lg mx-auto">
+        <div className="glass-panel p-8 max-w-lg mx-auto border-white/20 shadow-xl animate-fade-in">
             <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-6 uppercase tracking-tight flex items-center gap-3">
-                <SettingsIcon className="w-6 h-6 text-slate-400"/> Configuración General
+                <SettingsIcon className="w-6 h-6 text-brand-500 animate-spin-slow"/> 
+                <span className="vibrant-gradient bg-clip-text text-transparent">Configuración General</span>
             </h2>
             <div className="space-y-4">
                 <div className="space-y-1">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Nombre de la Empresa</label>
-                    <input type="text" value={name} onChange={e => setName(e.target.value)} className="w-full p-3 border border-slate-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-bold" />
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Nombre de la Empresa</label>
+                    <input 
+                        type="text" 
+                        value={name} 
+                        onChange={e => setName(e.target.value)} 
+                        className="w-full p-4 border border-slate-200 dark:border-slate-700 rounded-xl dark:bg-slate-900/50 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none font-bold transition-all shadow-inner" 
+                    />
                 </div>
-                <button onClick={() => onUpdate({ companyName: name })} className="w-full bg-brand-600 text-white font-bold py-3 rounded-lg uppercase text-xs tracking-widest shadow-lg shadow-brand-600/20 hover:bg-brand-700 transition-all mt-4">
+                <button 
+                    onClick={() => onUpdate({ companyName: name })} 
+                    className="w-full bg-brand-600 text-white font-bold py-4 rounded-xl uppercase text-xs tracking-widest shadow-lg shadow-brand-600/30 hover:bg-brand-700 hover:scale-[1.02] active:scale-[0.98] transition-all mt-4"
+                >
                     Guardar Cambios
                 </button>
             </div>

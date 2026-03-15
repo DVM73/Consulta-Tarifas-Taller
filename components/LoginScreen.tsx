@@ -86,15 +86,15 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, appData }) => {
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-brand-500/10 blur-[100px] pointer-events-none"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-accent-500/10 blur-[100px] pointer-events-none"></div>
 
-      <div className="w-full max-w-[440px] glass-panel rounded-2xl overflow-hidden animate-scale-in p-10 relative z-10">
+      <div className="w-full max-w-[440px] glass-panel rounded-3xl overflow-hidden animate-scale-in p-10 relative z-10 border-white/40 dark:border-slate-700/40">
         <div className="flex flex-col items-center mb-10">
-          <div className="w-16 h-16 text-brand-600 dark:text-brand-400 mb-6 bg-brand-50 dark:bg-brand-900/30 rounded-2xl flex items-center justify-center shadow-sm">
-             <ChatIcon className="w-8 h-8 stroke-[1.5]" />
+          <div className="w-20 h-20 text-brand-600 dark:text-brand-400 mb-6 bg-gradient-to-br from-brand-50 to-brand-100 dark:from-brand-900/40 dark:to-brand-800/20 rounded-3xl flex items-center justify-center shadow-inner group cursor-pointer transition-all duration-500 hover:rotate-6">
+             <ChatIcon className="w-10 h-10 stroke-[1.5] transition-transform duration-500 group-hover:scale-110" />
           </div>
-          <h1 className="text-2xl font-display font-bold text-slate-800 dark:text-white text-center leading-tight mb-3">
+          <h1 className="text-3xl font-display font-bold bg-gradient-to-r from-brand-600 via-slate-800 to-brand-600 dark:from-brand-400 dark:via-white dark:to-brand-400 bg-clip-text text-transparent text-center leading-tight mb-3 animate-gradient-x">
             {companyName}
           </h1>
-          <div className="bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 px-2.5 py-1 rounded-md text-[10px] font-bold mb-4 uppercase tracking-widest">
+          <div className="vibrant-gradient px-4 py-1.5 rounded-full text-[10px] font-black mb-4 uppercase tracking-[0.2em] shadow-lg shadow-brand-500/20 border border-white/20">
             v{APP_VERSION}
           </div>
           

@@ -102,53 +102,67 @@ const AdminDashboard = () => {
     const unreadReports = data?.reports?.filter(r => !r.read).length || 0;
 
     return (
-        <div className="h-screen flex flex-col bg-[#f3f4f6] dark:bg-slate-950 font-sans overflow-hidden">
-            <header className="bg-white dark:bg-slate-900 h-14 px-6 flex justify-between items-center border-b dark:border-slate-800 z-20">
-                <h1 className="text-lg font-bold text-slate-800 dark:text-white">Panel de Administrador</h1>
-                
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm">
-                        <UserIcon className="w-4 h-4" />
-                        <span>{user?.nombre} ({user?.rol})</span>
+        <div className="h-screen flex flex-col bg-[#f8fafc] dark:bg-slate-950 font-sans overflow-hidden">
+            <header className="glass-panel h-16 px-8 flex justify-between items-center z-20 border-b-0 shadow-lg shadow-brand-500/5">
+                <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center shadow-lg shadow-brand-600/30">
+                        <SettingsIcon className="w-5 h-5 text-white animate-spin-slow" />
                     </div>
-                    <ThemeToggle />
-                    <button className="text-slate-400 hover:text-brand-600 transition-colors">
-                        <ChatIcon className="w-5 h-5" />
-                    </button>
-                    <button onClick={logout} className="text-slate-400 hover:text-red-500 transition-colors">
-                        <LogoutIcon className="w-5 h-5" />
-                    </button>
+                    <h1 className="text-xl font-bold text-slate-800 dark:text-white tracking-tight">
+                        <span className="vibrant-gradient bg-clip-text text-transparent">Panel de Administrador</span>
+                    </h1>
+                </div>
+                
+                <div className="flex items-center gap-6">
+                    <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-slate-100 dark:bg-slate-800/50 rounded-full border border-slate-200 dark:border-slate-700">
+                        <div className="w-6 h-6 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center text-brand-600">
+                            <UserIcon className="w-3.5 h-3.5" />
+                        </div>
+                        <span className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">{user?.nombre}</span>
+                        <span className="text-[10px] bg-brand-600 text-white px-2 py-0.5 rounded-full font-bold">{user?.rol}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <ThemeToggle />
+                        <button className="p-2 text-slate-400 hover:text-brand-600 transition-all hover:scale-110 dynamic-icon">
+                            <ChatIcon className="w-5 h-5" />
+                        </button>
+                        <button onClick={logout} className="p-2 text-slate-400 hover:text-red-500 transition-all hover:scale-110 dynamic-icon">
+                            <LogoutIcon className="w-5 h-5" />
+                        </button>
+                    </div>
                 </div>
             </header>
 
-            <main className="flex-1 overflow-auto p-8 custom-scrollbar">
+            <main className="flex-1 overflow-auto p-8 custom-scrollbar bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
                 <div className="max-w-7xl mx-auto">
                     {view === 'menu' ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fade-in">
                             {menuItems.map(item => (
                                 <button
                                     key={item.id}
                                     onClick={() => setView(item.id as AdminView)}
-                                    className="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 flex flex-col items-center text-center group hover:shadow-md transition-all relative"
+                                    className="glass-panel p-10 rounded-2xl flex flex-col items-center text-center group hover:shadow-2xl hover:shadow-brand-500/10 transition-all relative border-white/20 hover:scale-[1.03] active:scale-[0.98] interactive-card"
                                 >
                                     {/* NOTIFICACIÓN CON BANDERA ROJA */}
                                     {item.id === 'reports' && unreadReports > 0 && (
-                                        <div className="absolute top-4 right-4 animate-pulse">
+                                        <div className="absolute top-6 right-6 animate-bounce">
                                             <div className="relative">
-                                                <FlagIcon className="w-8 h-8 text-red-600 fill-red-600 drop-shadow-md" />
-                                                <span className="absolute -top-1 -right-1 bg-white text-red-600 text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center border border-red-100 shadow-sm">
+                                                <FlagIcon className="w-10 h-10 text-red-600 fill-red-600 drop-shadow-xl" />
+                                                <span className="absolute -top-1 -right-1 bg-white text-red-600 text-[10px] font-bold rounded-full h-5 w-5 flex items-center justify-center border-2 border-red-50 shadow-lg">
                                                     {unreadReports}
                                                 </span>
                                             </div>
                                         </div>
                                     )}
                                     
-                                    <div className="mb-6 text-brand-500">
+                                    <div className="mb-8 p-5 bg-brand-50 dark:bg-brand-900/20 rounded-2xl text-brand-600 group-hover:bg-brand-600 group-hover:text-white transition-all duration-500 shadow-inner group-hover:shadow-lg group-hover:shadow-brand-600/30 dynamic-icon">
                                         {/* @ts-ignore: Manejo de iconos personalizados vs componentes */}
                                         {item.isCustomIcon ? <item.icon /> : <item.icon className="w-12 h-12 stroke-[1.5]" />}
                                     </div>
-                                    <h3 className="font-bold text-slate-800 dark:text-white text-base mb-2">{item.label}</h3>
-                                    <p className="text-slate-400 text-xs">{item.desc}</p>
+                                    <h3 className="font-bold text-slate-800 dark:text-white text-lg mb-3 uppercase tracking-tight group-hover:text-brand-600 transition-colors">{item.label}</h3>
+                                    <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{item.desc}</p>
+                                    
+                                    <div className="mt-6 w-10 h-1 bg-slate-100 dark:bg-slate-800 rounded-full group-hover:w-20 group-hover:bg-brand-500 transition-all duration-500"></div>
                                 </button>
                             ))}
                         </div>
@@ -156,11 +170,13 @@ const AdminDashboard = () => {
                         <div className="animate-fade-in">
                             <button 
                                 onClick={() => setView('menu')} 
-                                className="flex items-center gap-2 text-brand-600 font-bold text-xs mb-8 hover:underline uppercase tracking-widest"
+                                className="flex items-center gap-2 text-brand-600 font-bold text-xs mb-10 hover:gap-4 transition-all uppercase tracking-widest bg-brand-50 dark:bg-brand-900/20 px-5 py-2.5 rounded-full w-fit shadow-sm hover:shadow-md"
                             >
                                 <ArrowLeftIcon className="w-4 h-4" /> Volver al menú principal
                             </button>
-                            {renderContent()}
+                            <div className="animate-scale-in">
+                                {renderContent()}
+                            </div>
                         </div>
                     )}
                 </div>

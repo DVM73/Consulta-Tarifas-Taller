@@ -55,24 +55,28 @@ export const DataManagementView = () => {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in">
             {/* SECCIÓN DE EXPORTACIÓN */}
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-10 text-center flex flex-col justify-center h-full">
-                <div className="w-20 h-20 bg-indigo-50 dark:bg-indigo-900/20 rounded-full flex items-center justify-center text-indigo-600 mb-6 mx-auto">
-                    <ExportIcon className="w-10 h-10" />
+            <div className="glass-panel p-10 text-center flex flex-col justify-center h-full border-white/20 shadow-xl hover:scale-[1.02] transition-transform interactive-card">
+                <div className="w-20 h-20 bg-brand-50 dark:bg-brand-900/20 rounded-full flex items-center justify-center text-brand-600 mb-6 mx-auto shadow-inner">
+                    <ExportIcon className="w-10 h-10 animate-pulse" />
                 </div>
-                <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2 uppercase tracking-tight">Exportar Base de Datos</h2>
-                <p className="text-slate-500 mb-8">Descarga una copia completa de todos los datos en formato JSON para seguridad o migración.</p>
-                <button onClick={handleExport} className="w-full bg-brand-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-brand-600/20 hover:bg-brand-700 transition-all uppercase text-xs tracking-widest flex items-center justify-center gap-3">
+                <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2 uppercase tracking-tight">
+                    <span className="vibrant-gradient bg-clip-text text-transparent">Exportar Base de Datos</span>
+                </h2>
+                <p className="text-slate-500 dark:text-slate-400 mb-8 text-sm leading-relaxed">Descarga una copia completa de todos los datos en formato JSON para seguridad o migración.</p>
+                <button onClick={handleExport} className="w-full bg-brand-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-brand-600/30 hover:bg-brand-700 hover:scale-105 active:scale-95 transition-all uppercase text-xs tracking-widest flex items-center justify-center gap-3">
                     <ExportIcon className="w-5 h-5"/> Descargar Copia JSON
                 </button>
             </div>
 
             {/* SECCIÓN DE IMPORTACIÓN */}
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-10 text-center flex flex-col justify-center h-full">
-                <div className="w-20 h-20 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center text-green-600 mb-6 mx-auto">
-                    <ArrowDownIcon className="w-10 h-10" />
+            <div className="glass-panel p-10 text-center flex flex-col justify-center h-full border-white/20 shadow-xl hover:scale-[1.02] transition-transform interactive-card">
+                <div className="w-20 h-20 bg-emerald-50 dark:bg-emerald-900/20 rounded-full flex items-center justify-center text-emerald-600 mb-6 mx-auto shadow-inner">
+                    <ArrowDownIcon className="w-10 h-10 animate-bounce" />
                 </div>
-                <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2 uppercase tracking-tight">Importar Base de Datos</h2>
-                <p className="text-slate-500 mb-8">Restaura el sistema completo cargando un archivo JSON previamente exportado.</p>
+                <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2 uppercase tracking-tight">
+                    <span className="vibrant-gradient bg-clip-text text-transparent">Importar Base de Datos</span>
+                </h2>
+                <p className="text-slate-500 dark:text-slate-400 mb-8 text-sm leading-relaxed">Restaura el sistema completo cargando un archivo JSON previamente exportado.</p>
                 
                 <input 
                     type="file" 
@@ -84,7 +88,7 @@ export const DataManagementView = () => {
                 />
                 <label 
                     htmlFor="file-restore" 
-                    className={`w-full bg-brand-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-brand-600/20 hover:bg-brand-700 transition-all uppercase text-xs tracking-widest flex items-center justify-center gap-3 cursor-pointer ${loading ? 'opacity-50 pointer-events-none' : ''}`}
+                    className={`w-full bg-emerald-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-600/30 hover:bg-emerald-700 hover:scale-105 active:scale-95 transition-all uppercase text-xs tracking-widest flex items-center justify-center gap-3 cursor-pointer ${loading ? 'opacity-50 pointer-events-none' : ''}`}
                 >
                     <UploadIcon className="w-5 h-5"/> {loading ? 'Restaurando...' : 'Seleccionar Archivo JSON'}
                 </label>
