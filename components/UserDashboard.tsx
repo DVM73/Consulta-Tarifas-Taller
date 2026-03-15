@@ -202,9 +202,10 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
 
     const filteredData = useMemo(() => {
         return (articulos || []).filter(art => {
-            if (!art || !art.Referencia || String(art.Referencia).toLowerCase() === 'referencia') return false;
+            const refStr = String(art.Referencia ?? '').replace(/^\uFEFF/, '').replace(/["']/g, '').trim().toLowerCase();
+            if (!art || !art.Referencia || refStr === 'referencia' || refStr === 'cód.' || refStr === 'codigo' || refStr === 'código') return false;
+            
             const desc = String(art.Descripción ?? '').toLowerCase();
-            const refStr = String(art.Referencia ?? '').toLowerCase();
             const search = searchTerm.toLowerCase();
             const matchesSearch = desc.includes(search) || refStr.includes(search);
             if (!matchesSearch) return false;
@@ -266,12 +267,11 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
     const toggleZone = (zona: string) => setSelectedCompareZones(prev => prev.includes(zona) ? prev.filter(z => z !== zona) : [...prev, zona]);
 
     const generateCSV = (type: 'Completo' | 'Solo Notas') => {
-        const validData = filteredData.filter(art => art.Referencia !== 'Referencia' && art.Descripción !== 'Descripción');
-        const dataToExport = type === 'Completo' ? validData : validData.filter(a => notes[String(a.Referencia ?? '')]);
+        const dataToExport = type === 'Completo' ? filteredData : filteredData.filter(a => notes[String(a.Referencia ?? '')]);
         
         const priceHeaders = isComparing 
             ? selectedCompareZones.map(z => `;${z}`).join('') 
-            : ';PVP';
+            : ';PVP;Oferta;Inicio;Fin';
             
         const headerRow = `Referencia;Descripción;Coste${priceHeaders};Nota`;
 
@@ -285,7 +285,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                 });
             } else {
                 const t = getTariffForZone(art.Referencia, zonaFilter);
-                row += `;${t?.['P.V.P.'] || '-'}`;
+                row += `;${t?.['P.V.P.'] || '-'};${t?.['PVP Oferta'] || '-'};${t?.['Fec.Ini.Ofe.'] || '-'};${t?.['Fec.Fin.Ofe.'] || '-'}`;
             }
 
             row += `;${notes[String(art.Referencia ?? '')] || ''}`;
@@ -297,11 +297,13 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
 
     const handleDownloadCSV = (type: 'Completo' | 'Solo Notas') => {
         const link = document.createElement("a");
-        link.href = URL.createObjectURL(new Blob([generateCSV(type)], { type: 'text/csv;charset=utf-8;' }));
+        link.href = URL.createObjectURL(new Blob(['\uFEFF' + generateCSV(type)], { type: 'text/csv;charset=utf-8;' }));
         link.download = `listado_${type.replace(' ', '_')}.csv`;
         link.click();
         URL.revokeObjectURL(link.href);
         setShowExitModal(false);
+        if (onBack) onBack();
+        else logout();
     };
 
     const handleSendToAdmin = async (type: 'Completo' | 'Solo Notas') => {
@@ -345,6 +347,8 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
         } finally {
             setIsSending(false);
             setShowExitModal(false);
+            if (onBack) onBack();
+            else logout();
         }
     };
 
@@ -422,12 +426,48 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                             </>
                         ) : (
                             <>
-                                <h2 className="text-lg font-bold mb-4 text-center text-slate-800 dark:text-white">Tipo de Listado</h2>
-                                <div className="flex flex-col gap-3">
-                                    <button onClick={() => executeExportAction('Completo')} className="w-full px-4 py-3 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-lg font-bold text-sm border-2 border-gray-200 dark:border-slate-700 hover:border-brand-500 transition-colors">Listado completo</button>
-                                    <button onClick={() => executeExportAction('Solo Notas')} className="w-full px-4 py-3 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-lg font-bold text-sm border-2 border-gray-200 dark:border-slate-700 hover:border-brand-500 transition-colors">Sólo Artículos con Notas</button>
-                                    <button onClick={() => setExitModalStep('main')} className="w-full px-4 py-2 mt-2 text-slate-400 text-[10px] uppercase tracking-widest font-bold hover:text-slate-600 dark:hover:text-slate-200 transition-colors">Volver atrás</button>
+                                <div className="w-12 h-12 bg-brand-50 dark:bg-brand-900/20 rounded-full flex items-center justify-center text-brand-600 mb-4 mx-auto">
+                                    {exportAction === 'download' ? <ArrowDownIcon className="w-6 h-6"/> : <MailIcon className="w-6 h-6"/>}
                                 </div>
+                                <h2 className="text-lg font-bold mb-2 text-center text-slate-800 dark:text-white">
+                                    {exportAction === 'download' ? 'Descargar Listado' : 'Enviar a Admin'}
+                                </h2>
+                                <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 text-center">Selecciona qué artículos deseas incluir.</p>
+                                
+                                {isSending ? (
+                                    <div className="flex flex-col items-center justify-center py-8">
+                                        <div className="w-10 h-10 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin mb-4"></div>
+                                        <p className="text-sm font-bold text-slate-600 dark:text-slate-300 animate-pulse">Enviando reporte...</p>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div className="space-y-3 mb-6">
+                                            <button onClick={() => executeExportAction('Completo')} className="w-full flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all border-gray-200 dark:border-slate-700 hover:border-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 text-left group bg-white dark:bg-slate-800">
+                                                <div className="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-slate-600 group-hover:border-brand-500 flex items-center justify-center mr-4 shrink-0">
+                                                    <div className="w-2.5 h-2.5 rounded-full bg-transparent group-hover:bg-brand-500 transition-colors"></div>
+                                                </div>
+                                                <div>
+                                                    <span className="block font-bold text-slate-800 dark:text-slate-100 mb-1">Listado Completo</span>
+                                                    <span className="block text-xs text-slate-500 dark:text-slate-400">Exporta todos los artículos que coinciden con los filtros actuales.</span>
+                                                </div>
+                                            </button>
+                                            
+                                            <button onClick={() => executeExportAction('Solo Notas')} className="w-full flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all border-gray-200 dark:border-slate-700 hover:border-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 text-left group bg-white dark:bg-slate-800">
+                                                <div className="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-slate-600 group-hover:border-brand-500 flex items-center justify-center mr-4 shrink-0">
+                                                    <div className="w-2.5 h-2.5 rounded-full bg-transparent group-hover:bg-brand-500 transition-colors"></div>
+                                                </div>
+                                                <div>
+                                                    <span className="block font-bold text-slate-800 dark:text-slate-100 mb-1">Solo Artículos con Notas</span>
+                                                    <span className="block text-xs text-slate-500 dark:text-slate-400">Exporta únicamente los artículos donde hayas añadido una nota.</span>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        
+                                        <button onClick={() => setExitModalStep('main')} className="w-full px-4 py-3 bg-gray-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg font-bold uppercase text-xs tracking-widest hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors">
+                                            Volver atrás
+                                        </button>
+                                    </>
+                                )}
                             </>
                         )}
                     </div>
