@@ -84,13 +84,14 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
     const [notes, setNotes] = useState<Record<string, string>>({});
     
     const [isBotOpen, setIsBotOpen] = useState(false);
-    const [isExportModalOpen, setIsExportModalOpen] = useState(false);
     const [exportType, setExportType] = useState<'Completo' | 'Solo Notas'>('Completo');
     const [isSending, setIsSending] = useState(false);
     
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(50);
     const [showExitModal, setShowExitModal] = useState(false);
+    const [exitModalStep, setExitModalStep] = useState<'main' | 'export_type'>('main');
+    const [exportAction, setExportAction] = useState<'download' | 'send' | null>(null);
     
     const [showSessionModal, setShowSessionModal] = useState(false);
     const [showOverwriteModal, setShowOverwriteModal] = useState(false);
@@ -147,6 +148,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
         setShowOverwriteModal(false);
         setShowExitModal(false);
         if (onBack) onBack();
+        else logout();
     };
 
     const handleSaveAndExit = async () => {
@@ -157,6 +159,20 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
             setShowOverwriteModal(true);
         } else {
             await performSave();
+        }
+    };
+
+    const handleExitClick = () => {
+        setExitModalStep('main');
+        setShowExitModal(true);
+    };
+
+    const executeExportAction = async (type: 'Completo' | 'Solo Notas') => {
+        setExportType(type);
+        if (exportAction === 'download') {
+            handleDownloadCSV(type);
+        } else if (exportAction === 'send') {
+            await handleSendToAdmin(type);
         }
     };
 
@@ -249,8 +265,9 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
     const toggleAllZones = () => setSelectedCompareZones(prev => prev.length === posList.length ? [] : posList.map(p => p.zona));
     const toggleZone = (zona: string) => setSelectedCompareZones(prev => prev.includes(zona) ? prev.filter(z => z !== zona) : [...prev, zona]);
 
-    const generateCSV = () => {
-        const dataToExport = exportType === 'Completo' ? filteredData : filteredData.filter(a => notes[String(a.Referencia ?? '')]);
+    const generateCSV = (type: 'Completo' | 'Solo Notas') => {
+        const validData = filteredData.filter(art => art.Referencia !== 'Referencia' && art.Descripción !== 'Descripción');
+        const dataToExport = type === 'Completo' ? validData : validData.filter(a => notes[String(a.Referencia ?? '')]);
         
         const priceHeaders = isComparing 
             ? selectedCompareZones.map(z => `;${z}`).join('') 
@@ -278,18 +295,16 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
         return [headerRow, ...rows].join("\n");
     };
 
-    const handleDownloadCSV = () => {
+    const handleDownloadCSV = (type: 'Completo' | 'Solo Notas') => {
         const link = document.createElement("a");
-        link.href = URL.createObjectURL(new Blob([generateCSV()], { type: 'text/csv;charset=utf-8;' }));
-        link.download = `listado_${exportType.replace(' ', '_')}.csv`;
+        link.href = URL.createObjectURL(new Blob([generateCSV(type)], { type: 'text/csv;charset=utf-8;' }));
+        link.download = `listado_${type.replace(' ', '_')}.csv`;
         link.click();
         URL.revokeObjectURL(link.href);
-        setIsExportModalOpen(false);
+        setShowExitModal(false);
     };
 
-    const handleSendToAdmin = async (e?: React.MouseEvent) => {
-        if (e) e.preventDefault();
-        
+    const handleSendToAdmin = async (type: 'Completo' | 'Solo Notas') => {
         setIsSending(true);
         const supervisorRealName = user?.nombre || 'Supervisor';
         
@@ -298,8 +313,8 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
             date: new Date().toLocaleString(),
             supervisorName: supervisorRealName,
             zoneFilter: isComparing ? selectedCompareZones.join(', ') : zonaFilter,
-            type: exportType,
-            csvContent: generateCSV(),
+            type: type,
+            csvContent: generateCSV(type),
             read: false
         };
 
@@ -329,7 +344,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
             alert("✅ Listado guardado en la App.\n(Nota: El aviso por email ha fallado, pero el admin verá el listado en su panel).");
         } finally {
             setIsSending(false);
-            setIsExportModalOpen(false);
+            setShowExitModal(false);
         }
     };
 
@@ -370,18 +385,9 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                 <label className="flex items-center gap-2 text-sm cursor-pointer select-none"><input type="checkbox" checked={showNoPrice} onChange={e => setShowNoPrice(e.target.checked)} className="rounded text-brand-600"/> Sin Precio</label>
                 <label className="flex items-center gap-2 text-sm cursor-pointer select-none"><input type="checkbox" checked={isComparing} onChange={e => setIsComparing(e.target.checked)} className="rounded text-brand-600"/> Comparar</label>
                 <div className="ml-auto flex items-center gap-4 pl-4 border-l dark:border-slate-700">
-                    {onBack && (
-                        <button 
-                            onClick={() => Object.keys(notes).length > 0 ? setShowExitModal(true) : onBack()} 
-                            className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors"
-                        >
-                            <ArrowLeftIcon className="w-4 h-4" /> Volver
-                        </button>
-                    )}
                     <button onClick={() => setIsBotOpen(!isBotOpen)} className="text-slate-500 hover:text-brand-600 transition-colors"><SparklesIcon/></button>
-                    <button onClick={() => setIsExportModalOpen(true)} className="text-slate-500 hover:text-brand-600 transition-colors"><UploadIcon/></button>
                     <ThemeToggle/>
-                    <button onClick={logout} className="text-slate-500 hover:text-red-500 transition-colors"><LogoutIcon/></button>
+                    <button onClick={handleExitClick} className="text-slate-500 hover:text-red-500 transition-colors"><LogoutIcon/></button>
                 </div>
             </header>
 
@@ -401,16 +407,29 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
             {showExitModal && (
                 <div className="fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm z-[100]">
                     <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-xl shadow-2xl p-6">
-                        <div className="w-12 h-12 bg-amber-50 dark:bg-amber-900/20 rounded-full flex items-center justify-center text-amber-600 mb-4 mx-auto">
-                            <Save className="w-6 h-6"/>
-                        </div>
-                        <h2 className="text-lg font-bold mb-2 text-center text-slate-800 dark:text-white">¿Guardar cambios?</h2>
-                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 text-center">Tienes notas sin guardar. ¿Deseas guardar tu sesión antes de salir?</p>
-                        <div className="flex flex-col gap-2">
-                            <button onClick={handleSaveAndExit} className="w-full px-4 py-2.5 bg-brand-600 text-white rounded-lg font-bold uppercase text-xs tracking-widest shadow-lg shadow-brand-600/20">Guardar y Salir</button>
-                            <button onClick={onBack} className="w-full px-4 py-2.5 bg-gray-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg font-bold uppercase text-xs tracking-widest">Salir sin Guardar</button>
-                            <button onClick={() => setShowExitModal(false)} className="w-full px-4 py-2 text-slate-400 text-[10px] uppercase tracking-widest font-bold mt-2">Cancelar</button>
-                        </div>
+                        {exitModalStep === 'main' ? (
+                            <>
+                                <div className="w-12 h-12 bg-amber-50 dark:bg-amber-900/20 rounded-full flex items-center justify-center text-amber-600 mb-4 mx-auto">
+                                    <LogoutIcon className="w-6 h-6"/>
+                                </div>
+                                <h2 className="text-lg font-bold mb-6 text-center text-slate-800 dark:text-white">¿Qué deseas hacer?</h2>
+                                <div className="flex flex-col gap-3">
+                                    <button onClick={() => setShowExitModal(false)} className="w-full px-4 py-3 bg-gray-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg font-bold uppercase text-xs tracking-widest hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors">Cancelar</button>
+                                    <button onClick={() => { setExportAction('download'); setExitModalStep('export_type'); }} className="w-full px-4 py-3 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300 rounded-lg font-bold uppercase text-xs tracking-widest border border-brand-200 dark:border-brand-800 hover:bg-brand-100 dark:hover:bg-brand-900/40 transition-colors">Descargar</button>
+                                    <button onClick={handleSaveAndExit} className="w-full px-4 py-3 bg-brand-600 text-white rounded-lg font-bold uppercase text-xs tracking-widest shadow-lg shadow-brand-600/20 hover:bg-brand-700 transition-colors">Guardar y Salir</button>
+                                    <button onClick={() => { setExportAction('send'); setExitModalStep('export_type'); }} className="w-full px-4 py-3 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300 rounded-lg font-bold uppercase text-xs tracking-widest border border-brand-200 dark:border-brand-800 hover:bg-brand-100 dark:hover:bg-brand-900/40 transition-colors">Enviar a Admin</button>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <h2 className="text-lg font-bold mb-4 text-center text-slate-800 dark:text-white">Tipo de Listado</h2>
+                                <div className="flex flex-col gap-3">
+                                    <button onClick={() => executeExportAction('Completo')} className="w-full px-4 py-3 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-lg font-bold text-sm border-2 border-gray-200 dark:border-slate-700 hover:border-brand-500 transition-colors">Listado completo</button>
+                                    <button onClick={() => executeExportAction('Solo Notas')} className="w-full px-4 py-3 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-lg font-bold text-sm border-2 border-gray-200 dark:border-slate-700 hover:border-brand-500 transition-colors">Sólo Artículos con Notas</button>
+                                    <button onClick={() => setExitModalStep('main')} className="w-full px-4 py-2 mt-2 text-slate-400 text-[10px] uppercase tracking-widest font-bold hover:text-slate-600 dark:hover:text-slate-200 transition-colors">Volver atrás</button>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             )}
@@ -558,68 +577,6 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                     </div>
                 )}
             </main>
-
-            {isExportModalOpen && (
-                <div 
-                    className="fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
-                    style={{ zIndex: 99999 }}
-                >
-                    <div className="bg-white dark:bg-slate-900 w-full max-w-lg rounded-xl shadow-2xl border border-gray-100 dark:border-slate-800 overflow-hidden">
-                        <div className="p-6 border-b dark:border-slate-700 flex justify-between items-center">
-                            <div className="flex items-center gap-3">
-                                <ExportIcon className="w-6 h-6 text-brand-600"/>
-                                <h2 className="text-lg font-bold text-slate-800 dark:text-white">Exportar Listado</h2>
-                            </div>
-                            <button onClick={() => setIsExportModalOpen(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
-                                <CloseIcon className="w-5 h-5"/>
-                            </button>
-                        </div>
-                        <div className="p-8 space-y-6">
-                            <div>
-                                <h3 className="text-sm font-bold text-slate-600 dark:text-slate-300 mb-3">Selecciona el tipo de exportación:</h3>
-                                <div className="space-y-3">
-                                    <label onClick={() => setExportType('Completo')} className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${exportType === 'Completo' ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/20' : 'border-gray-200 dark:border-slate-700 hover:border-brand-300'}`}>
-                                        <input type="radio" name="export-type" checked={exportType === 'Completo'} readOnly className="h-4 w-4 text-brand-600 border-gray-300 focus:ring-brand-500" />
-                                        <div className="ml-4">
-                                            <span className="font-bold text-slate-800 dark:text-slate-100">Listado Completo</span>
-                                            <p className="text-xs text-slate-500 dark:text-slate-400">Exporta todos los artículos que coinciden con los filtros actuales.</p>
-                                        </div>
-                                    </label>
-                                     <label onClick={() => setExportType('Solo Notas')} className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${exportType === 'Solo Notas' ? 'border-brand-500 bg-brand-50 dark:bg-brand-900/20' : 'border-gray-200 dark:border-slate-700 hover:border-brand-300'}`}>
-                                        <input type="radio" name="export-type" checked={exportType === 'Solo Notas'} readOnly className="h-4 w-4 text-brand-600 border-gray-300 focus:ring-brand-500" />
-                                        <div className="ml-4">
-                                            <span className="font-bold text-slate-800 dark:text-slate-100">Solo Artículos con Notas</span>
-                                            <p className="text-xs text-slate-500 dark:text-slate-400">Exporta únicamente los artículos donde hayas añadido una nota.</p>
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="bg-gray-50 dark:bg-slate-800/50 p-6 flex flex-wrap justify-end gap-3">
-                            <button onClick={() => setIsExportModalOpen(false)} className="px-5 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700 rounded-lg transition-all uppercase tracking-widest">
-                                Cancelar
-                            </button>
-                            <button onClick={handleDownloadCSV} className="px-5 py-2.5 text-xs font-bold text-brand-700 bg-brand-100 hover:bg-brand-200 dark:bg-brand-900/50 dark:text-brand-300 dark:hover:bg-brand-900 rounded-lg transition-all uppercase tracking-widest flex items-center gap-2">
-                                <ArrowDownIcon className="w-4 h-4" />
-                                Descargar
-                            </button>
-                            <button onClick={handleSaveAndExit} className="px-5 py-2.5 text-xs font-bold text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-lg shadow-green-600/20 transition-all uppercase tracking-widest flex items-center gap-2">
-                                <Save className="w-4 h-4"/>
-                                Guardar y Salir
-                            </button>
-                            <button 
-                                onClick={handleSendToAdmin} 
-                                disabled={isSending}
-                                type="button"
-                                className="px-5 py-2.5 text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-lg shadow-lg shadow-brand-600/20 transition-all uppercase tracking-widest flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                <MailIcon className="w-4 h-4"/>
-                                {isSending ? 'Enviando...' : 'Enviar a Admin'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
             
             {isBotOpen && <div className="fixed bottom-20 right-5 w-96 h-[500px] shadow-lg rounded-lg z-50 bg-white dark:bg-slate-800 border dark:border-slate-700 overflow-hidden"><Chatbot contextData={JSON.stringify(filteredData)}/></div>}
         </div>
