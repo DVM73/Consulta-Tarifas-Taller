@@ -24,7 +24,7 @@ const isValidConfig =
     firebaseConfig.projectId &&
     firebaseConfig.projectId !== 'undefined';
 
-console.log("🔍 Diagnóstico Firebase (v3.0.1):");
+console.log("🔍 Diagnóstico Firebase (v3.0.0):");
 console.log("- API Key detectada:", firebaseConfig.apiKey ? "SÍ (Oculta)" : "NO");
 console.log("- Project ID detectado:", firebaseConfig.projectId ? `SÍ (${firebaseConfig.projectId})` : "NO");
 
