@@ -340,21 +340,6 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                     <option>Carnicería</option>
                     <option>Charcutería</option>
                 </select>
-            </header>
-
-            {showExitModal && (
-                <div className="fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm z-[100]">
-                    <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-xl shadow-2xl p-6">
-                        <h2 className="text-lg font-bold mb-4 text-slate-800 dark:text-white">¿Qué desea hacer?</h2>
-                        <div className="flex flex-col gap-3">
-                            <button onClick={() => setShowExitModal(false)} className="w-full px-4 py-2 bg-gray-200 dark:bg-slate-700 rounded-lg text-slate-800 dark:text-slate-200">Cancelar</button>
-                            <button onClick={() => { setShowExitModal(false); setIsExportModalOpen(true); }} className="w-full px-4 py-2 bg-brand-600 text-white rounded-lg">Descargar</button>
-                            <button onClick={handleSaveAndExit} className="w-full px-4 py-2 bg-green-600 text-white rounded-lg">Guardar y Salir</button>
-                            <button onClick={handleSendToAdmin} className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg">Enviar a Admin</button>
-                        </div>
-                    </div>
-                </div>
-            )}
 
                 <select value={familiaFilter} onChange={e => setFamiliaFilter(e.target.value)} className="bg-gray-50 dark:bg-slate-800 rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 font-medium max-w-[150px] cursor-pointer">
                     <option value="Todas">Todas las Familias</option>
@@ -374,6 +359,20 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                     <button onClick={logout} className="text-slate-500 hover:text-red-500 transition-colors"><LogoutIcon/></button>
                 </div>
             </header>
+
+            {showExitModal && (
+                <div className="fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm z-[100]">
+                    <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-xl shadow-2xl p-6">
+                        <h2 className="text-lg font-bold mb-4 text-slate-800 dark:text-white">¿Qué desea hacer?</h2>
+                        <div className="flex flex-col gap-3">
+                            <button onClick={() => setShowExitModal(false)} className="w-full px-4 py-2 bg-gray-200 dark:bg-slate-700 rounded-lg text-slate-800 dark:text-slate-200">Cancelar</button>
+                            <button onClick={() => { setShowExitModal(false); setIsExportModalOpen(true); }} className="w-full px-4 py-2 bg-brand-600 text-white rounded-lg">Descargar</button>
+                            <button onClick={handleSaveAndExit} className="w-full px-4 py-2 bg-green-600 text-white rounded-lg">Guardar y Salir</button>
+                            <button onClick={handleSendToAdmin} className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg">Enviar a Admin</button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {isComparing && <div className="bg-white dark:bg-slate-800 p-2 flex flex-wrap gap-2 border-b dark:border-slate-700 shadow-sm z-30"><label className="flex items-center gap-2 text-sm px-2"><input type="checkbox" onChange={toggleAllZones} className="rounded text-brand-600"/> Todas las Zonas</label>{(posList || []).map(p=> p ? <label key={p.id} className="flex items-center gap-2 text-sm px-2"><input type="checkbox" checked={selectedCompareZones.includes(p.zona)} onChange={()=>toggleZone(p.zona)} className="rounded text-brand-600"/>{p.zona}</label> : null)}</div>}
 
