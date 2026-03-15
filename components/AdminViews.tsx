@@ -24,11 +24,12 @@ import { getAppData, saveAllData, overwriteAllData } from '../services/dataServi
 const exportToCSV = (data: any[], filename: string) => {
     if (!data || data.length === 0) return;
     const headers = Object.keys(data[0]).filter(k => k !== 'id' && k !== 'clave');
+    const headerString = headers.join(';');
     const csvContent = [
-        headers.join(';'),
-        ...data.map(row => headers.map(h => String(row[h] ?? '').replace(/;/g, ',').replace(/"/g, '""')).join(';'))
+        headerString,
+        ...data.map(row => headers.map(h => String(row[h] ?? '').replace(/;/g, ',').replace(/"/g, '""')).join(';')).filter(rowString => rowString !== headerString)
     ].join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = filename;
@@ -962,7 +963,7 @@ export const ReportsInboxView: React.FC<{ reports: Report[], onUpdate: any, onRe
         }
 
         const link = document.createElement("a");
-        link.href = URL.createObjectURL(new Blob([content], { type: 'text/csv;charset=utf-8;' }));
+        link.href = URL.createObjectURL(new Blob(['\uFEFF' + content], { type: 'text/csv;charset=utf-8;' }));
         link.download = `reporte_${r.supervisorName}_${r.date.replace(/\//g,'-')}.csv`;
         link.click();
         markAsRead(r);

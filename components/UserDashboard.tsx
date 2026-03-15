@@ -156,6 +156,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
         
         const existingSession = await getSession(user.id);
         if (existingSession) {
+            setShowExitModal(false);
             setShowOverwriteModal(true);
         } else {
             await performSave();
@@ -203,7 +204,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
     const filteredData = useMemo(() => {
         return (articulos || []).filter(art => {
             const refStr = String(art.Referencia ?? '').replace(/^\uFEFF/, '').replace(/["']/g, '').trim().toLowerCase();
-            if (!art || !art.Referencia || refStr === 'referencia' || refStr === 'cód.' || refStr === 'codigo' || refStr === 'código') return false;
+            if (!art || !art.Referencia || refStr === 'referencia' || refStr === 'cód.' || refStr === 'codigo' || refStr === 'código' || refStr === 'cód. art.' || refStr === 'cod. art.') return false;
             
             const desc = String(art.Descripción ?? '').toLowerCase();
             const search = searchTerm.toLowerCase();
@@ -290,7 +291,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
 
             row += `;${notes[String(art.Referencia ?? '')] || ''}`;
             return row;
-        });
+        }).filter(row => !row.startsWith('Referencia;Descripción;Coste'));
         
         return [headerRow, ...rows].join("\n");
     };

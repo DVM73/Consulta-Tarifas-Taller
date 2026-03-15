@@ -73,19 +73,21 @@ const FileConverter: React.FC = () => {
     const downloadCSV = (data: any[], filename: string) => {
         if (data.length === 0) return;
         const headers = Object.keys(data[0]);
+        const headerString = headers.join(';');
+        
         // Asegurar que no haya duplicados en las cabeceras si se pasan como datos
         const csvContent = [
-            headers.join(';'),
+            headerString,
             ...data.map(row => headers.map(h => {
                 const val = row[h];
                 if (typeof val === 'number') {
                     return val.toFixed(2).replace('.', ',');
                 }
                 return String(val ?? '').replace(/"/g, '""');
-            }).join(';'))
+            }).join(';')).filter(rowString => rowString !== headerString)
         ].join('\n');
         
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
         link.download = filename;
@@ -97,7 +99,7 @@ const FileConverter: React.FC = () => {
         for (let i = 2; i < data.length; i++) {
             const row = data[i];
             const ref = String(row[1] ?? '').trim();
-            if (!ref) continue;
+            if (!ref || ref.toLowerCase() === 'referencia' || ref.toLowerCase() === 'cód.' || ref.toLowerCase() === 'codigo' || ref.toLowerCase() === 'código') continue;
 
             const costoBase = parseFloat(String(row[11] ?? '').replace(',', '.')) || 0;
             const iva = parseFloat(String(row[12] ?? '').replace(',', '.')) || 0;
@@ -127,7 +129,7 @@ const FileConverter: React.FC = () => {
         for (let i = 5; i < data.length; i++) {
             const row = data[i];
             const codArt = String(row[4] ?? '').trim().replace(/^0+/, '');
-            if (!codArt) continue;
+            if (!codArt || codArt.toLowerCase() === 'cód. art.' || codArt.toLowerCase() === 'cod. art.' || codArt.toLowerCase() === 'codigo' || codArt.toLowerCase() === 'código') continue;
 
             const cleanPrice = (val: any) => {
                 const str = String(val).replace(',', '.').replace(/[^0-9.]/g, '');
