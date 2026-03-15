@@ -74,8 +74,15 @@ const FileConverter: React.FC = () => {
         if (data.length === 0) return;
         const headers = Object.keys(data[0]);
         const csvContent = [
-            headers.join(';'),
-            ...data.map(row => headers.map(h => String(row[h] ?? '').replace(/"/g, '""')).join(';'))
+            headers.join(';'), // Solo una cabecera
+            ...data.map(row => headers.map(h => {
+                const val = row[h];
+                // Formatear números a 2 decimales con coma
+                if (typeof val === 'number') {
+                    return val.toFixed(2).replace('.', ',');
+                }
+                return String(val ?? '').replace(/"/g, '""');
+            }).join(';'))
         ].join('\n');
         
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -86,63 +93,58 @@ const FileConverter: React.FC = () => {
     };
 
     const processArticulos = async (data: any[][]) => {
-        // Ignorar filas 1 y 2 (índices 0 y 1)
         const newArticulos: any[] = [];
         for (let i = 2; i < data.length; i++) {
             const row = data[i];
-            
-            // Columna B (Referencia) = índice 1
             const ref = String(row[1] ?? '').trim();
             if (!ref) continue;
 
-            // Columna L (Ult. Costo) = índice 11, Columna M (IVA) = índice 12
             const costoBase = parseFloat(String(row[11] ?? '').replace(',', '.')) || 0;
             const iva = parseFloat(String(row[12] ?? '').replace(',', '.')) || 0;
-            const nuevoCosto = costoBase + ((costoBase * iva) / 100);
+            // Redondeo estricto a 2 decimales
+            const nuevoCosto = Math.round((costoBase + ((costoBase * iva) / 100)) * 100) / 100;
 
             newArticulos.push({
                 Referencia: ref,
-                Sección: String(row[3] ?? ''), // Columna D
-                Descripción: String(row[4] ?? ''), // Columna E
-                Familia: String(row[5] ?? ''), // Columna F
-                'Ult.Pro': String(row[9] ?? ''), // Columna J
-                'Ult. Costo': nuevoCosto, // Calculado
-                IVA: String(row[12] ?? ''), // Columna M
-                UN: String(row[13] ?? '') // Columna N
+                Sección: String(row[3] ?? ''),
+                Descripción: String(row[4] ?? ''),
+                Familia: String(row[5] ?? ''),
+                'Ult.Pro': String(row[9] ?? ''),
+                'Ult. Costo': nuevoCosto,
+                IVA: String(row[12] ?? ''),
+                UN: String(row[13] ?? '')
             });
         }
 
         await saveAllData({ articulos: newArticulos });
+        downloadCSV(newArticulos, 'articulos_procesados.csv');
         setMessage({ type: 'success', text: `Se han cargado ${newArticulos.length} artículos correctamente.` });
         setProcessing(false);
     };
 
     const processTarifas = async (data: any[][]) => {
-        // Ignorar filas 1 a 5 (índices 0 a 4)
         const newTarifas: any[] = [];
         for (let i = 5; i < data.length; i++) {
             const row = data[i];
-            
-            // Columna E (Cód. Art.) = índice 4
             const codArt = String(row[4] ?? '').trim().replace(/^0+/, '');
             if (!codArt) continue;
 
-            // Función para limpiar precios: eliminar todo excepto números, puntos y comas. Si es 0 o vacío, devolver null.
             const cleanPrice = (val: any) => {
                 const str = String(val).replace(',', '.').replace(/[^0-9.]/g, '');
                 const num = parseFloat(str);
-                return (isNaN(num) || num === 0) ? null : num;
+                // Redondeo estricto a 2 decimales
+                return (isNaN(num) || num === 0) ? null : Math.round(num * 100) / 100;
             };
 
             newTarifas.push({
-                'Cod.': String(row[2] ?? ''), // Columna C
-                'Tienda': String(row[3] ?? ''), // Columna D
+                'Cod.': String(row[2] ?? ''),
+                'Tienda': String(row[3] ?? ''),
                 'Cód. Art.': codArt,
-                'Descripción': String(row[5] ?? ''), // Columna F
-                'P.V.P.': cleanPrice(row[9]), // Columna J
-                'PVP Oferta': cleanPrice(row[12]), // Columna M
-                'Fec.Ini.Ofe.': String(row[14] ?? ''), // Columna O
-                'Fec.Fin.Ofe.': String(row[17] ?? '') // Columna R
+                'Descripción': String(row[5] ?? ''),
+                'P.V.P.': cleanPrice(row[9]),
+                'PVP Oferta': cleanPrice(row[12]),
+                'Fec.Ini.Ofe.': String(row[14] ?? ''),
+                'Fec.Fin.Ofe.': String(row[17] ?? '')
             });
         }
 
