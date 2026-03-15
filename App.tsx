@@ -81,10 +81,10 @@ const App: React.FC = () => {
   }), [theme, user, appData]);
   
   const LoadingFallback = () => (
-    <div className="h-full w-full flex items-center justify-center bg-[#f3f4f6] dark:bg-slate-950">
+    <div className="h-full w-full flex items-center justify-center bg-slate-50 dark:bg-slate-950">
         <div className="text-center">
-            <div className="w-10 h-10 border-4 border-brand-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-brand-600 font-bold text-xs tracking-widest uppercase animate-pulse">Cargando Módulo...</p>
+            <div className="w-10 h-10 border-4 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-brand-600 dark:text-brand-400 font-bold text-xs tracking-widest uppercase animate-pulse">Cargando Módulo...</p>
         </div>
     </div>
   );
@@ -92,10 +92,10 @@ const App: React.FC = () => {
   const renderContent = () => {
     if (loading) {
         return (
-            <div className="h-screen w-screen flex items-center justify-center bg-[#f3f4f6] dark:bg-slate-950">
+            <div className="h-screen w-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
                 <div className="text-center animate-fade-in">
-                    <div className="w-12 h-12 border-4 border-brand-600 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
-                    <p className="text-brand-600 font-bold uppercase text-xs tracking-widest animate-pulse">Iniciando Sistema...</p>
+                    <div className="w-12 h-12 border-4 border-brand-500 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+                    <p className="text-brand-600 dark:text-brand-400 font-bold uppercase text-xs tracking-widest animate-pulse">Iniciando Sistema...</p>
                 </div>
             </div>
         );
@@ -103,11 +103,11 @@ const App: React.FC = () => {
 
     if (loadError && !appData) {
         return (
-            <div className="h-screen w-screen flex items-center justify-center bg-red-50 p-10">
-                <div className="text-center max-w-lg">
-                    <h1 className="text-red-600 font-bold text-xl mb-4">Error de Inicio</h1>
-                    <p className="text-red-800 mb-6">{loadError}</p>
-                    <button onClick={() => window.location.reload()} className="bg-red-600 text-white px-6 py-2 rounded-lg font-bold">Reintentar</button>
+            <div className="h-screen w-screen flex items-center justify-center bg-red-50 dark:bg-red-950/20 p-10">
+                <div className="text-center max-w-lg glass-panel p-8 rounded-2xl">
+                    <h1 className="text-red-600 dark:text-red-400 font-bold text-xl mb-4">Error de Inicio</h1>
+                    <p className="text-red-800 dark:text-red-300 mb-6">{loadError}</p>
+                    <button onClick={() => window.location.reload()} className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-bold transition-colors">Reintentar</button>
                 </div>
             </div>
         );
@@ -130,7 +130,7 @@ const App: React.FC = () => {
 
   return (
     <AppContext.Provider value={contextValue}>
-      <div className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 h-screen w-screen overflow-hidden flex flex-col font-sans">
+      <div className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 h-screen w-screen overflow-hidden flex flex-col font-sans selection:bg-brand-500/30">
         {renderContent()}
       </div>
     </AppContext.Provider>

@@ -81,21 +81,25 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, appData }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] dark:bg-slate-950 flex items-center justify-center p-4">
-      <div className="w-full max-w-[440px] bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-gray-200 dark:border-slate-800 overflow-hidden animate-fade-in p-10">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-brand-500/10 blur-[100px] pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-accent-500/10 blur-[100px] pointer-events-none"></div>
+
+      <div className="w-full max-w-[440px] glass-panel rounded-2xl overflow-hidden animate-scale-in p-10 relative z-10">
         <div className="flex flex-col items-center mb-10">
-          <div className="w-16 h-16 text-brand-600 mb-4">
-             <ChatIcon className="w-full h-full stroke-[1.5]" />
+          <div className="w-16 h-16 text-brand-600 dark:text-brand-400 mb-6 bg-brand-50 dark:bg-brand-900/30 rounded-2xl flex items-center justify-center shadow-sm">
+             <ChatIcon className="w-8 h-8 stroke-[1.5]" />
           </div>
-          <h1 className="text-xl font-bold text-gray-800 dark:text-white text-center leading-tight mb-2">
+          <h1 className="text-2xl font-display font-bold text-slate-800 dark:text-white text-center leading-tight mb-3">
             {companyName}
           </h1>
-          <div className="bg-yellow-400 text-black px-2 py-0.5 rounded text-[10px] font-bold mb-4 uppercase">
+          <div className="bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 px-2.5 py-1 rounded-md text-[10px] font-bold mb-4 uppercase tracking-widest">
             v{APP_VERSION}
           </div>
           
           {connectionStatus === 'error' && (
-               <div className="bg-red-50 text-red-600 p-3 rounded-lg text-xs text-center border border-red-100 mb-2">
+               <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-3 rounded-lg text-xs text-center border border-red-100 dark:border-red-800/50 mb-2 w-full">
                   <strong>⚠️ Error de Carga</strong><br/>
                   No se han podido cargar los datos iniciales.
               </div>
@@ -103,28 +107,28 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, appData }) => {
 
           {/* Indicador visual de modo Setup */}
           {users.length === 0 && connectionStatus !== 'loading' && (
-              <div className="bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 p-2 rounded text-[10px] font-bold uppercase tracking-wide border border-blue-100 dark:border-blue-800 mb-2">
+              <div className="bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 p-2 rounded text-[10px] font-bold uppercase tracking-wide border border-blue-100 dark:border-blue-800 mb-2 w-full text-center">
                   Modo Configuración Inicial Activo
               </div>
           )}
           
           {connectionStatus === 'ready' && users.length > 0 && (
-               <p className="text-gray-500 dark:text-gray-400 text-sm">Inicia sesión en tu cuenta</p>
+               <p className="text-slate-500 dark:text-slate-400 text-sm">Inicia sesión en tu cuenta</p>
           )}
         </div>
 
         <form className="space-y-6" onSubmit={handleLogin}>
           <div>
-            <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-tight">Usuario</label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+            <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">Usuario</label>
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400 group-focus-within:text-brand-500 transition-colors">
                 <UserIcon className="h-5 w-5" />
               </div>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => { setUsername(e.target.value); setError(''); }}
-                className="block w-full border border-gray-300 dark:border-slate-700 rounded-lg pl-10 pr-3 py-3 text-sm focus:ring-brand-500 focus:border-brand-500 outline-none transition-all bg-white dark:bg-slate-800 dark:text-white"
+                className="block w-full border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-3 py-3 text-sm focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 outline-none transition-all bg-white/50 dark:bg-slate-800/50 dark:text-white backdrop-blur-sm"
                 placeholder={users.length === 0 ? "admin" : "usuario"}
                 autoComplete="username"
               />
@@ -132,23 +136,23 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, appData }) => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-tight">Contraseña</label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+            <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">Contraseña</label>
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400 group-focus-within:text-brand-500 transition-colors">
                 <LockIcon className="h-5 w-5" />
               </div>
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => { setPassword(e.target.value); setError(''); }}
-                className="block w-full border border-gray-300 dark:border-slate-700 rounded-lg pl-10 pr-10 py-3 text-sm focus:ring-brand-500 focus:border-brand-500 outline-none transition-all bg-white dark:bg-slate-800 dark:text-white"
+                className="block w-full border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-10 py-3 text-sm focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 outline-none transition-all bg-white/50 dark:bg-slate-800/50 dark:text-white backdrop-blur-sm"
                 placeholder={users.length === 0 ? "admin" : "contraseña"}
                 autoComplete="current-password"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition-colors"
+                className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-brand-500 transition-colors"
                 aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
               >
                 {showPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
@@ -157,7 +161,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, appData }) => {
           </div>
 
           {error && (
-            <div className="text-red-500 text-xs font-bold text-center bg-red-50 dark:bg-red-900/20 py-2 rounded-lg border border-red-100 dark:border-red-500/20">
+            <div className="text-red-500 text-xs font-bold text-center bg-red-50 dark:bg-red-900/20 py-2 rounded-lg border border-red-100 dark:border-red-500/20 animate-fade-in">
               {error}
             </div>
           )}
@@ -165,19 +169,19 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, appData }) => {
           <button
             type="submit"
             disabled={connectionStatus === 'loading'}
-            className="w-full bg-brand-600 text-white font-bold py-3 rounded-lg hover:bg-brand-700 transition-all shadow-md shadow-brand-500/20 active:scale-[0.98] disabled:bg-slate-300 disabled:cursor-not-allowed"
+            className="w-full bg-brand-600 text-white font-bold py-3.5 rounded-xl hover:bg-brand-700 transition-all shadow-md shadow-brand-500/20 hover:shadow-lg hover:shadow-brand-500/30 active:scale-[0.98] disabled:bg-slate-300 disabled:cursor-not-allowed mt-4"
           >
             {connectionStatus === 'loading' ? 'Cargando...' : 'Iniciar sesión'}
           </button>
         </form>
 
-        <div className="mt-8 text-center border-t border-gray-100 dark:border-slate-800 pt-6">
-          <p className="text-gray-400 text-[10px] font-medium mb-1">
+        <div className="mt-8 text-center border-t border-slate-100 dark:border-slate-800/50 pt-6">
+          <p className="text-slate-400 dark:text-slate-500 text-[10px] font-medium mb-1 tracking-wide">
             Datos: {lastUpdatedText}
           </p>
         </div>
       </div>
-      <div className="fixed bottom-4 right-4 text-gray-400 dark:text-gray-600 text-[10px] font-medium pointer-events-none">
+      <div className="fixed bottom-4 right-4 text-slate-400 dark:text-slate-600 text-[10px] uppercase tracking-widest font-bold pointer-events-none">
         By Daniel Vázquez Medina
       </div>
     </div>

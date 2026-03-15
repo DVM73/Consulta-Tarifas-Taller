@@ -6,12 +6,33 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        display: ['Space Grotesk', 'sans-serif'],
+      },
       colors: {
         brand: {
-          50: '#f5f7ff', 100: '#ebf0fe', 200: '#dae3ff', 300: '#b8c7ff', 400: '#8ca1ff',
-          500: '#5e71ff', 600: '#4f46e5', 700: '#3d34c1', 800: '#332c9c', 900: '#2e2a7d',
+          50: '#f0f4f8',
+          100: '#d9e2ec',
+          200: '#bcccdc',
+          300: '#9fb3c8',
+          400: '#829ab1',
+          500: '#627d98',
+          600: '#486581',
+          700: '#334e68',
+          800: '#243b53',
+          900: '#102a43',
+          950: '#0b1d2e',
         },
+        accent: {
+          500: '#3b82f6',
+          600: '#2563eb',
+        }
       },
+      boxShadow: {
+        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+        'glass-dark': '0 8px 32px 0 rgba(0, 0, 0, 0.3)',
+      }
     },
   },
   plugins: [],

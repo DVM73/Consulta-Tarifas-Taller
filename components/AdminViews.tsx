@@ -64,7 +64,7 @@ export const ReadOnlyUsersList: FC<{ users: User[], posList: PointOfSale[] }> = 
     }, [users, posList]);
 
     return (
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden animate-fade-in max-h-[80vh] flex flex-col">
+        <div className="glass-panel overflow-hidden animate-fade-in max-h-[80vh] flex flex-col">
             <div className="p-6 border-b dark:border-slate-700 shrink-0">
                 <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight">Usuarios</h2>
             </div>
@@ -72,19 +72,19 @@ export const ReadOnlyUsersList: FC<{ users: User[], posList: PointOfSale[] }> = 
                 <table className="w-full text-left text-sm border-separate border-spacing-0">
                     <thead className="sticky top-0 z-20 shadow-sm">
                         <tr>
-                            <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód. Tienda</th>
-                            <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
-                            <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Nombre</th>
-                            <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Departamento</th>
-                            <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Grupo</th>
-                            <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Ver PVP</th>
+                            <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód. Tienda</th>
+                            <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
+                            <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Nombre</th>
+                            <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Departamento</th>
+                            <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Grupo</th>
+                            <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Ver PVP</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y dark:divide-slate-700">
                         {sortedUsers.map(u => {
                             const uPos = posList.find(p => p.zona === u.zona);
                             return (
-                                <tr key={u.id} className="hover:bg-gray-50/50 dark:hover:bg-slate-900/50 transition-colors">
+                                <tr key={u.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
                                     <td className="p-4 font-bold">{uPos?.código || '--'}</td>
                                     <td className="p-4 font-medium">{u.zona}</td>
                                     <td className="p-4 font-bold text-slate-800 dark:text-slate-200">{u.nombre}</td>
@@ -102,7 +102,7 @@ export const ReadOnlyUsersList: FC<{ users: User[], posList: PointOfSale[] }> = 
 };
 
 export const ReadOnlyPOSList: FC<{ pos: PointOfSale[] }> = ({ pos }) => (
-    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden animate-fade-in max-h-[80vh] flex flex-col">
+    <div className="glass-panel overflow-hidden animate-fade-in max-h-[80vh] flex flex-col">
         <div className="p-6 border-b dark:border-slate-700 shrink-0">
             <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight">Puntos de Venta</h2>
         </div>
@@ -110,16 +110,16 @@ export const ReadOnlyPOSList: FC<{ pos: PointOfSale[] }> = ({ pos }) => (
             <table className="w-full text-left text-sm border-separate border-spacing-0">
                 <thead className="sticky top-0 z-20 shadow-sm">
                     <tr>
-                        <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód</th>
-                        <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
-                        <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Grupo</th>
-                        <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Dirección</th>
-                        <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Población</th>
+                        <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód</th>
+                        <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
+                        <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Grupo</th>
+                        <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Dirección</th>
+                        <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Población</th>
                     </tr>
                 </thead>
                 <tbody className="divide-y dark:divide-slate-700">
                     {pos.map(p => (
-                        <tr key={p.id} className="hover:bg-gray-50/50 dark:hover:bg-slate-900/50 transition-colors">
+                        <tr key={p.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
                             <td className="p-4 font-bold">{p.código}</td>
                             <td className="p-4 font-bold text-slate-700 dark:text-slate-200">{p.zona}</td>
                             <td className="p-4 text-slate-500">{p.grupo}</td>
@@ -134,11 +134,11 @@ export const ReadOnlyPOSList: FC<{ pos: PointOfSale[] }> = ({ pos }) => (
 );
 
 export const ReadOnlyGroupsList: FC<{ groups: Group[] }> = ({ groups }) => (
-    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 max-w-2xl mx-auto overflow-hidden animate-fade-in">
-        <div className="p-6 border-b dark:border-slate-700 bg-gray-50/50 dark:bg-slate-900/50 uppercase font-bold text-sm tracking-widest text-slate-700 dark:text-white">Grupos</div>
+    <div className="glass-panel max-w-2xl mx-auto overflow-hidden animate-fade-in">
+        <div className="p-6 border-b dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 uppercase font-bold text-sm tracking-widest text-slate-700 dark:text-white">Grupos</div>
         <div className="p-4 divide-y dark:divide-slate-700">
             {groups.map(g => (
-                <div key={g.id} className="py-4 flex justify-between items-center px-4 hover:bg-gray-50/50 dark:hover:bg-slate-900/30 transition-all">
+                <div key={g.id} className="py-4 flex justify-between items-center px-4 hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-all">
                     <span className="font-bold text-slate-700 dark:text-slate-200 text-sm tracking-wide">{g.nombre}</span>
                 </div>
             ))}
@@ -157,7 +157,7 @@ const ConfirmModal: React.FC<{
     if (!isOpen) return null;
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-            <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-xl shadow-2xl border border-gray-100 dark:border-slate-800 overflow-hidden transform transition-all">
+            <div className="glass-panel w-full max-w-md shadow-2xl overflow-hidden transform transition-all">
                 <div className="p-8">
                     <div className="w-14 h-14 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center text-red-600 mb-6 mx-auto">
                         <TrashIcon className="w-7 h-7" />
@@ -165,8 +165,8 @@ const ConfirmModal: React.FC<{
                     <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-3 text-center">{title}</h3>
                     <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed text-center">{message}</p>
                 </div>
-                <div className="bg-gray-50 dark:bg-slate-800/50 p-6 flex justify-end gap-3">
-                    <button onClick={onCancel} className="px-6 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700 rounded-lg transition-all uppercase tracking-widest">No, cancelar</button>
+                <div className="bg-slate-50 dark:bg-slate-800/50 p-6 flex justify-end gap-3">
+                    <button onClick={onCancel} className="px-6 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-all uppercase tracking-widest">No, cancelar</button>
                     <button onClick={onConfirm} className="px-6 py-2.5 text-xs font-bold text-white bg-red-600 hover:bg-red-700 rounded-lg shadow-lg shadow-red-600/20 transition-all uppercase tracking-widest">Sí, borrar</button>
                 </div>
             </div>
@@ -255,27 +255,27 @@ export const UsersList: React.FC<{ users: User[], posList: PointOfSale[] } & Vie
     };
 
     if (isFormOpen) return (
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-10 animate-fade-in max-w-4xl mx-auto">
+        <div className="glass-panel p-10 animate-fade-in max-w-4xl mx-auto">
             <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-8 uppercase tracking-tight">
                 {editingUser ? 'Editar Usuario' : 'Nuevo Usuario'}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Nombre del Usuario</label>
-                    <input type="text" value={formData.nombre} onChange={e => setFormData({...formData, nombre: e.target.value})} className="w-full p-3 border border-gray-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-medium" placeholder="Nombre y apellidos..." />
+                    <input type="text" value={formData.nombre} onChange={e => setFormData({...formData, nombre: e.target.value})} className="w-full p-3 border border-slate-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-medium" placeholder="Nombre y apellidos..." />
                 </div>
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Contraseña</label>
                     <div className="relative">
-                        <input type={showPassword ? "text" : "password"} value={formData.clave} onChange={e => setFormData({...formData, clave: e.target.value})} className="w-full p-3 border border-gray-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-medium" />
-                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-3.5 text-gray-400 hover:text-brand-600">
+                        <input type={showPassword ? "text" : "password"} value={formData.clave} onChange={e => setFormData({...formData, clave: e.target.value})} className="w-full p-3 border border-slate-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-medium" />
+                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-3.5 text-slate-400 hover:text-brand-600">
                             {showPassword ? <EyeOffIcon className="w-5 h-5"/> : <EyeIcon className="w-5 h-5"/>}
                         </button>
                     </div>
                 </div>
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Zona</label>
-                    <select value={formData.zona} onChange={e => handleZonaChange(e.target.value)} className="w-full p-3 border border-gray-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-medium">
+                    <select value={formData.zona} onChange={e => handleZonaChange(e.target.value)} className="w-full p-3 border border-slate-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-medium">
                         {posList.map(p => (
                             <option key={p.id} value={p.zona}>{p.zona}</option>
                         ))}
@@ -283,11 +283,11 @@ export const UsersList: React.FC<{ users: User[], posList: PointOfSale[] } & Vie
                 </div>
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Grupo</label>
-                    <input type="text" value={formData.grupo} disabled className="w-full p-3 border border-gray-200 dark:border-slate-700 rounded-lg bg-gray-50 dark:bg-slate-800 text-gray-500 font-bold outline-none cursor-not-allowed" />
+                    <input type="text" value={formData.grupo} disabled className="w-full p-3 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-500 font-bold outline-none cursor-not-allowed" />
                 </div>
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Departamento</label>
-                    <select value={formData.departamento} onChange={e => setFormData({...formData, departamento: e.target.value})} className="w-full p-3 border border-gray-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-medium">
+                    <select value={formData.departamento} onChange={e => setFormData({...formData, departamento: e.target.value})} className="w-full p-3 border border-slate-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-medium">
                         <option value="Carnicero/a">Carnicero/a</option>
                         <option value="Charcutero/a">Charcutero/a</option>
                         <option value="Carnicero/a y Charcutero/a">Carnicero/a y Charcutero/a</option>
@@ -296,7 +296,7 @@ export const UsersList: React.FC<{ users: User[], posList: PointOfSale[] } & Vie
                 </div>
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Rol</label>
-                    <select value={formData.rol} onChange={e => setFormData({...formData, rol: e.target.value as UserRole})} className="w-full p-3 border border-gray-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-medium">
+                    <select value={formData.rol} onChange={e => setFormData({...formData, rol: e.target.value as UserRole})} className="w-full p-3 border border-slate-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-medium">
                         <option value="Normal">Normal</option>
                         <option value="Supervisor">Supervisor</option>
                         <option value="admin">Admin</option>
@@ -304,14 +304,14 @@ export const UsersList: React.FC<{ users: User[], posList: PointOfSale[] } & Vie
                 </div>
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Ver Precios (PVP)</label>
-                    <select value={formData.verPVP ? "Si" : "No"} onChange={e => setFormData({...formData, verPVP: e.target.value === "Si"})} className="w-full p-3 border border-gray-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-medium">
+                    <select value={formData.verPVP ? "Si" : "No"} onChange={e => setFormData({...formData, verPVP: e.target.value === "Si"})} className="w-full p-3 border border-slate-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-medium">
                         <option value="No">No</option>
                         <option value="Si">Si</option>
                     </select>
                 </div>
             </div>
             <div className="mt-12 flex justify-end gap-4">
-                <button onClick={() => setIsFormOpen(false)} className="px-8 py-3 bg-gray-400 text-white font-bold rounded-lg uppercase text-xs tracking-widest hover:bg-gray-500 transition-all">Cancelar</button>
+                <button onClick={() => setIsFormOpen(false)} className="px-8 py-3 bg-slate-400 text-white font-bold rounded-lg uppercase text-xs tracking-widest hover:bg-slate-500 transition-all">Cancelar</button>
                 <button onClick={handleSave} className="px-8 py-3 bg-brand-600 text-white font-bold rounded-lg uppercase text-xs tracking-widest shadow-lg shadow-brand-600/20 hover:bg-brand-700 transition-all">Guardar Usuario</button>
             </div>
         </div>
@@ -326,7 +326,7 @@ export const UsersList: React.FC<{ users: User[], posList: PointOfSale[] } & Vie
                 onConfirm={() => { onUpdate({ users: users.filter(u => u.id !== deleteConfig.id) }); setDeleteConfig({isOpen: false, id: '', name: ''}); }} 
                 onCancel={() => setDeleteConfig({isOpen: false, id: '', name: ''})} 
             />
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden animate-fade-in flex flex-col max-h-[80vh]">
+            <div className="glass-panel overflow-hidden animate-fade-in flex flex-col max-h-[80vh]">
                 <div className="p-6 flex justify-between items-center border-b dark:border-slate-700 shrink-0">
                     <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2"><UserIcon className="w-5 h-5"/> Administración de Usuarios</h2>
                     <div className="flex items-center gap-3">
@@ -338,20 +338,20 @@ export const UsersList: React.FC<{ users: User[], posList: PointOfSale[] } & Vie
                     <table className="w-full text-left text-sm border-separate border-spacing-0">
                         <thead className="sticky top-0 z-20 shadow-sm">
                             <tr>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód. Tienda</th>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Nombre</th>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Departamento</th>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Grupo</th>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Ver PVP</th>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] text-center">Acciones</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód. Tienda</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Nombre</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Departamento</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Grupo</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Ver PVP</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y dark:divide-slate-700">
                             {paginatedUsers.map(u => {
                                 const uPos = posList.find(p => p.zona === u.zona);
                                 return (
-                                    <tr key={u.id} className="hover:bg-gray-50/50 dark:hover:bg-slate-900/50 transition-colors">
+                                    <tr key={u.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
                                         <td className="p-4 font-bold">{uPos?.código || '--'}</td>
                                         <td className="p-4 font-medium">{u.zona}</td>
                                         <td className="p-4 font-bold text-slate-800 dark:text-slate-200">{u.nombre}</td>
@@ -371,7 +371,7 @@ export const UsersList: React.FC<{ users: User[], posList: PointOfSale[] } & Vie
                     </table>
                 </div>
                 {totalPages > 1 && (
-                    <div className="p-4 border-t dark:border-slate-700 flex justify-between items-center bg-gray-50/50 dark:bg-slate-900/50 shrink-0">
+                    <div className="p-4 border-t dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50 shrink-0">
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Página {currentPage} de {totalPages}</p>
                         <div className="flex gap-2">
                             <button 
@@ -458,20 +458,20 @@ export const POSList: React.FC<{ pos: PointOfSale[] } & ViewProps> = ({ pos, onU
     };
 
     if (isFormOpen) return (
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-10 animate-fade-in max-w-4xl mx-auto">
+        <div className="glass-panel p-10 animate-fade-in max-w-4xl mx-auto">
             <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-8 uppercase tracking-tight">Datos del Punto de Venta</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Código (01-99)</label>
-                    <input type="text" maxLength={2} value={formData.código} onChange={e => setFormData({...formData, código: e.target.value.replace(/\D/g,'')})} className="w-full p-3 border border-gray-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-bold" placeholder="01" />
+                    <input type="text" maxLength={2} value={formData.código} onChange={e => setFormData({...formData, código: e.target.value.replace(/\D/g,'')})} className="w-full p-3 border border-slate-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-bold" placeholder="01" />
                 </div>
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Zona (3 Dígitos)</label>
-                    <input type="text" maxLength={3} value={formData.zona} onChange={e => setFormData({...formData, zona: e.target.value.toUpperCase()})} className="w-full p-3 border border-gray-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-bold uppercase" placeholder="CH2" />
+                    <input type="text" maxLength={3} value={formData.zona} onChange={e => setFormData({...formData, zona: e.target.value.toUpperCase()})} className="w-full p-3 border border-slate-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-bold uppercase" placeholder="CH2" />
                 </div>
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Grupo</label>
-                    <select value={formData.grupo} onChange={e => setFormData({...formData, grupo: e.target.value})} className="w-full p-3 border border-gray-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-medium">
+                    <select value={formData.grupo} onChange={e => setFormData({...formData, grupo: e.target.value})} className="w-full p-3 border border-slate-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-medium">
                         <option value="">-- Seleccionar Grupo --</option>
                         {groupsList.map(g => (
                             <option key={g.id} value={g.nombre}>{g.nombre}</option>
@@ -480,15 +480,15 @@ export const POSList: React.FC<{ pos: PointOfSale[] } & ViewProps> = ({ pos, onU
                 </div>
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Población</label>
-                    <input type="text" value={formData.población} onChange={e => setFormData({...formData, población: e.target.value})} className="w-full p-3 border border-gray-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-medium" placeholder="Ciudad..." />
+                    <input type="text" value={formData.población} onChange={e => setFormData({...formData, población: e.target.value})} className="w-full p-3 border border-slate-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-medium" placeholder="Ciudad..." />
                 </div>
                 <div className="md:col-span-2 space-y-1">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Dirección</label>
-                    <input type="text" value={formData.dirección} onChange={e => setFormData({...formData, dirección: e.target.value})} className="w-full p-3 border border-gray-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-medium" placeholder="Calle, número..." />
+                    <input type="text" value={formData.dirección} onChange={e => setFormData({...formData, dirección: e.target.value})} className="w-full p-3 border border-slate-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-medium" placeholder="Calle, número..." />
                 </div>
             </div>
             <div className="mt-10 flex justify-end gap-3">
-                <button onClick={() => setIsFormOpen(false)} className="px-8 py-3 bg-gray-400 text-white font-bold rounded-lg uppercase text-xs tracking-widest hover:bg-gray-500 transition-all">Cancelar</button>
+                <button onClick={() => setIsFormOpen(false)} className="px-8 py-3 bg-slate-400 text-white font-bold rounded-lg uppercase text-xs tracking-widest hover:bg-slate-500 transition-all">Cancelar</button>
                 <button onClick={handleSave} className="px-8 py-3 bg-brand-600 text-white font-bold rounded-lg uppercase text-xs tracking-widest shadow-lg shadow-brand-600/20 hover:bg-brand-700 transition-all">Guardar Tienda</button>
             </div>
         </div>
@@ -503,7 +503,7 @@ export const POSList: React.FC<{ pos: PointOfSale[] } & ViewProps> = ({ pos, onU
                 onConfirm={() => { onUpdate({ pos: pos.filter(p => p.id !== deleteConfig.id) }); setDeleteConfig({isOpen: false, id: '', name: ''}); }} 
                 onCancel={() => setDeleteConfig({isOpen: false, id: '', name: ''})} 
             />
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden animate-fade-in flex flex-col max-h-[80vh]">
+            <div className="glass-panel overflow-hidden animate-fade-in flex flex-col max-h-[80vh]">
                 <div className="p-6 flex justify-between items-center border-b dark:border-slate-700 shrink-0">
                     <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2"><BuildingIcon className="w-5 h-5"/> Administración de Puntos de Venta</h2>
                     <div className="flex items-center gap-3">
@@ -515,17 +515,17 @@ export const POSList: React.FC<{ pos: PointOfSale[] } & ViewProps> = ({ pos, onU
                     <table className="w-full text-left text-sm border-separate border-spacing-0">
                         <thead className="sticky top-0 z-20 shadow-sm">
                             <tr>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód</th>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Grupo</th>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Dirección</th>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Población</th>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] text-center">Acciones</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Grupo</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Dirección</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Población</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y dark:divide-slate-700">
                             {paginatedPOS.map(p => (
-                                <tr key={p.id} className="hover:bg-gray-50/50 dark:hover:bg-slate-900/50 transition-colors">
+                                <tr key={p.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
                                     <td className="p-4 font-bold">{p.código}</td>
                                     <td className="p-4 font-bold text-slate-700 dark:text-slate-200">{p.zona}</td>
                                     <td className="p-4 text-slate-500">{p.grupo}</td>
@@ -543,7 +543,7 @@ export const POSList: React.FC<{ pos: PointOfSale[] } & ViewProps> = ({ pos, onU
                     </table>
                 </div>
                 {totalPages > 1 && (
-                    <div className="p-4 border-t dark:border-slate-700 flex justify-between items-center bg-gray-50/50 dark:bg-slate-900/50 shrink-0">
+                    <div className="p-4 border-t dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50 shrink-0">
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Página {currentPage} de {totalPages}</p>
                         <div className="flex gap-2">
                             <button 
@@ -596,15 +596,15 @@ export const GroupsList: React.FC<{ groups: Group[] } & ViewProps> = ({ groups, 
     };
 
     if (isFormOpen) return (
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-8 animate-fade-in max-w-lg mx-auto">
+        <div className="glass-panel p-8 animate-fade-in max-w-lg mx-auto">
             <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-6 uppercase tracking-tight">{editingGroup ? 'Editar Grupo' : 'Nuevo Grupo'}</h2>
             <div className="space-y-4">
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Nombre del Grupo</label>
-                    <input type="text" value={name} onChange={e => setName(e.target.value)} className="w-full p-3 border border-gray-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-bold" />
+                    <input type="text" value={name} onChange={e => setName(e.target.value)} className="w-full p-3 border border-slate-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-bold" />
                 </div>
                 <div className="flex justify-end gap-3 pt-4">
-                    <button onClick={() => setIsFormOpen(false)} className="px-6 py-2.5 bg-gray-400 text-white font-bold rounded-lg uppercase text-xs tracking-widest">Cancelar</button>
+                    <button onClick={() => setIsFormOpen(false)} className="px-6 py-2.5 bg-slate-400 text-white font-bold rounded-lg uppercase text-xs tracking-widest">Cancelar</button>
                     <button onClick={handleSave} className="px-6 py-2.5 bg-brand-600 text-white font-bold rounded-lg uppercase text-xs tracking-widest shadow-lg shadow-brand-600/20">Guardar</button>
                 </div>
             </div>
@@ -620,7 +620,7 @@ export const GroupsList: React.FC<{ groups: Group[] } & ViewProps> = ({ groups, 
                 onConfirm={() => { onUpdate({ groups: groups.filter(g => g.id !== deleteConfig.id) }); setDeleteConfig({isOpen: false, id: '', name: ''}); }} 
                 onCancel={() => setDeleteConfig({isOpen: false, id: '', name: ''})} 
             />
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden animate-fade-in max-w-2xl mx-auto flex flex-col max-h-[80vh]">
+            <div className="glass-panel overflow-hidden animate-fade-in max-w-2xl mx-auto flex flex-col max-h-[80vh]">
                 <div className="p-6 flex justify-between items-center border-b dark:border-slate-700 shrink-0">
                     <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2"><BuildingIcon className="w-5 h-5"/> Gestión de Grupos</h2>
                     <div className="flex items-center gap-3">
@@ -630,7 +630,7 @@ export const GroupsList: React.FC<{ groups: Group[] } & ViewProps> = ({ groups, 
                 </div>
                 <div className="overflow-auto custom-scrollbar p-4 divide-y dark:divide-slate-700">
                     {paginatedGroups.map(g => (
-                        <div key={g.id} className="py-4 flex justify-between items-center px-4 hover:bg-gray-50/50 dark:hover:bg-slate-900/30 transition-all rounded-lg">
+                        <div key={g.id} className="py-4 flex justify-between items-center px-4 hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-all rounded-lg">
                             <span className="font-bold text-slate-700 dark:text-slate-200">{g.nombre}</span>
                             <div className="flex gap-4">
                                 <button onClick={() => openEdit(g)} className="text-brand-600 hover:scale-110"><EditIcon className="w-4 h-4"/></button>
@@ -640,7 +640,7 @@ export const GroupsList: React.FC<{ groups: Group[] } & ViewProps> = ({ groups, 
                     ))}
                 </div>
                 {totalPages > 1 && (
-                    <div className="p-4 border-t dark:border-slate-700 flex justify-between items-center bg-gray-50/50 dark:bg-slate-900/50 shrink-0">
+                    <div className="p-4 border-t dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50 shrink-0">
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Página {currentPage} de {totalPages}</p>
                         <div className="flex gap-2">
                             <button 
@@ -698,19 +698,19 @@ export const FamiliesList: React.FC<{ families: Family[] } & ViewProps> = ({ fam
     };
 
     if (isFormOpen) return (
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-8 animate-fade-in max-w-lg mx-auto">
+        <div className="glass-panel p-8 animate-fade-in max-w-lg mx-auto">
             <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-6 uppercase tracking-tight">{editingFamily ? 'Editar Familia' : 'Nueva Familia'}</h2>
             <div className="space-y-4">
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Código (Ej: 05)</label>
-                    <input type="text" value={formData.id} disabled={!!editingFamily} onChange={e => setFormData({...formData, id: e.target.value})} className="w-full p-3 border border-gray-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-bold" />
+                    <input type="text" value={formData.id} disabled={!!editingFamily} onChange={e => setFormData({...formData, id: e.target.value})} className="w-full p-3 border border-slate-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-bold" />
                 </div>
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Nombre</label>
-                    <input type="text" value={formData.nombre} onChange={e => setFormData({...formData, nombre: e.target.value})} className="w-full p-3 border border-gray-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-bold" />
+                    <input type="text" value={formData.nombre} onChange={e => setFormData({...formData, nombre: e.target.value})} className="w-full p-3 border border-slate-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-bold" />
                 </div>
                 <div className="flex justify-end gap-3 pt-4">
-                    <button onClick={() => setIsFormOpen(false)} className="px-6 py-2.5 bg-gray-400 text-white font-bold rounded-lg uppercase text-xs tracking-widest">Cancelar</button>
+                    <button onClick={() => setIsFormOpen(false)} className="px-6 py-2.5 bg-slate-400 text-white font-bold rounded-lg uppercase text-xs tracking-widest">Cancelar</button>
                     <button onClick={handleSave} className="px-6 py-2.5 bg-brand-600 text-white font-bold rounded-lg uppercase text-xs tracking-widest shadow-lg shadow-brand-600/20">Guardar</button>
                 </div>
             </div>
@@ -726,7 +726,7 @@ export const FamiliesList: React.FC<{ families: Family[] } & ViewProps> = ({ fam
                 onConfirm={() => { onUpdate({ families: families.filter(f => f.id !== deleteConfig.id) }); setDeleteConfig({isOpen: false, id: '', name: ''}); }} 
                 onCancel={() => setDeleteConfig({isOpen: false, id: '', name: ''})} 
             />
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden animate-fade-in max-w-3xl mx-auto flex flex-col max-h-[80vh]">
+            <div className="glass-panel overflow-hidden animate-fade-in max-w-3xl mx-auto flex flex-col max-h-[80vh]">
                 <div className="p-6 flex justify-between items-center border-b dark:border-slate-700 shrink-0">
                     <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2"><TagIcon className="w-5 h-5"/> Familias de Artículos</h2>
                     <div className="flex items-center gap-3">
@@ -738,14 +738,14 @@ export const FamiliesList: React.FC<{ families: Family[] } & ViewProps> = ({ fam
                     <table className="w-full text-left text-sm border-separate border-spacing-0">
                         <thead className="sticky top-0 z-20 shadow-sm">
                             <tr>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód</th>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] w-full">Descripción</th>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] text-center">Acciones</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Cód</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] w-full">Descripción</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y dark:divide-slate-700">
                             {paginatedFamilies.map(f => (
-                                <tr key={f.id} className="hover:bg-gray-50/50 dark:hover:bg-slate-900/50 transition-colors">
+                                <tr key={f.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
                                     <td className="p-4 font-mono font-bold text-slate-500">{f.id}</td>
                                     <td className="p-4 font-bold text-slate-800 dark:text-slate-200">{f.nombre}</td>
                                     <td className="p-4 text-center">
@@ -760,7 +760,7 @@ export const FamiliesList: React.FC<{ families: Family[] } & ViewProps> = ({ fam
                     </table>
                 </div>
                 {totalPages > 1 && (
-                    <div className="p-4 border-t dark:border-slate-700 flex justify-between items-center bg-gray-50/50 dark:bg-slate-900/50 shrink-0">
+                    <div className="p-4 border-t dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50 shrink-0">
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Página {currentPage} de {totalPages}</p>
                         <div className="flex gap-2">
                             <button 
@@ -867,7 +867,7 @@ export const DataUploadView: React.FC = () => {
     };
 
     return (
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-10 animate-fade-in max-w-4xl mx-auto text-center">
+        <div className="glass-panel p-10 animate-fade-in max-w-4xl mx-auto text-center">
             <div className="w-20 h-20 bg-brand-50 dark:bg-brand-900/20 rounded-full flex items-center justify-center text-brand-600 mb-6 mx-auto">
                 <UploadIcon className="w-10 h-10" />
             </div>
@@ -875,7 +875,7 @@ export const DataUploadView: React.FC = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
                 {/* CAJA ARTÍCULOS */}
-                <div className={`border-2 border-dashed rounded-xl p-8 transition-colors ${pendingArticulos ? 'border-green-500 bg-green-50 dark:bg-green-900/10' : 'border-gray-300 dark:border-slate-600'}`}>
+                <div className={`border-2 border-dashed rounded-xl p-8 transition-colors ${pendingArticulos ? 'border-green-500 bg-green-50 dark:bg-green-900/10' : 'border-slate-300 dark:border-slate-600'}`}>
                     <h3 className="font-bold text-slate-700 dark:text-slate-300 mb-4 text-sm uppercase">Archivo de Artículos (CSV)</h3>
                     <input 
                         type="file" 
@@ -896,7 +896,7 @@ export const DataUploadView: React.FC = () => {
                 </div>
 
                 {/* CAJA TARIFAS */}
-                <div className={`border-2 border-dashed rounded-xl p-8 transition-colors ${pendingTarifas ? 'border-green-500 bg-green-50 dark:bg-green-900/10' : 'border-gray-300 dark:border-slate-600'}`}>
+                <div className={`border-2 border-dashed rounded-xl p-8 transition-colors ${pendingTarifas ? 'border-green-500 bg-green-50 dark:bg-green-900/10' : 'border-slate-300 dark:border-slate-600'}`}>
                     <h3 className="font-bold text-slate-700 dark:text-slate-300 mb-4 text-sm uppercase">Archivo de Tarifas (CSV)</h3>
                     <input 
                         type="file" 
@@ -920,7 +920,7 @@ export const DataUploadView: React.FC = () => {
             <button 
                 onClick={handleUpdateDB}
                 disabled={(!pendingArticulos && !pendingTarifas) || loading}
-                className="w-full bg-brand-600 disabled:bg-gray-300 disabled:text-gray-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-brand-600/20 hover:bg-brand-700 transition-all uppercase text-xs tracking-widest"
+                className="w-full bg-brand-600 disabled:bg-slate-300 disabled:text-slate-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-brand-600/20 hover:bg-brand-700 transition-all uppercase text-xs tracking-widest"
             >
                 {loading ? 'ACTUALIZANDO...' : 'ACTUALIZAR BASE DE DATOS'}
             </button>
@@ -984,7 +984,7 @@ export const ReportsInboxView: React.FC<{ reports: Report[], onUpdate: any, onRe
                 onConfirm={handleDelete} 
                 onCancel={() => setDeleteConfig({isOpen: false, id: '', name: ''})} 
             />
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden animate-fade-in flex flex-col max-h-[80vh]">
+            <div className="glass-panel overflow-hidden animate-fade-in flex flex-col max-h-[80vh]">
                 <div className="p-6 border-b dark:border-slate-700 shrink-0 flex justify-between items-center">
                     <h2 className="text-lg font-bold text-slate-800 dark:text-white uppercase tracking-tight flex items-center gap-2"><MailIcon className="w-5 h-5"/> Buzón de Reportes</h2>
                     <button onClick={onRefresh} className="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Actualizar</button>
@@ -993,12 +993,12 @@ export const ReportsInboxView: React.FC<{ reports: Report[], onUpdate: any, onRe
                     <table className="w-full text-left text-sm border-separate border-spacing-0">
                         <thead className="sticky top-0 z-20 shadow-sm">
                             <tr>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Estado</th>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Fecha</th>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Supervisor</th>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Tipo</th>
-                                <th className="p-4 bg-gray-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] text-center">Acciones</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Estado</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Fecha</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Supervisor</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Zona</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px]">Tipo</th>
+                                <th className="p-4 bg-slate-50 dark:bg-slate-900 border-b dark:border-slate-700 text-slate-500 font-bold uppercase text-[10px] text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y dark:divide-slate-700">
@@ -1008,7 +1008,7 @@ export const ReportsInboxView: React.FC<{ reports: Report[], onUpdate: any, onRe
                                 </tr>
                             )}
                             {paginatedReports.map(r => (
-                                <tr key={r.id} className="hover:bg-gray-50/50 dark:hover:bg-slate-900/50 transition-colors">
+                                <tr key={r.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
                                     <td className="p-4">
                                         {r.read ? (
                                             <span className="flex items-center gap-2 text-green-600 dark:text-green-400 font-bold text-[10px] uppercase bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded border border-green-100 dark:border-green-800 w-fit">
@@ -1042,7 +1042,7 @@ export const ReportsInboxView: React.FC<{ reports: Report[], onUpdate: any, onRe
                     </table>
                 </div>
                 {totalPages > 1 && (
-                    <div className="p-4 border-t dark:border-slate-700 flex justify-between items-center bg-gray-50/50 dark:bg-slate-900/50 shrink-0">
+                    <div className="p-4 border-t dark:border-slate-700 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50 shrink-0">
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Página {currentPage} de {totalPages}</p>
                         <div className="flex gap-2">
                             <button 
@@ -1088,7 +1088,7 @@ export const BackupView: React.FC<{ backups: Backup[], currentData: AppData, onU
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-8 text-center h-fit">
+            <div className="glass-panel p-8 text-center h-fit">
                 <div className="w-16 h-16 bg-green-50 dark:bg-green-900/20 rounded-full flex items-center justify-center text-green-600 mb-4 mx-auto">
                     <HistoryIcon className="w-8 h-8" />
                 </div>
@@ -1096,12 +1096,12 @@ export const BackupView: React.FC<{ backups: Backup[], currentData: AppData, onU
                 <p className="text-xs text-slate-500 mb-6">Guarda el estado actual del sistema antes de hacer cambios importantes.</p>
                 <button onClick={createBackup} className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl uppercase text-xs tracking-widest shadow-lg shadow-green-600/20 transition-all">Crear Backup Ahora</button>
             </div>
-            <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden flex flex-col max-h-[600px]">
+            <div className="lg:col-span-2 glass-panel overflow-hidden flex flex-col max-h-[600px]">
                 <div className="p-6 border-b dark:border-slate-700 font-bold uppercase text-sm tracking-widest text-slate-700 dark:text-white">Historial de Copias</div>
                 <div className="overflow-auto custom-scrollbar p-4 space-y-3">
                     {backups.length === 0 && <div className="text-center p-10 text-slate-400 italic">No hay copias de seguridad.</div>}
                     {backups.map(b => (
-                        <div key={b.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-900/50 rounded-lg border border-gray-100 dark:border-slate-700">
+                        <div key={b.id} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-100 dark:border-slate-700">
                             <div>
                                 <h4 className="font-bold text-slate-700 dark:text-slate-200 text-sm">{b.nombre}</h4>
                                 <p className="text-xs text-slate-400">{b.fecha}</p>
@@ -1119,14 +1119,14 @@ export const SettingsView: React.FC<{ companyName?: string, onUpdate: any }> = (
     const [name, setName] = useState(companyName || '');
     
     return (
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-8 max-w-lg mx-auto">
+        <div className="glass-panel p-8 max-w-lg mx-auto">
             <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-6 uppercase tracking-tight flex items-center gap-3">
                 <SettingsIcon className="w-6 h-6 text-slate-400"/> Configuración General
             </h2>
             <div className="space-y-4">
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Nombre de la Empresa</label>
-                    <input type="text" value={name} onChange={e => setName(e.target.value)} className="w-full p-3 border border-gray-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-bold" />
+                    <input type="text" value={name} onChange={e => setName(e.target.value)} className="w-full p-3 border border-slate-200 dark:border-slate-700 rounded-lg dark:bg-slate-900 focus:border-brand-500 outline-none font-bold" />
                 </div>
                 <button onClick={() => onUpdate({ companyName: name })} className="w-full bg-brand-600 text-white font-bold py-3 rounded-lg uppercase text-xs tracking-widest shadow-lg shadow-brand-600/20 hover:bg-brand-700 transition-all mt-4">
                     Guardar Cambios

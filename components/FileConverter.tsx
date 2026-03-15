@@ -157,7 +157,7 @@ const FileConverter: React.FC = () => {
     };
 
     return (
-        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-gray-100 dark:border-slate-800 p-8 max-w-4xl mx-auto animate-fade-in">
+        <div className="glass-panel p-8 max-w-4xl mx-auto animate-fade-in">
             <div className="text-center mb-10">
                 <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">Importador de Archivos XLS</h2>
                 <p className="text-slate-500 dark:text-slate-400">Selecciona el tipo de archivo que deseas cargar directamente en la base de datos.</p>

@@ -57,7 +57,7 @@ const NoteInput = memo(({
             onChange={e => setVal(e.target.value)}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            className="w-full bg-gray-50 dark:bg-black/20 p-2 rounded-lg border border-transparent focus:border-brand-300 focus:bg-white dark:focus:bg-slate-800 outline-none text-xs transition-all placeholder:text-slate-400"
+            className="w-full bg-slate-50 dark:bg-black/20 p-2 rounded-lg border border-transparent focus:border-brand-300 focus:bg-white dark:focus:bg-slate-800 outline-none text-xs transition-all placeholder:text-slate-400"
             placeholder="Añadir nota..."
         />
     );
@@ -369,36 +369,52 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                         <h2 className="text-lg font-bold mb-4 text-slate-800 dark:text-white">¿Continuar sesión anterior?</h2>
                         <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">Se ha encontrado una sesión de trabajo guardada. ¿Desea continuarla o empezar una nueva?</p>
                         <div className="flex gap-3">
-                            <button onClick={handleNewSession} className="flex-1 px-4 py-2 bg-gray-200 dark:bg-slate-700 rounded-lg text-slate-800 dark:text-slate-200">Nueva</button>
+                            <button onClick={handleNewSession} className="flex-1 px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-lg text-slate-800 dark:text-slate-200">Nueva</button>
                             <button onClick={handleContinueSession} className="flex-1 px-4 py-2 bg-brand-600 text-white rounded-lg">Continuar</button>
                         </div>
                     </div>
                 </div>
             )}
-            <header className="bg-white dark:bg-slate-900 p-4 border-b dark:border-slate-800 flex items-center gap-4 shadow-sm z-40 overflow-x-auto min-h-[72px] whitespace-nowrap">
-                <div className="relative flex-grow min-w-[200px]"><input type="text" placeholder="Buscar por descripción o referencia..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 pr-4 py-2 bg-gray-50 dark:bg-slate-800 rounded-lg w-full text-sm outline-none focus:ring-2 focus:ring-brand-500" /><SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" /></div>
+            <header className="glass-panel p-4 border-b dark:border-slate-800/50 flex items-center gap-4 shadow-sm z-40 overflow-x-auto min-h-[76px] whitespace-nowrap sticky top-0">
+                <div className="relative flex-grow min-w-[250px]">
+                    <input 
+                        type="text" 
+                        placeholder="Buscar por descripción o referencia..." 
+                        value={searchTerm} 
+                        onChange={e => setSearchTerm(e.target.value)} 
+                        className="pl-11 pr-4 py-2.5 bg-slate-100/50 dark:bg-slate-800/50 rounded-xl w-full text-sm outline-none focus:ring-2 focus:ring-brand-500/50 focus:bg-white dark:focus:bg-slate-800 transition-all border border-transparent focus:border-brand-500/30 backdrop-blur-sm" 
+                    />
+                    <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                </div>
                 
-                <select value={seccionFilter} onChange={e => setSeccionFilter(e.target.value)} className="bg-gray-50 dark:bg-slate-800 rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 font-medium cursor-pointer">
+                <select value={seccionFilter} onChange={e => setSeccionFilter(e.target.value)} className="bg-slate-100/50 dark:bg-slate-800/50 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500/50 font-medium cursor-pointer border border-transparent focus:border-brand-500/30 transition-all backdrop-blur-sm">
                     <option>Todas</option>
                     <option>Carnicería</option>
                     <option>Charcutería</option>
                 </select>
 
-                <select value={familiaFilter} onChange={e => setFamiliaFilter(e.target.value)} className="bg-gray-50 dark:bg-slate-800 rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 font-medium max-w-[150px] cursor-pointer">
+                <select value={familiaFilter} onChange={e => setFamiliaFilter(e.target.value)} className="bg-slate-100/50 dark:bg-slate-800/50 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500/50 font-medium max-w-[180px] cursor-pointer border border-transparent focus:border-brand-500/30 transition-all backdrop-blur-sm">
                     <option value="Todas">Todas las Familias</option>
                     {families.map(f => (
                         <option key={f.id} value={f.id}>{f.nombre}</option>
                     ))}
                 </select>
 
-                <select value={zonaFilter} disabled={isComparing} onChange={e => setZonaFilter(e.target.value)} className="bg-gray-50 dark:bg-slate-800 rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 disabled:opacity-50 font-medium cursor-pointer"><option>Todas</option>{(posList || []).map(p=> p ? <option key={p.id}>{p.zona}</option> : null)}</select>
-                <label className="flex items-center gap-2 text-sm cursor-pointer select-none"><input type="checkbox" checked={showOffers} onChange={e => setShowOffers(e.target.checked)} className="rounded text-brand-600"/> Ofertas</label>
-                <label className="flex items-center gap-2 text-sm cursor-pointer select-none"><input type="checkbox" checked={showNoPrice} onChange={e => setShowNoPrice(e.target.checked)} className="rounded text-brand-600"/> Sin Precio</label>
-                <label className="flex items-center gap-2 text-sm cursor-pointer select-none"><input type="checkbox" checked={isComparing} onChange={e => setIsComparing(e.target.checked)} className="rounded text-brand-600"/> Comparar</label>
-                <div className="ml-auto flex items-center gap-4 pl-4 border-l dark:border-slate-700">
-                    <button onClick={() => setIsBotOpen(!isBotOpen)} className="text-slate-500 hover:text-brand-600 transition-colors"><SparklesIcon/></button>
+                <select value={zonaFilter} disabled={isComparing} onChange={e => setZonaFilter(e.target.value)} className="bg-slate-100/50 dark:bg-slate-800/50 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand-500/50 disabled:opacity-50 font-medium cursor-pointer border border-transparent focus:border-brand-500/30 transition-all backdrop-blur-sm">
+                    <option>Todas</option>
+                    {(posList || []).map(p=> p ? <option key={p.id}>{p.zona}</option> : null)}
+                </select>
+
+                <div className="flex items-center gap-3 bg-slate-100/50 dark:bg-slate-800/50 p-1.5 rounded-xl border border-transparent backdrop-blur-sm">
+                    <button onClick={() => setShowOffers(!showOffers)} className={`px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${showOffers ? 'bg-brand-600 text-white shadow-md shadow-brand-500/20' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>Ofertas</button>
+                    <button onClick={() => setShowNoPrice(!showNoPrice)} className={`px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${showNoPrice ? 'bg-red-500 text-white shadow-md shadow-red-500/20' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>Sin PVP</button>
+                    <button onClick={() => setIsComparing(!isComparing)} className={`px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${isComparing ? 'bg-accent-500 text-white shadow-md shadow-accent-500/20' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>Comparar</button>
+                </div>
+
+                <div className="ml-auto flex items-center gap-4 pl-4 border-l border-slate-200 dark:border-slate-700/50">
+                    <button onClick={() => setIsBotOpen(!isBotOpen)} className="text-slate-400 hover:text-brand-500 transition-colors hover:scale-110 active:scale-95"><SparklesIcon/></button>
                     <ThemeToggle/>
-                    <button onClick={handleExitClick} className="text-slate-500 hover:text-red-500 transition-colors"><LogoutIcon/></button>
+                    <button onClick={handleExitClick} className="text-slate-400 hover:text-red-500 transition-colors hover:scale-110 active:scale-95"><LogoutIcon/></button>
                 </div>
             </header>
 
@@ -408,7 +424,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                         <h2 className="text-lg font-bold mb-4 text-slate-800 dark:text-white">¿Sobrescribir sesión?</h2>
                         <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">Ya existe una sesión guardada. Si guarda esta, la anterior se perderá.</p>
                         <div className="flex gap-3">
-                            <button onClick={() => setShowOverwriteModal(false)} className="flex-1 px-4 py-2 bg-gray-200 dark:bg-slate-700 rounded-lg text-slate-800 dark:text-slate-200">Cancelar</button>
+                            <button onClick={() => setShowOverwriteModal(false)} className="flex-1 px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-lg text-slate-800 dark:text-slate-200">Cancelar</button>
                             <button onClick={performSave} className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg">Sobrescribir</button>
                         </div>
                     </div>
@@ -429,7 +445,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                                     <button onClick={() => { setExportAction('download'); setExitModalStep('export_type'); }} className="w-full px-4 py-3 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300 rounded-lg font-bold uppercase text-xs tracking-widest border border-brand-200 dark:border-brand-800 hover:bg-brand-100 dark:hover:bg-brand-900/40 transition-colors">Descargar CSV</button>
                                     <button onClick={() => { setExportAction('send'); setExitModalStep('export_type'); }} className="w-full px-4 py-3 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300 rounded-lg font-bold uppercase text-xs tracking-widest border border-brand-200 dark:border-brand-800 hover:bg-brand-100 dark:hover:bg-brand-900/40 transition-colors">Enviar a Admin</button>
                                     <button onClick={handleExitWithoutSaving} className="w-full px-4 py-3 bg-transparent text-red-600 dark:text-red-400 rounded-lg font-bold uppercase text-xs tracking-widest border border-red-200 dark:border-red-900/50 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">Salir sin Guardar</button>
-                                    <button onClick={() => setShowExitModal(false)} className="w-full px-4 py-3 bg-gray-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg font-bold uppercase text-xs tracking-widest hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors">Cancelar</button>
+                                    <button onClick={() => setShowExitModal(false)} className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg font-bold uppercase text-xs tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Cancelar</button>
                                 </div>
                             </>
                         ) : (
@@ -450,8 +466,8 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                                 ) : (
                                     <>
                                         <div className="space-y-3 mb-6">
-                                            <button onClick={() => executeExportAction('Completo')} className="w-full flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all border-gray-200 dark:border-slate-700 hover:border-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 text-left group bg-white dark:bg-slate-800">
-                                                <div className="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-slate-600 group-hover:border-brand-500 flex items-center justify-center mr-4 shrink-0">
+                                            <button onClick={() => executeExportAction('Completo')} className="w-full flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all border-slate-200 dark:border-slate-700 hover:border-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 text-left group bg-white dark:bg-slate-800">
+                                                <div className="w-5 h-5 rounded-full border-2 border-slate-300 dark:border-slate-600 group-hover:border-brand-500 flex items-center justify-center mr-4 shrink-0">
                                                     <div className="w-2.5 h-2.5 rounded-full bg-transparent group-hover:bg-brand-500 transition-colors"></div>
                                                 </div>
                                                 <div>
@@ -460,8 +476,8 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                                                 </div>
                                             </button>
                                             
-                                            <button onClick={() => executeExportAction('Solo Notas')} className="w-full flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all border-gray-200 dark:border-slate-700 hover:border-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 text-left group bg-white dark:bg-slate-800">
-                                                <div className="w-5 h-5 rounded-full border-2 border-gray-300 dark:border-slate-600 group-hover:border-brand-500 flex items-center justify-center mr-4 shrink-0">
+                                            <button onClick={() => executeExportAction('Solo Notas')} className="w-full flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all border-slate-200 dark:border-slate-700 hover:border-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 text-left group bg-white dark:bg-slate-800">
+                                                <div className="w-5 h-5 rounded-full border-2 border-slate-300 dark:border-slate-600 group-hover:border-brand-500 flex items-center justify-center mr-4 shrink-0">
                                                     <div className="w-2.5 h-2.5 rounded-full bg-transparent group-hover:bg-brand-500 transition-colors"></div>
                                                 </div>
                                                 <div>
@@ -471,7 +487,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                                             </button>
                                         </div>
                                         
-                                        <button onClick={() => setExitModalStep('main')} className="w-full px-4 py-3 bg-gray-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg font-bold uppercase text-xs tracking-widest hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors">
+                                        <button onClick={() => setExitModalStep('main')} className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg font-bold uppercase text-xs tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                                             Volver atrás
                                         </button>
                                     </>
@@ -486,70 +502,70 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
 
             <main className="flex-1 overflow-auto bg-[#f3f4f6] dark:bg-slate-950 relative custom-scrollbar">
                 <table className="w-full text-left text-sm border-separate border-spacing-0">
-                    <thead className="sticky top-0 z-[60] shadow-md">
+                    <thead className="sticky top-0 z-[60] shadow-sm">
                         <tr>
-                            <th className="p-3 bg-white dark:bg-slate-900 font-bold text-slate-600 dark:text-slate-300 uppercase text-[10px] tracking-wider border-b border-gray-200 dark:border-slate-700 sticky top-0">Cód.</th>
-                            <th className="p-3 bg-white dark:bg-slate-900 font-bold text-slate-600 dark:text-slate-300 uppercase text-[10px] tracking-wider border-b border-gray-200 dark:border-slate-700 sticky top-0">Descripción</th>
-                            {user?.rol !== 'Normal' && <th className="p-3 bg-white dark:bg-slate-900 font-bold text-slate-600 dark:text-slate-300 uppercase text-[10px] tracking-wider border-b border-gray-200 dark:border-slate-700 sticky top-0">Coste</th>}
+                            <th className="p-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md font-bold text-slate-500 dark:text-slate-400 uppercase text-[10px] tracking-widest border-b border-slate-200 dark:border-slate-800 sticky top-0">Cód.</th>
+                            <th className="p-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md font-bold text-slate-500 dark:text-slate-400 uppercase text-[10px] tracking-widest border-b border-slate-200 dark:border-slate-800 sticky top-0">Descripción</th>
+                            {user?.rol !== 'Normal' && <th className="p-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md font-bold text-slate-500 dark:text-slate-400 uppercase text-[10px] tracking-widest border-b border-slate-200 dark:border-slate-800 sticky top-0">Coste</th>}
                             {!isComparing ? <>
-                                <th className="p-3 bg-white dark:bg-slate-900 font-bold text-slate-600 dark:text-slate-300 uppercase text-[10px] tracking-wider border-b border-gray-200 dark:border-slate-700 sticky top-0">PVP</th>
-                                <th className="p-3 bg-white dark:bg-slate-900 font-bold text-slate-600 dark:text-slate-300 uppercase text-[10px] tracking-wider border-b border-gray-200 dark:border-slate-700 sticky top-0">Oferta</th>
-                                <th className="p-3 bg-white dark:bg-slate-900 font-bold text-slate-600 dark:text-slate-300 uppercase text-[10px] tracking-wider border-b border-gray-200 dark:border-slate-700 sticky top-0">Inicio</th>
-                                <th className="p-3 bg-white dark:bg-slate-900 font-bold text-slate-600 dark:text-slate-300 uppercase text-[10px] tracking-wider border-b border-gray-200 dark:border-slate-700 sticky top-0">Fin</th>
-                            </> : selectedCompareZones.map(z=><th key={z} className="p-3 bg-white dark:bg-slate-900 font-bold text-slate-600 dark:text-slate-300 uppercase text-[10px] text-center tracking-wider border-b border-gray-200 dark:border-slate-700 sticky top-0">{z}</th>)}
-                            <th className="p-3 bg-white dark:bg-slate-900 font-bold text-slate-600 dark:text-slate-300 uppercase text-[10px] w-1/4 tracking-wider border-b border-gray-200 dark:border-slate-700 sticky top-0">Nota de Supervisor</th>
+                                <th className="p-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md font-bold text-slate-500 dark:text-slate-400 uppercase text-[10px] tracking-widest border-b border-slate-200 dark:border-slate-800 sticky top-0">PVP</th>
+                                <th className="p-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md font-bold text-slate-500 dark:text-slate-400 uppercase text-[10px] tracking-widest border-b border-slate-200 dark:border-slate-800 sticky top-0">Oferta</th>
+                                <th className="p-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md font-bold text-slate-500 dark:text-slate-400 uppercase text-[10px] tracking-widest border-b border-slate-200 dark:border-slate-800 sticky top-0">Inicio</th>
+                                <th className="p-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md font-bold text-slate-500 dark:text-slate-400 uppercase text-[10px] tracking-widest border-b border-slate-200 dark:border-slate-800 sticky top-0">Fin</th>
+                            </> : selectedCompareZones.map(z=><th key={z} className="p-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md font-bold text-slate-500 dark:text-slate-400 uppercase text-[10px] text-center tracking-widest border-b border-slate-200 dark:border-slate-800 sticky top-0">{z}</th>)}
+                            <th className="p-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md font-bold text-slate-500 dark:text-slate-400 uppercase text-[10px] w-1/4 tracking-widest border-b border-slate-200 dark:border-slate-800 sticky top-0">Nota de Supervisor</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white dark:bg-slate-900 divide-y dark:divide-slate-800">
+                    <tbody className="bg-white dark:bg-slate-900 divide-y divide-slate-100 dark:divide-slate-800/50">
                         {paginatedData.map(art => {
                             const t = getTariffForZone(art.Referencia, zonaFilter);
                             const hasOffer = t && t['PVP Oferta'] && t['PVP Oferta'] !== '';
                             
                             return (
-                                <tr key={art.Referencia || Math.random()} className={`transition-colors border-b dark:border-slate-800 ${hasOffer ? 'bg-green-100 dark:bg-green-900/40 hover:bg-green-200 dark:hover:bg-green-900/60' : 'hover:bg-gray-50 dark:hover:bg-slate-800'}`}>
-                                    <td className="p-3 font-mono text-xs text-slate-500">{String(art.Referencia ?? '').replace(/\D/g,'')}</td>
-                                    <td className="p-3 font-bold text-slate-800 dark:text-slate-200">{art.Descripción}</td>
-                                    {user?.rol !== 'Normal' && <td className="p-3 text-slate-600 dark:text-slate-400 font-medium">{formatCurrency(art['Ult. Costo'])}</td>}
+                                <tr key={art.Referencia || Math.random()} className={`transition-colors group ${hasOffer ? 'bg-emerald-50/50 dark:bg-emerald-900/10 hover:bg-emerald-100/50 dark:hover:bg-emerald-900/20' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
+                                    <td className="p-4 font-mono text-xs text-slate-400 dark:text-slate-500">{String(art.Referencia ?? '').replace(/\D/g,'')}</td>
+                                    <td className="p-4 font-bold text-slate-800 dark:text-slate-200 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">{art.Descripción}</td>
+                                    {user?.rol !== 'Normal' && <td className="p-4 text-slate-500 dark:text-slate-400 font-medium">{formatCurrency(art['Ult. Costo'])}</td>}
                                     
                                     {!isComparing ? <>
-                                        <td className="p-3">
+                                        <td className="p-4">
                                             <div className="flex flex-col">
                                                 {hasOffer && (
                                                     <span className="line-through text-slate-400 dark:text-slate-500 text-[10px]">
                                                         {formatCurrency(t?.['P.V.P.'])}
                                                     </span>
                                                 )}
-                                                <span className={`font-bold ${hasOffer ? 'text-green-700 dark:text-green-400' : 'text-slate-800 dark:text-slate-200'}`}>
+                                                <span className={`font-bold ${hasOffer ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-800 dark:text-slate-200'}`}>
                                                     {formatCurrency(hasOffer ? t!['PVP Oferta'] : t?.['P.V.P.'])}
                                                 </span>
                                             </div>
                                         </td>
-                                        <td className="p-3">
+                                        <td className="p-4">
                                             {hasOffer ? (
-                                                <span className="font-extrabold text-green-700 dark:text-green-400 text-base bg-green-200/50 px-2 py-0.5 rounded-md border border-green-200 dark:border-green-800">
+                                                <span className="font-extrabold text-emerald-700 dark:text-emerald-400 text-sm bg-emerald-100 dark:bg-emerald-900/30 px-2.5 py-1 rounded-lg border border-emerald-200 dark:border-emerald-800/50 shadow-sm">
                                                     {formatCurrency(t!['PVP Oferta'])}
                                                 </span>
                                             ) : (
                                                 <span className="text-slate-300"></span>
                                             )}
                                         </td>
-                                        <td className="p-3 text-xs font-medium text-slate-600">{t?.['Fec.Ini.Ofe.']||'-'}</td>
-                                        <td className="p-3 text-xs font-medium text-slate-600">{t?.['Fec.Fin.Ofe.']||'-'}</td>
+                                        <td className="p-4 text-xs font-medium text-slate-500">{t?.['Fec.Ini.Ofe.']||'-'}</td>
+                                        <td className="p-4 text-xs font-medium text-slate-500">{t?.['Fec.Fin.Ofe.']||'-'}</td>
                                     </> : selectedCompareZones.map(z => {
                                         const tz = getTariffForZone(art.Referencia, z);
                                         const isOffer = tz && tz['PVP Oferta'] && tz['PVP Oferta'] !== '';
                                         return (
-                                            <td key={z} className={`p-3 text-center border-l dark:border-slate-800 ${isOffer ? 'bg-green-50 dark:bg-green-900/20' : ''}`}>
+                                            <td key={z} className={`p-4 text-center border-l border-slate-100 dark:border-slate-800/50 ${isOffer ? 'bg-emerald-50/50 dark:bg-emerald-900/10' : ''}`}>
                                                 <div className="flex flex-col items-center">
-                                                    {isOffer && <span className="text-[10px] text-red-500 line-through mb-0.5">{formatCurrency(tz?.['P.V.P.'])}</span>}
-                                                    <span className={`font-bold ${isOffer ? 'text-green-700 dark:text-green-400' : 'text-slate-700 dark:text-slate-300'}`}>
+                                                    {isOffer && <span className="text-[10px] text-red-400 line-through mb-0.5">{formatCurrency(tz?.['P.V.P.'])}</span>}
+                                                    <span className={`font-bold ${isOffer ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-700 dark:text-slate-300'}`}>
                                                         {formatCurrency(isOffer ? tz!['PVP Oferta'] : tz?.['P.V.P.'])}
                                                     </span>
                                                 </div>
                                             </td>
                                         );
                                     })}
-                                    <td className="p-2">
+                                    <td className="p-3">
                                         <NoteInput 
                                             initialValue={notes[String(art.Referencia ?? '')] || ''} 
                                             onSave={(val) => handleSaveNote(art.Referencia, val)} 
@@ -562,27 +578,27 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                 </table>
                 
                 {totalPages > 1 && (
-                    <div className="flex items-center justify-between px-4 py-3 bg-white dark:bg-slate-900 border-t dark:border-slate-800 sticky bottom-0 z-20">
+                    <div className="flex items-center justify-between px-6 py-4 glass-panel border-t dark:border-slate-800/50 sticky bottom-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
                         <div className="flex flex-1 justify-between sm:hidden">
                             <button
                                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                 disabled={currentPage === 1}
-                                className="relative inline-flex items-center rounded-md border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50"
+                                className="relative inline-flex items-center rounded-xl border border-slate-200 dark:border-slate-700/50 bg-white/50 dark:bg-slate-800/50 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 transition-all backdrop-blur-sm"
                             >
                                 Anterior
                             </button>
                             <button
                                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                 disabled={currentPage === totalPages}
-                                className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50"
+                                className="relative ml-3 inline-flex items-center rounded-xl border border-slate-200 dark:border-slate-700/50 bg-white/50 dark:bg-slate-800/50 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 transition-all backdrop-blur-sm"
                             >
                                 Siguiente
                             </button>
                         </div>
                         <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                             <div className="flex items-center gap-4">
-                                <p className="text-sm text-gray-700 dark:text-gray-300">
-                                    Mostrando <span className="font-medium">{((currentPage - 1) * itemsPerPage) + 1}</span> a <span className="font-medium">{Math.min(currentPage * itemsPerPage, filteredData.length)}</span> de <span className="font-medium">{filteredData.length}</span> resultados
+                                <p className="text-sm text-slate-600 dark:text-slate-400">
+                                    Mostrando <span className="font-bold text-slate-900 dark:text-white">{((currentPage - 1) * itemsPerPage) + 1}</span> a <span className="font-bold text-slate-900 dark:text-white">{Math.min(currentPage * itemsPerPage, filteredData.length)}</span> de <span className="font-bold text-slate-900 dark:text-white">{filteredData.length}</span> resultados
                                 </p>
                                 <select 
                                     value={itemsPerPage} 
@@ -590,7 +606,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                                         setItemsPerPage(Number(e.target.value));
                                         setCurrentPage(1);
                                     }}
-                                    className="text-[10px] font-bold uppercase tracking-widest border rounded-lg px-2 py-1 bg-white dark:bg-slate-800 dark:border-slate-700 outline-none text-slate-500 focus:ring-2 focus:ring-brand-500"
+                                    className="text-[10px] font-bold uppercase tracking-widest border border-slate-200 dark:border-slate-700/50 rounded-lg px-3 py-1.5 bg-white/50 dark:bg-slate-800/50 outline-none text-slate-500 focus:ring-2 focus:ring-brand-500/50 transition-all backdrop-blur-sm cursor-pointer"
                                 >
                                     <option value={25}>25 por página</option>
                                     <option value={50}>50 por página</option>
@@ -599,22 +615,22 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                                 </select>
                             </div>
                             <div>
-                                <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                                <nav className="isolate inline-flex -space-x-px rounded-xl shadow-sm overflow-hidden" aria-label="Pagination">
                                     <button
                                         onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                         disabled={currentPage === 1}
-                                        className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
+                                        className="relative inline-flex items-center px-3 py-2 text-slate-400 ring-1 ring-inset ring-slate-200 dark:ring-slate-700/50 bg-white/50 dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-700 focus:z-20 focus:outline-offset-0 disabled:opacity-50 transition-all backdrop-blur-sm"
                                     >
                                         <span className="sr-only">Anterior</span>
                                         <ArrowLeftIcon className="h-5 w-5" aria-hidden="true" />
                                     </button>
-                                    <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 ring-1 ring-inset ring-gray-300 dark:ring-slate-700 focus:outline-offset-0">
+                                    <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-slate-900 dark:text-white ring-1 ring-inset ring-slate-200 dark:ring-slate-700/50 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm">
                                         Página {currentPage} de {totalPages}
                                     </span>
                                     <button
                                         onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                         disabled={currentPage === totalPages}
-                                        className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 focus:z-20 focus:outline-offset-0 disabled:opacity-50"
+                                        className="relative inline-flex items-center px-3 py-2 text-slate-400 ring-1 ring-inset ring-slate-200 dark:ring-slate-700/50 bg-white/50 dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-700 focus:z-20 focus:outline-offset-0 disabled:opacity-50 transition-all backdrop-blur-sm"
                                     >
                                         <span className="sr-only">Siguiente</span>
                                         <ArrowLeftIcon className="h-5 w-5 rotate-180" aria-hidden="true" />
