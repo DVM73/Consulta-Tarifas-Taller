@@ -88,6 +88,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
     const [isSending, setIsSending] = useState(false);
     
     const [showSessionModal, setShowSessionModal] = useState(false);
+    const [showExitModal, setShowExitModal] = useState(false);
     const [previousSession, setPreviousSession] = useState<any>(null);
 
     useEffect(() => {
@@ -167,7 +168,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
 
     const filteredData = useMemo(() => {
         return (articulos || []).filter(art => {
-            if (!art) return false;
+            if (!art || !art.Referencia) return false;
             const desc = String(art.Descripción ?? '').toLowerCase();
             const refStr = String(art.Referencia ?? '').toLowerCase();
             const search = searchTerm.toLowerCase();
@@ -331,13 +332,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                 </div>
             )}
             <header className="bg-white dark:bg-slate-900 p-4 border-b dark:border-slate-800 flex items-center gap-4 shadow-sm z-40 overflow-x-auto min-h-[72px] whitespace-nowrap">
-                <div className="flex gap-2">
-                    <button onClick={onBack} className="px-4 py-2 bg-gray-200 dark:bg-slate-700 rounded-lg text-slate-800 dark:text-slate-200 text-sm">Cancelar</button>
-                    <button onClick={handleDownloadCSV} className="px-4 py-2 bg-brand-600 text-white rounded-lg text-sm">Descargar</button>
-                    <button onClick={handleSaveAndExit} className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm">Guardar y Salir</button>
-                    <button onClick={handleSendToAdmin} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">Enviar a Admin</button>
-                </div>
-                 {onBack && <button onClick={onBack} className="flex-shrink-0"><ArrowLeftIcon className="w-5 h-5" /></button>}
+                 {onBack && <button onClick={() => setShowExitModal(true)} className="flex-shrink-0 p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full"><ArrowLeftIcon className="w-5 h-5" /></button>}
                 <div className="relative flex-grow min-w-[200px]"><input type="text" placeholder="Buscar por descripción o referencia..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 pr-4 py-2 bg-gray-50 dark:bg-slate-800 rounded-lg w-full text-sm outline-none focus:ring-2 focus:ring-brand-500" /><SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" /></div>
                 
                 <select value={seccionFilter} onChange={e => setSeccionFilter(e.target.value)} className="bg-gray-50 dark:bg-slate-800 rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 font-medium cursor-pointer">
@@ -345,6 +340,21 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                     <option>Carnicería</option>
                     <option>Charcutería</option>
                 </select>
+            </header>
+
+            {showExitModal && (
+                <div className="fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm z-[100]">
+                    <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-xl shadow-2xl p-6">
+                        <h2 className="text-lg font-bold mb-4 text-slate-800 dark:text-white">¿Qué desea hacer?</h2>
+                        <div className="flex flex-col gap-3">
+                            <button onClick={() => setShowExitModal(false)} className="w-full px-4 py-2 bg-gray-200 dark:bg-slate-700 rounded-lg text-slate-800 dark:text-slate-200">Cancelar</button>
+                            <button onClick={() => { setShowExitModal(false); setIsExportModalOpen(true); }} className="w-full px-4 py-2 bg-brand-600 text-white rounded-lg">Descargar</button>
+                            <button onClick={handleSaveAndExit} className="w-full px-4 py-2 bg-green-600 text-white rounded-lg">Guardar y Salir</button>
+                            <button onClick={handleSendToAdmin} className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg">Enviar a Admin</button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
                 <select value={familiaFilter} onChange={e => setFamiliaFilter(e.target.value)} className="bg-gray-50 dark:bg-slate-800 rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 font-medium max-w-[150px] cursor-pointer">
                     <option value="Todas">Todas las Familias</option>
