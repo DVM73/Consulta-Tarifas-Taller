@@ -17,10 +17,10 @@ import { Tarifa, Articulo, PointOfSale, Report, Family } from '../types';
 import { getAppData, saveAllData } from '../services/dataService';
 import emailjs from '@emailjs/browser';
 
-const formatCurrency = (value: string | number | undefined): string => {
-    if (value === undefined || value === null || value === '' || value === 0 || value === '0') return '-';
+const formatCurrency = (value: string | number | null | undefined): string => {
+    if (value === undefined || value === null || value === '' || value === 0 || value === '0') return '';
     let num = typeof value === 'number' ? value : parseFloat(String(value).replace(',', '.').replace(/[^0-9.-]/g, ''));
-    if (isNaN(num) || num === 0) return '-';
+    if (isNaN(num) || num === 0) return '';
     return num.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',') + '€';
 };
 
@@ -354,7 +354,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                                                     {formatCurrency(t!['PVP Oferta'])}
                                                 </span>
                                             ) : (
-                                                <span className="text-slate-300">-</span>
+                                                <span className="text-slate-300"></span>
                                             )}
                                         </td>
                                         <td className="p-3 text-xs font-medium text-slate-600">{t?.['Fec.Ini.Ofe.']||'-'}</td>

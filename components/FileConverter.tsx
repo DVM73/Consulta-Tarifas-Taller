@@ -127,11 +127,11 @@ const FileConverter: React.FC = () => {
             const codArt = String(row[4] ?? '').trim().replace(/^0+/, '');
             if (!codArt) continue;
 
-            // Función para limpiar precios: eliminar todo excepto números, puntos y comas
+            // Función para limpiar precios: eliminar todo excepto números, puntos y comas. Si es 0 o vacío, devolver null.
             const cleanPrice = (val: any) => {
                 const str = String(val).replace(',', '.').replace(/[^0-9.]/g, '');
                 const num = parseFloat(str);
-                return isNaN(num) ? 0 : num;
+                return (isNaN(num) || num === 0) ? null : num;
             };
 
             newTarifas.push({
@@ -147,6 +147,7 @@ const FileConverter: React.FC = () => {
         }
 
         await saveAllData({ tarifas: newTarifas });
+        downloadCSV(newTarifas, 'tarifas_procesadas.csv');
         setMessage({ type: 'success', text: `Se han cargado ${newTarifas.length} tarifas correctamente.` });
         setProcessing(false);
     };
