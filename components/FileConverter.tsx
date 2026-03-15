@@ -73,11 +73,11 @@ const FileConverter: React.FC = () => {
     const downloadCSV = (data: any[], filename: string) => {
         if (data.length === 0) return;
         const headers = Object.keys(data[0]);
+        // Asegurar que no haya duplicados en las cabeceras si se pasan como datos
         const csvContent = [
-            headers.join(';'), // Solo una cabecera
+            headers.join(';'),
             ...data.map(row => headers.map(h => {
                 const val = row[h];
-                // Formatear números a 2 decimales con coma
                 if (typeof val === 'number') {
                     return val.toFixed(2).replace('.', ',');
                 }

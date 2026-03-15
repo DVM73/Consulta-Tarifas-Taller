@@ -209,3 +209,25 @@ export async function overwriteAllData(newData: AppData): Promise<void> {
         }
     }
 }
+
+export const saveSession = async (userId: string, sessionData: any) => {
+    await dbPut(`session_${userId}`, sessionData);
+};
+
+export const getSession = async (userId: string) => {
+    return await dbGet(`session_${userId}`);
+};
+
+export const deleteSession = async (userId: string) => {
+    try {
+        const idb = await openDB();
+        return new Promise<void>((res, rej) => {
+            const tx = idb.transaction(STORE_NAME, 'readwrite');
+            tx.objectStore(STORE_NAME).delete(`session_${userId}`);
+            tx.oncomplete = () => res();
+            tx.onerror = () => rej(tx.error);
+        });
+    } catch (e) {
+        console.warn("Error borrando sesión en IndexedDB:", e);
+    }
+};

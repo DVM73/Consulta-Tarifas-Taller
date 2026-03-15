@@ -14,7 +14,7 @@ import MailIcon from './icons/MailIcon';
 import CloseIcon from './icons/CloseIcon';
 import ArrowDownIcon from './icons/ArrowDownIcon';
 import { Tarifa, Articulo, PointOfSale, Report, Family } from '../types';
-import { getAppData, saveAllData } from '../services/dataService';
+import { getAppData, saveAllData, saveSession, getSession, deleteSession } from '../services/dataService';
 import emailjs from '@emailjs/browser';
 
 const formatCurrency = (value: string | number | null | undefined): string => {
@@ -86,6 +86,9 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
     const [isExportModalOpen, setIsExportModalOpen] = useState(false);
     const [exportType, setExportType] = useState<'Completo' | 'Solo Notas'>('Completo');
     const [isSending, setIsSending] = useState(false);
+    
+    const [showSessionModal, setShowSessionModal] = useState(false);
+    const [previousSession, setPreviousSession] = useState<any>(null);
 
     useEffect(() => {
         getAppData().then(data => {
@@ -98,7 +101,45 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
             console.error("Error al cargar los datos del panel de usuario:", err);
             setLoading(false);
         });
-    }, []);
+
+        if (user) {
+            getSession(user.id).then(session => {
+                if (session) {
+                    setPreviousSession(session);
+                    setShowSessionModal(true);
+                }
+            });
+        }
+    }, [user]);
+
+    const handleContinueSession = () => {
+        if (previousSession) {
+            setSearchTerm(previousSession.searchTerm || '');
+            setSeccionFilter(previousSession.seccionFilter || 'Todas');
+            setFamiliaFilter(previousSession.familiaFilter || 'Todas');
+            setZonaFilter(previousSession.zonaFilter || user?.zona || 'Todas');
+            setNotes(previousSession.notes || {});
+        }
+        setShowSessionModal(false);
+    };
+
+    const handleNewSession = () => {
+        if (user) deleteSession(user.id);
+        setShowSessionModal(false);
+    };
+
+    const handleSaveAndExit = async () => {
+        if (user) {
+            await saveSession(user.id, {
+                searchTerm,
+                seccionFilter,
+                familiaFilter,
+                zonaFilter,
+                notes
+            });
+        }
+        if (onBack) onBack();
+    };
 
     const tariffsByArticle = useMemo(() => {
         const map = new Map<string, Tarifa[]>();
@@ -196,7 +237,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
             ? selectedCompareZones.map(z => `;${z}`).join('') 
             : ';PVP';
             
-        let headers = `Referencia;Descripción;Coste${priceHeaders};Nota`;
+        const headerRow = `Referencia;Descripción;Coste${priceHeaders};Nota`;
 
         const rows = dataToExport.map(art => {
             let row = `${art.Referencia};${art.Descripción};${art['Ult. Costo']}`;
@@ -215,7 +256,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
             return row;
         });
         
-        return [headers, ...rows].join("\n");
+        return [headerRow, ...rows].join("\n");
     };
 
     const handleDownloadCSV = () => {
@@ -277,7 +318,25 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
 
     return (
         <div className="flex flex-col h-screen bg-[#f3f4f6] dark:bg-slate-950">
+            {showSessionModal && (
+                <div className="fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm z-[100]">
+                    <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-xl shadow-2xl p-6">
+                        <h2 className="text-lg font-bold mb-4 text-slate-800 dark:text-white">¿Continuar sesión anterior?</h2>
+                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">Se ha encontrado una sesión de trabajo guardada. ¿Desea continuarla o empezar una nueva?</p>
+                        <div className="flex gap-3">
+                            <button onClick={handleNewSession} className="flex-1 px-4 py-2 bg-gray-200 dark:bg-slate-700 rounded-lg text-slate-800 dark:text-slate-200">Nueva</button>
+                            <button onClick={handleContinueSession} className="flex-1 px-4 py-2 bg-brand-600 text-white rounded-lg">Continuar</button>
+                        </div>
+                    </div>
+                </div>
+            )}
             <header className="bg-white dark:bg-slate-900 p-4 border-b dark:border-slate-800 flex items-center gap-4 shadow-sm z-40 overflow-x-auto min-h-[72px] whitespace-nowrap">
+                <div className="flex gap-2">
+                    <button onClick={onBack} className="px-4 py-2 bg-gray-200 dark:bg-slate-700 rounded-lg text-slate-800 dark:text-slate-200 text-sm">Cancelar</button>
+                    <button onClick={handleDownloadCSV} className="px-4 py-2 bg-brand-600 text-white rounded-lg text-sm">Descargar</button>
+                    <button onClick={handleSaveAndExit} className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm">Guardar y Salir</button>
+                    <button onClick={handleSendToAdmin} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">Enviar a Admin</button>
+                </div>
                  {onBack && <button onClick={onBack} className="flex-shrink-0"><ArrowLeftIcon className="w-5 h-5" /></button>}
                 <div className="relative flex-grow min-w-[200px]"><input type="text" placeholder="Buscar por descripción o referencia..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 pr-4 py-2 bg-gray-50 dark:bg-slate-800 rounded-lg w-full text-sm outline-none focus:ring-2 focus:ring-brand-500" /><SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" /></div>
                 
