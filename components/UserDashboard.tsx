@@ -3,6 +3,7 @@ import React, { useContext, useState, useEffect, useMemo, memo } from 'react';
 import { AppContext } from '../context/AppContext';
 import Chatbot from './Chatbot';
 import ThemeToggle from './ThemeToggle';
+import { Save } from 'lucide-react';
 import SearchIcon from './icons/SearchIcon';
 import SparklesIcon from './icons/SparklesIcon';
 import LogoutIcon from './icons/LogoutIcon';
@@ -88,7 +89,6 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
     const [isSending, setIsSending] = useState(false);
     
     const [showSessionModal, setShowSessionModal] = useState(false);
-    const [showExitModal, setShowExitModal] = useState(false);
     const [showOverwriteModal, setShowOverwriteModal] = useState(false);
     const [previousSession, setPreviousSession] = useState<any>(null);
 
@@ -367,25 +367,11 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                 <label className="flex items-center gap-2 text-sm cursor-pointer select-none"><input type="checkbox" checked={isComparing} onChange={e => setIsComparing(e.target.checked)} className="rounded text-brand-600"/> Comparar</label>
                 <div className="ml-auto flex items-center gap-4 pl-4 border-l dark:border-slate-700">
                     <button onClick={() => setIsBotOpen(!isBotOpen)} className="text-slate-500 hover:text-brand-600 transition-colors"><SparklesIcon/></button>
-                    <button onClick={() => setShowExitModal(true)} className="text-slate-500 hover:text-brand-600 transition-colors"><UploadIcon/></button>
+                    <button onClick={() => setIsExportModalOpen(true)} className="text-slate-500 hover:text-brand-600 transition-colors"><UploadIcon/></button>
                     <ThemeToggle/>
                     <button onClick={logout} className="text-slate-500 hover:text-red-500 transition-colors"><LogoutIcon/></button>
                 </div>
             </header>
-
-            {showExitModal && (
-                <div className="fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm z-[100]">
-                    <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-xl shadow-2xl p-6">
-                        <h2 className="text-lg font-bold mb-4 text-slate-800 dark:text-white">¿Qué desea hacer?</h2>
-                        <div className="flex flex-col gap-3">
-                            <button onClick={() => setShowExitModal(false)} className="w-full px-4 py-2 bg-gray-200 dark:bg-slate-700 rounded-lg text-slate-800 dark:text-slate-200">Cancelar</button>
-                            <button onClick={() => { setShowExitModal(false); setIsExportModalOpen(true); }} className="w-full px-4 py-2 bg-brand-600 text-white rounded-lg">Descargar</button>
-                            <button onClick={handleSaveAndExit} className="w-full px-4 py-2 bg-green-600 text-white rounded-lg">Guardar y Salir</button>
-                            <button onClick={handleSendToAdmin} className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg">Enviar a Admin</button>
-                        </div>
-                    </div>
-                </div>
-            )}
 
             {showOverwriteModal && (
                 <div className="fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm z-[100]">
@@ -567,13 +553,17 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="bg-gray-50 dark:bg-slate-800/50 p-6 flex justify-end gap-3">
+                        <div className="bg-gray-50 dark:bg-slate-800/50 p-6 flex flex-wrap justify-end gap-3">
                             <button onClick={() => setIsExportModalOpen(false)} className="px-5 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-gray-200 dark:hover:bg-slate-700 rounded-lg transition-all uppercase tracking-widest">
                                 Cancelar
                             </button>
                             <button onClick={handleDownloadCSV} className="px-5 py-2.5 text-xs font-bold text-brand-700 bg-brand-100 hover:bg-brand-200 dark:bg-brand-900/50 dark:text-brand-300 dark:hover:bg-brand-900 rounded-lg transition-all uppercase tracking-widest flex items-center gap-2">
                                 <ArrowDownIcon className="w-4 h-4" />
                                 Descargar
+                            </button>
+                            <button onClick={handleSaveAndExit} className="px-5 py-2.5 text-xs font-bold text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-lg shadow-green-600/20 transition-all uppercase tracking-widest flex items-center gap-2">
+                                <Save className="w-4 h-4"/>
+                                Guardar y Salir
                             </button>
                             <button 
                                 onClick={handleSendToAdmin} 
