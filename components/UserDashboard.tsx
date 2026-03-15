@@ -89,6 +89,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
     
     const [showSessionModal, setShowSessionModal] = useState(false);
     const [showExitModal, setShowExitModal] = useState(false);
+    const [showOverwriteModal, setShowOverwriteModal] = useState(false);
     const [previousSession, setPreviousSession] = useState<any>(null);
 
     useEffect(() => {
@@ -129,7 +130,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
         setShowSessionModal(false);
     };
 
-    const handleSaveAndExit = async () => {
+    const performSave = async () => {
         if (user) {
             await saveSession(user.id, {
                 searchTerm,
@@ -139,7 +140,20 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                 notes
             });
         }
+        setShowOverwriteModal(false);
+        setShowExitModal(false);
         if (onBack) onBack();
+    };
+
+    const handleSaveAndExit = async () => {
+        if (!user) return;
+        
+        const existingSession = await getSession(user.id);
+        if (existingSession) {
+            setShowOverwriteModal(true);
+        } else {
+            await performSave();
+        }
     };
 
     const tariffsByArticle = useMemo(() => {
@@ -168,7 +182,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
 
     const filteredData = useMemo(() => {
         return (articulos || []).filter(art => {
-            if (!art || !art.Referencia) return false;
+            if (!art || !art.Referencia || String(art.Referencia).toLowerCase() === 'referencia') return false;
             const desc = String(art.Descripción ?? '').toLowerCase();
             const refStr = String(art.Referencia ?? '').toLowerCase();
             const search = searchTerm.toLowerCase();
@@ -332,7 +346,6 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                 </div>
             )}
             <header className="bg-white dark:bg-slate-900 p-4 border-b dark:border-slate-800 flex items-center gap-4 shadow-sm z-40 overflow-x-auto min-h-[72px] whitespace-nowrap">
-                 {onBack && <button onClick={() => setShowExitModal(true)} className="flex-shrink-0 p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full"><ArrowLeftIcon className="w-5 h-5" /></button>}
                 <div className="relative flex-grow min-w-[200px]"><input type="text" placeholder="Buscar por descripción o referencia..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 pr-4 py-2 bg-gray-50 dark:bg-slate-800 rounded-lg w-full text-sm outline-none focus:ring-2 focus:ring-brand-500" /><SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" /></div>
                 
                 <select value={seccionFilter} onChange={e => setSeccionFilter(e.target.value)} className="bg-gray-50 dark:bg-slate-800 rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-brand-500 font-medium cursor-pointer">
@@ -354,7 +367,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                 <label className="flex items-center gap-2 text-sm cursor-pointer select-none"><input type="checkbox" checked={isComparing} onChange={e => setIsComparing(e.target.checked)} className="rounded text-brand-600"/> Comparar</label>
                 <div className="ml-auto flex items-center gap-4 pl-4 border-l dark:border-slate-700">
                     <button onClick={() => setIsBotOpen(!isBotOpen)} className="text-slate-500 hover:text-brand-600 transition-colors"><SparklesIcon/></button>
-                    <button onClick={()=>setIsExportModalOpen(true)} className="text-slate-500 hover:text-brand-600 transition-colors"><UploadIcon/></button>
+                    <button onClick={() => setShowExitModal(true)} className="text-slate-500 hover:text-brand-600 transition-colors"><UploadIcon/></button>
                     <ThemeToggle/>
                     <button onClick={logout} className="text-slate-500 hover:text-red-500 transition-colors"><LogoutIcon/></button>
                 </div>
@@ -369,6 +382,19 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                             <button onClick={() => { setShowExitModal(false); setIsExportModalOpen(true); }} className="w-full px-4 py-2 bg-brand-600 text-white rounded-lg">Descargar</button>
                             <button onClick={handleSaveAndExit} className="w-full px-4 py-2 bg-green-600 text-white rounded-lg">Guardar y Salir</button>
                             <button onClick={handleSendToAdmin} className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg">Enviar a Admin</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showOverwriteModal && (
+                <div className="fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm z-[100]">
+                    <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-xl shadow-2xl p-6">
+                        <h2 className="text-lg font-bold mb-4 text-slate-800 dark:text-white">¿Sobrescribir sesión?</h2>
+                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">Ya existe una sesión guardada. Si guarda esta, la anterior se perderá.</p>
+                        <div className="flex gap-3">
+                            <button onClick={() => setShowOverwriteModal(false)} className="flex-1 px-4 py-2 bg-gray-200 dark:bg-slate-700 rounded-lg text-slate-800 dark:text-slate-200">Cancelar</button>
+                            <button onClick={performSave} className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg">Sobrescribir</button>
                         </div>
                     </div>
                 </div>
