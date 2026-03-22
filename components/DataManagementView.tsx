@@ -1,5 +1,5 @@
 
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import ExportIcon from './icons/ExportIcon';
 import ArrowDownIcon from './icons/ArrowDownIcon';
 import UploadIcon from './icons/UploadIcon';

@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef, useMemo, FC, ChangeEvent } from 'react';
+import React, { useState, useEffect, useRef, useMemo, FC, ChangeEvent } from 'react';
 import { User, PointOfSale, Group, Report, AppData, UserRole, Departamento, Backup, Articulo, Tarifa, Family } from '../types';
 import EditIcon from './icons/EditIcon';
 import TrashIcon from './icons/TrashIcon';

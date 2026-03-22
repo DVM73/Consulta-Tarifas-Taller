@@ -359,6 +359,20 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
         }
     };
 
+    const aiContext = useMemo(() => {
+        return articulos.map(art => {
+            const t = getTariffForZone(art.Referencia, zonaFilter);
+            return {
+                ...art,
+                Precio: t?.['P.V.P.'] || 'No disponible',
+                Oferta: t?.['PVP Oferta'] || '',
+                InicioOferta: t?.['Fec.Ini.Ofe.'] || '',
+                FinOferta: t?.['Fec.Fin.Ofe.'] || '',
+                Tienda: t?.Tienda || zonaFilter
+            };
+        });
+    }, [articulos, tariffsByArticle, zonaFilter]);
+
     if (loading) return <div className="h-screen flex items-center justify-center">Cargando...</div>;
 
     return (
@@ -662,7 +676,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                 )}
             </main>
             
-            {isBotOpen && <div className="fixed bottom-20 right-5 w-96 h-[500px] shadow-lg rounded-lg z-50 bg-white dark:bg-slate-800 border dark:border-slate-700 overflow-hidden"><Chatbot contextData={JSON.stringify(filteredData)}/></div>}
+            {isBotOpen && <div className="fixed bottom-20 right-5 w-96 h-[500px] shadow-lg rounded-lg z-50 bg-white dark:bg-slate-800 border dark:border-slate-700 overflow-hidden"><Chatbot contextData={JSON.stringify(aiContext)}/></div>}
         </div>
     );
 };

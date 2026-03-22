@@ -168,7 +168,16 @@ export function getAppData(): Promise<AppData> {
 export async function saveAllData(updates: Partial<AppData>): Promise<void> {
     const current = await getAppData();
     const now = Date.now();
-    const updated = sanitizeAppData({ ...current, ...updates, lastUpdated: new Date().toLocaleString() });
+    
+    // Solo actualizamos la fecha si hay cambios en artículos o tarifas
+    const shouldUpdateDate = updates.articulos || updates.tarifas;
+    const lastUpdated = shouldUpdateDate ? new Date().toLocaleString() : current.lastUpdated;
+
+    const updated = sanitizeAppData({ 
+        ...current, 
+        ...updates, 
+        lastUpdated 
+    });
     
     // 1. Guardar LOCAL (IndexedDB) - Esto permite trabajar en la Preview
     await dbPut(DATA_KEY, updated);

@@ -25,14 +25,12 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
-    // ---Instrucciones para que utilice el localhost:5174---
     server: {
-       port: 5174,
+       port: 3000,
        strictPort: true,
        host: true
     },
-    // -----------------------------------------------------------
-    base: './', 
+    base: '/', 
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './'),
@@ -41,17 +39,7 @@ export default defineConfig(({ mode }) => {
     build: {
       target: 'esnext',
       outDir: 'dist',
-      chunkSizeWarningLimit: 1000,
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            vendor: ['react', 'react-dom'],
-            firebase: ['firebase/app', 'firebase/firestore'],
-            pdf: ['jspdf', 'jspdf-autotable'],
-            genai: ['@google/genai']
-          }
-        }
-      }
+      chunkSizeWarningLimit: 1000
     },
     define: {
       // Polyfill vital para evitar "process is not defined" en navegadores
