@@ -95,6 +95,8 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
     
     const [showSessionModal, setShowSessionModal] = useState(false);
     const [showOverwriteModal, setShowOverwriteModal] = useState(false);
+    const [showConfirmNewSession, setShowConfirmNewSession] = useState(false);
+    const [showConfirmExitNoSave, setShowConfirmExitNoSave] = useState(false);
     const [previousSession, setPreviousSession] = useState<any>(null);
 
     useEffect(() => {
@@ -131,8 +133,18 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
     };
 
     const handleNewSession = () => {
-        if (user) deleteSession(user.id);
         setShowSessionModal(false);
+        setShowConfirmNewSession(true);
+    };
+
+    const confirmNewSession = () => {
+        if (user) deleteSession(user.id);
+        setShowConfirmNewSession(false);
+    };
+
+    const cancelNewSession = () => {
+        setShowConfirmNewSession(false);
+        setShowSessionModal(true);
     };
 
     const performSave = async () => {
@@ -165,8 +177,18 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
 
     const handleExitWithoutSaving = () => {
         setShowExitModal(false);
+        setShowConfirmExitNoSave(true);
+    };
+
+    const confirmExitWithoutSaving = () => {
+        setShowConfirmExitNoSave(false);
         if (onBack) onBack();
         else logout();
+    };
+
+    const cancelExitWithoutSaving = () => {
+        setShowConfirmExitNoSave(false);
+        setShowExitModal(true);
     };
 
     const handleExitClick = () => {
@@ -383,8 +405,40 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                         <h2 className="text-lg font-bold mb-4 text-slate-800 dark:text-white">¿Continuar sesión anterior?</h2>
                         <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">Se ha encontrado una sesión de trabajo guardada. ¿Desea continuarla o empezar una nueva?</p>
                         <div className="flex gap-3">
-                            <button onClick={handleNewSession} className="flex-1 px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-lg text-slate-800 dark:text-slate-200">Nueva</button>
-                            <button onClick={handleContinueSession} className="flex-1 px-4 py-2 bg-brand-600 text-white rounded-lg">Continuar</button>
+                            <button onClick={handleNewSession} className="flex-1 px-4 py-2 bg-slate-200 dark:bg-slate-700 rounded-lg text-slate-800 dark:text-slate-200 font-bold uppercase text-[10px] tracking-widest">Nueva</button>
+                            <button onClick={handleContinueSession} className="flex-1 px-4 py-2 bg-brand-600 text-white rounded-lg font-bold uppercase text-[10px] tracking-widest">Continuar</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showConfirmNewSession && (
+                <div className="fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm z-[110]">
+                    <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-xl shadow-2xl p-6 border-2 border-amber-500">
+                        <div className="w-12 h-12 bg-amber-50 dark:bg-amber-900/20 rounded-full flex items-center justify-center text-amber-600 mb-4 mx-auto">
+                            <HistoryIcon className="w-6 h-6"/>
+                        </div>
+                        <h2 className="text-lg font-bold mb-2 text-center text-slate-800 dark:text-white">¿Confirmar nueva sesión?</h2>
+                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 text-center">Ya existe un listado anterior. Si abre uno nuevo, <b>se perderá el anterior</b>. ¿Desea continuar?</p>
+                        <div className="flex gap-3">
+                            <button onClick={cancelNewSession} className="flex-1 px-4 py-3 bg-slate-200 dark:bg-slate-700 rounded-lg text-slate-800 dark:text-slate-200 font-bold uppercase text-xs tracking-widest">NO</button>
+                            <button onClick={confirmNewSession} className="flex-1 px-4 py-3 bg-amber-600 text-white rounded-lg font-bold uppercase text-xs tracking-widest shadow-lg shadow-amber-600/20">SÍ, NUEVA</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showConfirmExitNoSave && (
+                <div className="fixed inset-0 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm z-[110]">
+                    <div className="bg-white dark:bg-slate-900 w-full max-w-sm rounded-xl shadow-2xl p-6 border-2 border-red-500">
+                        <div className="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center text-red-600 mb-4 mx-auto">
+                            <LogoutIcon className="w-6 h-6"/>
+                        </div>
+                        <h2 className="text-lg font-bold mb-2 text-center text-slate-800 dark:text-white">¿Salir sin grabar?</h2>
+                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 text-center">Con esta opción <b>no se conservarán</b> los cambios realizados en el listado actual. ¿Está seguro?</p>
+                        <div className="flex gap-3">
+                            <button onClick={cancelExitWithoutSaving} className="flex-1 px-4 py-3 bg-slate-200 dark:bg-slate-700 rounded-lg text-slate-800 dark:text-slate-200 font-bold uppercase text-xs tracking-widest">NO</button>
+                            <button onClick={confirmExitWithoutSaving} className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg font-bold uppercase text-xs tracking-widest shadow-lg shadow-red-600/20">SÍ, SALIR</button>
                         </div>
                     </div>
                 </div>
