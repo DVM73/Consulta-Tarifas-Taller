@@ -59,10 +59,10 @@ const SupervisorDashboard: React.FC = () => {
               setTarPosId(appData.pos[0].id);
           }
           
-          // Lógica de Notificación de Actualización (ROBUSTA)
-          if (appData?.lastUpdated) {
+          // Lógica de Notificación de Actualización (ROBUSTA y POR USUARIO)
+          if (appData?.lastUpdated && user?.id) {
              const cleanDate = appData.lastUpdated.replace(/[^a-zA-Z0-9]/g, '');
-             const storageKey = `supervisor_update_ack_${cleanDate}`;
+             const storageKey = `supervisor_update_ack_${user.id}_${cleanDate}`;
              const hasSeenThisUpdate = localStorage.getItem(storageKey);
              
              if (!hasSeenThisUpdate) {
@@ -75,9 +75,9 @@ const SupervisorDashboard: React.FC = () => {
   }, []);
 
   const handleCloseUpdateModal = () => {
-      if (data?.lastUpdated) {
+      if (data?.lastUpdated && user?.id) {
           const cleanDate = data.lastUpdated.replace(/[^a-zA-Z0-9]/g, '');
-          const storageKey = `supervisor_update_ack_${cleanDate}`;
+          const storageKey = `supervisor_update_ack_${user.id}_${cleanDate}`;
           localStorage.setItem(storageKey, 'true');
       }
       setShowUpdateModal(false);
@@ -402,7 +402,14 @@ const SupervisorDashboard: React.FC = () => {
                     <button key={item.id} onClick={() => setView(item.id as SupervisorView)} className="bg-white dark:bg-slate-800 p-10 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 flex flex-col items-center text-center group hover:shadow-xl hover:-translate-y-1 transition-all">
                         <div className="mb-6 text-brand-500 bg-brand-50 p-4 rounded-xl"><item.icon className="w-10 h-10" /></div>
                         <h3 className="font-bold text-slate-800 dark:text-white text-lg mb-2 uppercase tracking-tight">{item.label}</h3>
-                        <p className="text-slate-400 text-xs">{item.desc}</p>
+                        <p className="text-slate-400 text-xs mb-2">{item.desc}</p>
+                        {item.id === 'tarifas' && data?.lastUpdated && (
+                            <div className="mt-2 px-3 py-1 bg-brand-50 dark:bg-brand-900/30 rounded-full border border-brand-100 dark:border-brand-800/50">
+                                <p className="text-[9px] font-black text-brand-600 dark:text-brand-400 uppercase tracking-widest">
+                                    Última actualización: {data.lastUpdated}
+                                </p>
+                            </div>
+                        )}
                     </button>
                 ))}
             </div>

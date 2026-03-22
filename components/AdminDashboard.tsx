@@ -160,8 +160,16 @@ const AdminDashboard = () => {
                                         {item.isCustomIcon ? <item.icon /> : <item.icon className="w-12 h-12 stroke-[1.5]" />}
                                     </div>
                                     <h3 className="font-bold text-slate-800 dark:text-white text-lg mb-3 uppercase tracking-tight group-hover:text-brand-600 transition-colors">{item.label}</h3>
-                                    <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{item.desc}</p>
+                                    <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-3">{item.desc}</p>
                                     
+                                    {item.id === 'upload' && data?.lastUpdated && (
+                                        <div className="mb-2 px-3 py-1 bg-brand-50 dark:bg-brand-900/30 rounded-full border border-brand-100 dark:border-brand-800/50">
+                                            <p className="text-[9px] font-black text-brand-600 dark:text-brand-400 uppercase tracking-widest">
+                                                Última actualización: {data.lastUpdated}
+                                            </p>
+                                        </div>
+                                    )}
+
                                     <div className="mt-6 w-10 h-1 bg-slate-100 dark:bg-slate-800 rounded-full group-hover:w-20 group-hover:bg-brand-500 transition-all duration-500"></div>
                                 </button>
                             ))}

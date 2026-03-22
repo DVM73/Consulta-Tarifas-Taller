@@ -65,11 +65,24 @@ const Chatbot: React.FC<ChatbotProps> = ({ contextData, initialMessage }) => {
           let relevantContext = "";
           if (contextData) {
               const data = JSON.parse(contextData);
-              const relevantData = data.filter((item: any) => 
-                  (item.Descripción && item.Descripción.toLowerCase().includes(text.toLowerCase())) || 
-                  (item.Referencia && item.Referencia.toLowerCase().includes(text.toLowerCase()))
-              );
-              relevantContext = JSON.stringify(relevantData.slice(0, 20));
+              // Búsqueda por palabras clave en múltiples campos
+              const keywords = text.toLowerCase().split(/\s+/).filter(k => k.length > 2);
+              const relevantData = data.filter((item: any) => {
+                  const itemText = `${item.referencia || ''} ${item.articulo || ''} ${item.familia || ''} ${item.seccion || ''}`.toLowerCase();
+                  return keywords.length === 0 || keywords.some(k => itemText.includes(k));
+              });
+
+              if (relevantData.length > 0) {
+                  relevantContext = JSON.stringify(relevantData.slice(0, 30));
+              } else {
+                  // Resumen si no hay coincidencias
+                  const summary = {
+                      totalArticulos: data.length,
+                      familias: [...new Set(data.map((i: any) => i.familia))].filter(Boolean).slice(0, 10),
+                      mensaje: "No hay coincidencias específicas para esta consulta. Por favor, informa al usuario sobre lo que hay disponible en general."
+                  };
+                  relevantContext = `RESUMEN DE BASE DE DATOS: ${JSON.stringify(summary)}`;
+              }
           }
           
           const botResponseText = await getBotResponse(text, relevantContext);
@@ -112,11 +125,22 @@ const Chatbot: React.FC<ChatbotProps> = ({ contextData, initialMessage }) => {
       let relevantContext = "";
       if (contextData) {
           const data = JSON.parse(contextData);
-          const relevantData = data.filter((item: any) => 
-              (item.Descripción && item.Descripción.toLowerCase().includes(currentInput.toLowerCase())) || 
-              (item.Referencia && item.Referencia.toLowerCase().includes(currentInput.toLowerCase()))
-          );
-          relevantContext = JSON.stringify(relevantData.slice(0, 20));
+          const keywords = currentInput.toLowerCase().split(/\s+/).filter(k => k.length > 2);
+          const relevantData = data.filter((item: any) => {
+              const itemText = `${item.referencia || ''} ${item.articulo || ''} ${item.familia || ''} ${item.seccion || ''}`.toLowerCase();
+              return keywords.length === 0 || keywords.some(k => itemText.includes(k));
+          });
+
+          if (relevantData.length > 0) {
+              relevantContext = JSON.stringify(relevantData.slice(0, 30));
+          } else {
+              const summary = {
+                  totalArticulos: data.length,
+                  familias: [...new Set(data.map((i: any) => i.familia))].filter(Boolean).slice(0, 10),
+                  mensaje: "No hay coincidencias específicas. Resume la base de datos disponible."
+              };
+              relevantContext = `RESUMEN DE BASE DE DATOS: ${JSON.stringify(summary)}`;
+          }
       }
 
       const botResponseText = await getBotResponse(currentInput, relevantContext);
