@@ -14,6 +14,7 @@ import UploadIcon from './icons/UploadIcon';
 import MailIcon from './icons/MailIcon';
 import CloseIcon from './icons/CloseIcon';
 import ArrowDownIcon from './icons/ArrowDownIcon';
+import HistoryIcon from './icons/HistoryIcon';
 import { Tarifa, Articulo, PointOfSale, Report, Family } from '../types';
 import { getAppData, saveAllData, saveSession, getSession, deleteSession } from '../services/dataService';
 import emailjs from '@emailjs/browser';
