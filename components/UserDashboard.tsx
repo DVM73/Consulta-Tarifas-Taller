@@ -99,6 +99,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
     const [showConfirmNewSession, setShowConfirmNewSession] = useState(false);
     const [showConfirmExitNoSave, setShowConfirmExitNoSave] = useState(false);
     const [previousSession, setPreviousSession] = useState<any>(null);
+    const [isDirty, setIsDirty] = useState(false);
 
     useEffect(() => {
         getAppData().then(data => {
@@ -107,6 +108,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
             setPosList(data?.pos || []);
             setFamilies(data?.families || []);
             setLoading(false);
+            setIsDirty(false);
         }).catch(err => {
             console.error("Error al cargar los datos del panel de usuario:", err);
             setLoading(false);
@@ -129,6 +131,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
             setFamiliaFilter(previousSession.familiaFilter || 'Todas');
             setZonaFilter(previousSession.zonaFilter || user?.zona || 'Todas');
             setNotes(previousSession.notes || {});
+            setTimeout(() => setIsDirty(false), 100);
         }
         setShowSessionModal(false);
     };
@@ -141,6 +144,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
     const confirmNewSession = () => {
         if (user) deleteSession(user.id);
         setShowConfirmNewSession(false);
+        setIsDirty(false);
     };
 
     const cancelNewSession = () => {
@@ -158,6 +162,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                 notes
             });
         }
+        setIsDirty(false);
         setShowOverwriteModal(false);
         setShowExitModal(false);
         if (onBack) onBack();
@@ -178,7 +183,11 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
 
     const handleExitWithoutSaving = () => {
         setShowExitModal(false);
-        setShowConfirmExitNoSave(true);
+        if (isDirty) {
+            setShowConfirmExitNoSave(true);
+        } else {
+            confirmExitWithoutSaving();
+        }
     };
 
     const confirmExitWithoutSaving = () => {
@@ -291,6 +300,7 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
 
     const handleSaveNote = (ref: string | number | undefined, val: string) => {
         setNotes(prev => ({ ...prev, [String(ref ?? '')]: val }));
+        setIsDirty(true);
     };
 
     const toggleAllZones = () => setSelectedCompareZones(prev => prev.length === posList.length ? [] : posList.map(p => p.zona));
@@ -460,36 +470,36 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                         type="text" 
                         placeholder="Buscar por descripción o referencia..." 
                         value={searchTerm} 
-                        onChange={e => setSearchTerm(e.target.value)} 
+                        onChange={e => { setSearchTerm(e.target.value); setIsDirty(true); }} 
                         className="pl-11 pr-4 py-3 bg-white/40 dark:bg-slate-800/40 rounded-2xl w-full text-sm outline-none focus:ring-4 focus:ring-brand-500/20 focus:bg-white dark:focus:bg-slate-800 transition-all border border-slate-200/50 dark:border-slate-700/50 focus:border-brand-500 shadow-inner" 
                     />
                     <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-brand-500 transition-colors" />
                 </div>
                 
                 <div className="flex items-center gap-3">
-                    <select value={seccionFilter} onChange={e => setSeccionFilter(e.target.value)} className="bg-white/40 dark:bg-slate-800/40 rounded-2xl px-5 py-3 text-xs font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-brand-500/20 cursor-pointer border border-slate-200/50 dark:border-slate-700/50 focus:border-brand-500 transition-all shadow-sm">
+                    <select value={seccionFilter} onChange={e => { setSeccionFilter(e.target.value); setIsDirty(true); }} className="bg-white/40 dark:bg-slate-800/40 rounded-2xl px-5 py-3 text-xs font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-brand-500/20 cursor-pointer border border-slate-200/50 dark:border-slate-700/50 focus:border-brand-500 transition-all shadow-sm">
                         <option>Todas</option>
                         <option>Carnicería</option>
                         <option>Charcutería</option>
                     </select>
 
-                    <select value={familiaFilter} onChange={e => setFamiliaFilter(e.target.value)} className="bg-white/40 dark:bg-slate-800/40 rounded-2xl px-5 py-3 text-xs font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-brand-500/20 max-w-[200px] cursor-pointer border border-slate-200/50 dark:border-slate-700/50 focus:border-brand-500 transition-all shadow-sm">
+                    <select value={familiaFilter} onChange={e => { setFamiliaFilter(e.target.value); setIsDirty(true); }} className="bg-white/40 dark:bg-slate-800/40 rounded-2xl px-5 py-3 text-xs font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-brand-500/20 max-w-[200px] cursor-pointer border border-slate-200/50 dark:border-slate-700/50 focus:border-brand-500 transition-all shadow-sm">
                         <option value="Todas">Familias</option>
                         {families.map(f => (
                             <option key={f.id} value={f.id}>{f.nombre}</option>
                         ))}
                     </select>
 
-                    <select value={zonaFilter} disabled={isComparing} onChange={e => setZonaFilter(e.target.value)} className="bg-white/40 dark:bg-slate-800/40 rounded-2xl px-5 py-3 text-xs font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-brand-500/20 disabled:opacity-50 cursor-pointer border border-slate-200/50 dark:border-slate-700/50 focus:border-brand-500 transition-all shadow-sm">
+                    <select value={zonaFilter} disabled={isComparing} onChange={e => { setZonaFilter(e.target.value); setIsDirty(true); }} className="bg-white/40 dark:bg-slate-800/40 rounded-2xl px-5 py-3 text-xs font-black uppercase tracking-widest outline-none focus:ring-4 focus:ring-brand-500/20 disabled:opacity-50 cursor-pointer border border-slate-200/50 dark:border-slate-700/50 focus:border-brand-500 transition-all shadow-sm">
                         <option>Todas</option>
                         {(posList || []).map(p=> p ? <option key={p.id}>{p.zona}</option> : null)}
                     </select>
                 </div>
 
                 <div className="flex items-center gap-2 bg-slate-200/30 dark:bg-slate-800/30 p-1.5 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 shadow-inner">
-                    <button onClick={() => setShowOffers(!showOffers)} className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500 ${showOffers ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/40 scale-105' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>Ofertas</button>
-                    <button onClick={() => setShowNoPrice(!showNoPrice)} className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500 ${showNoPrice ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/40 scale-105' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>Sin PVP</button>
-                    <button onClick={() => setIsComparing(!isComparing)} className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500 ${isComparing ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/40 scale-105' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>Comparar</button>
+                    <button onClick={() => { setShowOffers(!showOffers); setIsDirty(true); }} className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500 ${showOffers ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/40 scale-105' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>Ofertas</button>
+                    <button onClick={() => { setShowNoPrice(!showNoPrice); setIsDirty(true); }} className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500 ${showNoPrice ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/40 scale-105' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>Sin PVP</button>
+                    <button onClick={() => { setIsComparing(!isComparing); setIsDirty(true); }} className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-500 ${isComparing ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/40 scale-105' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>Comparar</button>
                 </div>
 
                 <div className="ml-auto flex items-center gap-6 pl-6 border-l border-slate-200/50 dark:border-slate-700/50">
@@ -522,10 +532,14 @@ const UserDashboard: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
                                 </div>
                                 <h2 className="text-lg font-bold mb-6 text-center text-slate-800 dark:text-white">¿Qué deseas hacer?</h2>
                                 <div className="flex flex-col gap-3">
-                                    <button onClick={handleSaveAndExit} className="w-full px-4 py-3 bg-brand-600 text-white rounded-lg font-bold uppercase text-xs tracking-widest shadow-lg shadow-brand-600/20 hover:bg-brand-700 transition-colors">Guardar y Salir</button>
+                                    {isDirty && (
+                                        <button onClick={handleSaveAndExit} className="w-full px-4 py-3 bg-brand-600 text-white rounded-lg font-bold uppercase text-xs tracking-widest shadow-lg shadow-brand-600/20 hover:bg-brand-700 transition-colors">Guardar y Salir</button>
+                                    )}
                                     <button onClick={() => { setExportAction('download'); setExitModalStep('export_type'); }} className="w-full px-4 py-3 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300 rounded-lg font-bold uppercase text-xs tracking-widest border border-brand-200 dark:border-brand-800 hover:bg-brand-100 dark:hover:bg-brand-900/40 transition-colors">Descargar CSV</button>
                                     <button onClick={() => { setExportAction('send'); setExitModalStep('export_type'); }} className="w-full px-4 py-3 bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300 rounded-lg font-bold uppercase text-xs tracking-widest border border-brand-200 dark:border-brand-800 hover:bg-brand-100 dark:hover:bg-brand-900/40 transition-colors">Enviar a Admin</button>
-                                    <button onClick={handleExitWithoutSaving} className="w-full px-4 py-3 bg-transparent text-red-600 dark:text-red-400 rounded-lg font-bold uppercase text-xs tracking-widest border border-red-200 dark:border-red-900/50 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">Salir sin Guardar</button>
+                                    <button onClick={handleExitWithoutSaving} className="w-full px-4 py-3 bg-transparent text-red-600 dark:text-red-400 rounded-lg font-bold uppercase text-xs tracking-widest border border-red-200 dark:border-red-900/50 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                                        {isDirty ? 'Salir sin Guardar' : 'Salir'}
+                                    </button>
                                     <button onClick={() => setShowExitModal(false)} className="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg font-bold uppercase text-xs tracking-widest hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">Cancelar</button>
                                 </div>
                             </>
